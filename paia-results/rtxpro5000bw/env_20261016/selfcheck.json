@@ -1,0 +1,276 @@
+{
+ "platform_tag": "rtxpro5000bw",
+ "session_id": "env_20261016",
+ "provenance": {
+  "git_commit": "ddf2d5368c1c8241d3922babd98e71d62c71f193",
+  "git_dirty": false,
+  "image": "host-venv:.venv-host",
+  "image_id": "f2fc730be3e64281"
+ },
+ "device": "NVIDIA RTX PRO 5000 Blackwell",
+ "capability": [
+  12,
+  0
+ ],
+ "checks": {
+  "bf16_vs_cpu": {
+   "ok": true,
+   "value": {
+    "rel_err": 0.0033845053985714912,
+    "correct": true
+   }
+  },
+  "e1_torch_ops": {
+   "ok": true,
+   "value": {
+    "read_sum": {
+     "kernels": [
+      "Memset (Device)",
+      "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::func_wrapper_t<float, at::native::sum_functor<float, float, float>::operator()(at::TensorIterator&)::{lambda(float, float)#1}>, unsigned int, float, 4, 4> >(at::native::ReduceOp<float, at::native::func_wrapper_t<float, at::native::sum_functor<float, float, float>::operator()(at::TensorIterator&)::{lambda(float, float)#1}>, unsigned int, float, 4, 4>)"
+     ],
+     "graph": true
+    },
+    "copy": {
+     "kernels": [
+      "Memcpy DtoD (Device -> Device)"
+     ],
+     "graph": true
+    },
+    "write_fill": {
+     "kernels": [
+      "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul>, false>(int, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul>)"
+     ],
+     "graph": true
+    }
+   }
+  },
+  "triton_read_probe": {
+   "ok": true,
+   "value": {
+    "triton": "3.8.0",
+    "target": "GPUTarget(backend='cuda', arch=120, warp_size=32)",
+    "correct": true,
+    "graph": true
+   }
+  },
+  "cublas_bf16": {
+   "ok": true,
+   "value": {
+    "1024x4096_M1": {
+     "rel_err": 0.002489743521437049,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "1024x4096_M16": {
+     "rel_err": 0.003359133144840598,
+     "correct": true,
+     "kernels": [
+      "void cublasLt::splitKreduce_kernel<32, 16, int, __nv_bfloat16, __nv_bfloat16, float, __nv_bfloat16, false, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, true, false, false, false>(cublasLt::cublasSplitKParams<float>, __nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, __nv_bfloat16*, float const*, float const*, __nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, void*, long, float*, int*, float*, float*, float const*, float const*, float const*, float const*, float const*)",
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "4096x4096_M1": {
+     "rel_err": 0.002609651768580079,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "4096x4096_M16": {
+     "rel_err": 0.002693876391276717,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "14336x4096_M1": {
+     "rel_err": 0.002681643469259143,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "14336x4096_M16": {
+     "rel_err": 0.0026926561258733273,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "4096x14336_M1": {
+     "rel_err": 0.0033045760355889797,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "4096x14336_M16": {
+     "rel_err": 0.002837347099557519,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "512x3584_M1": {
+     "rel_err": 0.003609918989241123,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "512x3584_M16": {
+     "rel_err": 0.004373001866042614,
+     "correct": true,
+     "kernels": [
+      "void cublasLt::splitKreduce_kernel<32, 16, int, __nv_bfloat16, __nv_bfloat16, float, __nv_bfloat16, false, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, true, false, false, false>(cublasLt::cublasSplitKParams<float>, __nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, __nv_bfloat16*, float const*, float const*, __nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, void*, long, float*, int*, float*, float*, float const*, float const*, float const*, float const*, float const*)",
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "18944x3584_M1": {
+     "rel_err": 0.0025522541254758835,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "18944x3584_M16": {
+     "rel_err": 0.0026617408730089664,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    }
+   }
+  },
+  "scaled_mm_fp8": {
+   "ok": true,
+   "value": {
+    "schema": "aten::_scaled_mm(Tensor self, Tensor mat2, Tensor scale_a, Tensor scale_b, Tensor? bias=None, Tensor? scale_result=None, ScalarType? out_dtype=None, bool use_fast_accum=False) -> Tensor",
+    "tensorwise_M1": {
+     "rel_err": 0.003040801966562867,
+     "correct": true,
+     "kernels": [
+      "nvjet_sm120_qqtst_mma_64x32x64_16_32x16x64_tmaAB_bz_TNNN"
+     ],
+     "graph": true
+    },
+    "tensorwise_M2": {
+     "rel_err": 0.0030385900754481554,
+     "correct": true,
+     "kernels": [
+      "nvjet_sm120_qqtst_mma_64x32x64_16_32x16x64_tmaAB_bz_TNNN"
+     ],
+     "graph": true
+    },
+    "tensorwise_M4": {
+     "rel_err": 0.0027243420481681824,
+     "correct": true,
+     "kernels": [
+      "nvjet_sm120_qqtst_mma_64x32x64_16_32x16x64_tmaAB_bz_TNNN"
+     ],
+     "graph": true
+    },
+    "tensorwise_M8": {
+     "rel_err": 0.0027298028580844402,
+     "correct": true,
+     "kernels": [
+      "nvjet_sm120_qqtst_mma_64x32x64_16_32x16x64_tmaAB_bz_TNNN"
+     ],
+     "graph": true
+    },
+    "tensorwise_M16": {
+     "rel_err": 0.002855203114449978,
+     "correct": true,
+     "kernels": [
+      "nvjet_sm120_qqtst_mma_64x32x64_16_32x16x64_tmaAB_bz_TNNN"
+     ],
+     "graph": true
+    },
+    "rowwise_M1": {
+     "rel_err": 0.0026406478136777878,
+     "correct": true,
+     "kernels": [
+      "Memcpy DtoD (Device -> Device)",
+      "_ZN7cutlass13device_kernelIN2at4cuda6detail34enable_3x_kernel_for_sm10_or_laterINS_4gemm6kernel13GemmUniversalIN4cute5tupleIJiiiEEENS5_10collective13CollectiveMmaINS5_31MainloopSm120TmaWarpSpecializedILi3ELi2ENS9_IJNS8_1CILi1EEESF_SF_EEENS5_37KernelTmaWarpSpecializedPingpongSm120ILi2EEEEENS9_IJNSE_ILi64EEENSE_ILi128EEESL_EEENS_12float_e4m3_tENS9_IJlSF_lEEESN_SO_NS8_8TiledMMAINS8_8MMA_AtomIJNS8_16SM120_16x8x32_TNISN_SN_fEEEEENS8_6LayoutINS9_IJNSE_ILi2EEESV_SF_EEENS9_IJSF_SV_NSE_ILi0EEEEEEEENS9_IJSK_NSE_ILi32EEES10_EEEEENS8_13SM90_TMA_LOADENS8_14ComposedLayoutINS8_7SwizzleILi3ELi4ELi3EEENS8_18smem_ptr_flag_bitsILi8EEENSU_INS9_IJNSE_ILi8EEESL_EEENS9_IJSL_SF_EEEEEEENS8_9Copy_AtomIJNS8_17SM75_U32x4_LDSM_NEhEEENS8_8identityES13_S1D_S1G_S1H_EENS_8epilogue10collective18CollectiveEpilogueINS1J_22Sm90TmaWarpSpecializedILi2ELi2ELi4ELb0ELb1EEEJSM_NS9_IJSK_S10_EEEvSO_NS_10bfloat16_tESO_NS1J_6fusion15Sm90TreeVisitorINS1Q_11Sm90ComputeINS1J_6thread8IdentityES1P_fLNS_15FloatRoundStyleE2EvEEJNS1R_INS1S_INS_4plusEffLS1V_2EvEEJNS1Q_16Sm90RowBroadcastILi0ESM_ffNS9_IJSX_SF_SX_EEELi4ELb1EEENS1R_INS1S_INS_10multipliesEffLS1V_2EvEEJS21_NS1R_IS23_JNS1Q_16Sm90ColBroadcastILi0ESM_ffNS9_IJSF_SX_SX_EEELi4ELb1EEENS1Q_12Sm90AccFetchEEEEEEEEEEEEES13_NS14_INS15_ILi2ELi4ELi3EEENS17_ILi16EEENSU_INS9_IJS19_S10_EEENS9_IJS10_SF_EEEEEEENS8_17SM75_U32x2_LDSM_NENS8_14SM90_TMA_STOREES2H_NS8_17SM90_U32x2_STSM_NENS1E_IJS2K_NS_6half_tEEEEvEEEvvEEEEEEvNT_6ParamsE"
+     ],
+     "graph": true
+    },
+    "rowwise_M16": {
+     "rel_err": 0.0027974210679531097,
+     "correct": true,
+     "kernels": [
+      "Memcpy DtoD (Device -> Device)",
+      "_ZN7cutlass13device_kernelIN2at4cuda6detail34enable_3x_kernel_for_sm10_or_laterINS_4gemm6kernel13GemmUniversalIN4cute5tupleIJiiiEEENS5_10collective13CollectiveMmaINS5_31MainloopSm120TmaWarpSpecializedILi3ELi2ENS9_IJNS8_1CILi1EEESF_SF_EEENS5_37KernelTmaWarpSpecializedPingpongSm120ILi2EEEEENS9_IJNSE_ILi64EEENSE_ILi128EEESL_EEENS_12float_e4m3_tENS9_IJlSF_lEEESN_SO_NS8_8TiledMMAINS8_8MMA_AtomIJNS8_16SM120_16x8x32_TNISN_SN_fEEEEENS8_6LayoutINS9_IJNSE_ILi2EEESV_SF_EEENS9_IJSF_SV_NSE_ILi0EEEEEEEENS9_IJSK_NSE_ILi32EEES10_EEEEENS8_13SM90_TMA_LOADENS8_14ComposedLayoutINS8_7SwizzleILi3ELi4ELi3EEENS8_18smem_ptr_flag_bitsILi8EEENSU_INS9_IJNSE_ILi8EEESL_EEENS9_IJSL_SF_EEEEEEENS8_9Copy_AtomIJNS8_17SM75_U32x4_LDSM_NEhEEENS8_8identityES13_S1D_S1G_S1H_EENS_8epilogue10collective18CollectiveEpilogueINS1J_22Sm90TmaWarpSpecializedILi2ELi2ELi4ELb0ELb1EEEJSM_NS9_IJSK_S10_EEEvSO_NS_10bfloat16_tESO_NS1J_6fusion15Sm90TreeVisitorINS1Q_11Sm90ComputeINS1J_6thread8IdentityES1P_fLNS_15FloatRoundStyleE2EvEEJNS1R_INS1S_INS_4plusEffLS1V_2EvEEJNS1Q_16Sm90RowBroadcastILi0ESM_ffNS9_IJSX_SF_SX_EEELi4ELb1EEENS1R_INS1S_INS_10multipliesEffLS1V_2EvEEJS21_NS1R_IS23_JNS1Q_16Sm90ColBroadcastILi0ESM_ffNS9_IJSF_SX_SX_EEELi4ELb1EEENS1Q_12Sm90AccFetchEEEEEEEEEEEEES13_NS14_INS15_ILi2ELi4ELi3EEENS17_ILi16EEENSU_INS9_IJS19_S10_EEENS9_IJS10_SF_EEEEEEENS8_17SM75_U32x2_LDSM_NENS8_14SM90_TMA_STOREES2H_NS8_17SM90_U32x2_STSM_NENS1E_IJS2K_NS_6half_tEEEEvEEEvvEEEEEEvNT_6ParamsE"
+     ],
+     "graph": true
+    }
+   }
+  },
+  "vllm_cutlass_fp8": {
+   "ok": false,
+   "error": "Traceback (most recent call last):\n  File \"/data/cs3406/team18/PAIA-Project/paia-bench/bench/selfcheck.py\", line 217, in main\n    res[\"checks\"][n] = {\"ok\": True, \"value\": CHECKS[n]()}\n                                             ^^^^^^^^^^^\n  File \"/data/cs3406/team18/PAIA-Project/paia-bench/bench/selfcheck.py\", line 128, in chk_vllm_cutlass_fp8\n    from vllm import _custom_ops as ops\nModuleNotFoundError: No module named 'vllm'\n"
+  },
+  "tinygemm_int4": {
+   "ok": true,
+   "value": {
+    "convert_schema": [
+     "aten::_convert_weight_to_int4pack(Tensor self, int innerKTiles) -> Tensor"
+    ],
+    "mm_schema": [
+     "aten::_weight_int4pack_mm(Tensor self, Tensor mat2, int qGroupSize, Tensor qScaleAndZeros) -> Tensor"
+    ],
+    "packed": [
+     [
+      512,
+      32,
+      32,
+      4
+     ],
+     "torch.int32"
+    ],
+    "scales_zeros": [
+     [
+      32,
+      4096,
+      2
+     ],
+     "torch.bfloat16"
+    ],
+    "M1": {
+     "rel_err": 0.004094937350600958,
+     "correct": true,
+     "kernels": [
+      "void at::native::tinygemm_m16n8k16_chunk_kernel<at::native::ALayout_RM<(at::native::KReductionType)0>, at::native::BLayout_TC_int4<8, 128>, at::native::ALayout_RM<(at::native::KReductionType)0>, 8, 8>(void const*, void const*, void const*, void*, int, int, int, int, int, int)"
+     ],
+     "graph": true
+    },
+    "M16": {
+     "rel_err": 0.004259108100086451,
+     "correct": true,
+     "kernels": [
+      "void at::native::tinygemm_m16n8k16_chunk_kernel<at::native::ALayout_RM<(at::native::KReductionType)0>, at::native::BLayout_TC_int4<8, 128>, at::native::ALayout_RM<(at::native::KReductionType)0>, 8, 8>(void const*, void const*, void const*, void*, int, int, int, int, int, int)"
+     ],
+     "graph": true
+    }
+   }
+  },
+  "marlin_int4": {
+   "ok": false,
+   "error": "Traceback (most recent call last):\n  File \"/data/cs3406/team18/PAIA-Project/paia-bench/bench/selfcheck.py\", line 217, in main\n    res[\"checks\"][n] = {\"ok\": True, \"value\": CHECKS[n]()}\n                                             ^^^^^^^^^^^\n  File \"/data/cs3406/team18/PAIA-Project/paia-bench/bench/selfcheck.py\", line 160, in chk_marlin_int4\n    import vllm.model_executor.layers.quantization.utils.marlin_utils as mu\nModuleNotFoundError: No module named 'vllm'\n"
+  }
+ }
+}
