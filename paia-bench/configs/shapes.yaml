@@ -1,0 +1,95 @@
+# FROZEN shape set (schema_version 1). Do not edit mid-project; bump shapes_version and note it in findings.md.
+# Weight matrices are [N_out, K_in]; x is [M, K]; y = x @ W.T.
+shapes_version: 1
+frozen_on: 2026-10-16
+# Verified 2026-10-16 against Hugging Face config.json for both models (hidden, intermediate,
+# heads, kv heads, vocab all match the brief; head_dim = hidden / heads = 128; tie_word_embeddings false).
+# Qwen2.5 has a QKV bias; it is ignored for GEMV timing (see findings.md).
+
+models:
+  llama31_8b:
+    hf_id: meta-llama/Llama-3.1-8B-Instruct
+    hidden: 4096
+    intermediate: 14336
+    n_heads: 32
+    n_kv_heads: 8
+    head_dim: 128
+    vocab: 128256
+    n_layers: 32
+    shapes:            # name: [N, K]
+      q_proj: [4096, 4096]
+      k_proj: [1024, 4096]
+      v_proj: [1024, 4096]
+      o_proj: [4096, 4096]
+      gate_proj: [14336, 4096]
+      up_proj: [14336, 4096]
+      down_proj: [4096, 14336]
+      qkv_fused: [6144, 4096]
+      gate_up_fused: [28672, 4096]
+      lm_head: [128256, 4096]
+  qwen25_7b:
+    hf_id: Qwen/Qwen2.5-7B-Instruct
+    hidden: 3584
+    intermediate: 18944
+    n_heads: 28
+    n_kv_heads: 4
+    head_dim: 128
+    vocab: 152064
+    n_layers: 28
+    shapes:
+      q_proj: [3584, 3584]
+      k_proj: [512, 3584]
+      v_proj: [512, 3584]
+      o_proj: [3584, 3584]
+      gate_proj: [18944, 3584]
+      up_proj: [18944, 3584]
+      down_proj: [3584, 18944]
+      qkv_fused: [4608, 3584]
+      gate_up_fused: [37888, 3584]
+      lm_head: [152064, 3584]
+
+# Synthetic sweep for (tau, R_inf) fits. BF16 weight bytes span 0.25 MiB to 1 GiB in 14 geometric
+# steps. N is a multiple of 128 when the target is >= 128 rows, otherwise a multiple of 32 (min 32),
+# so the tau-dominated small-B region is sampled. Duplicates after rounding are dropped (K=14336 keeps 12).
+synthetic:
+  K4096:
+    K: 4096
+    N: [32, 64, 128, 256, 384, 768, 1536, 2816, 5376, 10112, 19200, 36480, 69120, 131072]
+  K14336:
+    K: 14336
+    N: [32, 64, 128, 256, 384, 768, 1536, 2944, 5504, 10368, 19712, 37504]
+
+# M sweep: real shapes only, graph mode only. M = 1 additionally runs isolated and eager.
+batch_sweep:
+  M: [1, 2, 4, 8, 16]
+
+# E1 bandwidth probe sizes: 256 KiB to 4 GiB, factor 2 (subject to --mem-cap-gb).
+e1_sizes_bytes:
+  start: 262144
+  stop: 4294967296
+  factor: 2
+
+# Measurement methodology parameters (Section 4 of the brief).
+timing:
+  warmup_min_calls: 20
+  warmup_min_ms: 200
+  samples_min: 30
+  noisy_cv: 0.03
+  loop_target_ms: 5.0     # R chosen so one eager loop / graph replay lasts at least this long
+  l2_rotation_factor: 4   # n_copies = max(2, ceil(4 * L2 / op_bytes))
+  mem_cap_gb: 12
+
+canary:
+  total_bytes: 536870912  # 512 MB of rotating buffers, cold read
+  reps: 10
+  ref_runs: 20
+  ref_max_cv: 0.02
+  contaminated_below: 0.95
+  ref_refresh_min: 60
+
+idle_gate:
+  max_gpu_util_pct: 5
+  util_window_s: 2
+  max_foreign_cpu_cores: 2
+  backoff_start_s: 30
+  backoff_max_s: 600

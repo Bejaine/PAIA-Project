@@ -1,0 +1,37 @@
+# Verified platform facts that the code consults at runtime. Hardware properties (SMs, L2, memory, CC)
+# are never stored here: they are always read from the device. This file only records how to measure
+# on a platform when the generic default does not work there. Evidence: findings.md.
+
+defaults:
+  ncu_metrics:
+    time: gpu__time_duration.sum
+    dram_read_bytes: dram__bytes_read.sum
+    dram_write_bytes: dram__bytes_write.sum
+    l2_bytes: lts__t_bytes.sum
+    mem_throughput_pct: dram__throughput.avg.pct_of_peak_sustained_elapsed
+    sm_throughput_pct: sm__throughput.avg.pct_of_peak_sustained_elapsed
+    warps_active_pct: sm__warps_active.avg.pct_of_peak_sustained_active
+    grid_size: launch__grid_size
+    regs_per_thread: launch__registers_per_thread
+  fp8_rowwise_impl: torch_scaled_mm
+
+dgxspark_gb10:
+  verified_on: 2026-10-16
+  image: paia-bench:25.11   # NGC vllm:25.11-py3 + profilers; torch 2.10.0a0+b558c98.nv25.11, cuBLAS 13.1.0
+  driver: "580.159.03"
+  memory_kind: unified_lpddr5x   # CPU and GPU share one bus: CPU jobs can steal GPU bandwidth unseen by NVML
+  ncu_metrics:
+    # No dram__* metrics exist on GB10. Unified memory is reached through the L2 "sysmem" aperture.
+    # L2 fill sectors from sysmem x 32 B matched expected GEMV bytes at ratio 1.002 (14336x4096 BF16).
+    dram_read_bytes: lts__d_sectors_fill_sysmem.sum   # unit: sectors (multiply by 32)
+    dram_read_bytes_unit_bytes: 32
+    dram_write_bytes: lts__t_sectors_aperture_sysmem_op_write.sum   # sectors, x32; to be confirmed in E3
+    dram_write_bytes_unit_bytes: 32
+    mem_throughput_pct: gpu__compute_memory_throughput.avg.pct_of_peak_sustained_elapsed
+  nvml_unsupported: [mem_clock_mhz, max_mem_clock_mhz, power_limit_mw, memory_info]
+  clock_lock: not_attempted   # needs root and affects all users; policy forbids
+  # torch._scaled_mm with row-wise scales dispatches an sm100 CUTLASS kernel that aborts on sm_121
+  # and returns garbage without raising. Use vLLM's CUTLASS kernel for row-wise FP8.
+  fp8_rowwise_impl: vllm_cutlass_scaled_mm
+  nsys_flags: ["--trace=cuda,nvtx", "--cuda-graph-trace=node"]
+  vllm_env: {VLLM_ENABLE_V1_MULTIPROCESSING: "0"}   # keep the engine in-process so one nsys trace sees it
