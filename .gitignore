@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.tmp
+.container_home/
+
+# Large raw profiler outputs: commit summaries only
+*.ncu-rep
+*.nsys-rep
+*.qdstrm
+*.sqlite
