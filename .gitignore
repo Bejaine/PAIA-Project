@@ -8,3 +8,6 @@ __pycache__/
 *.nsys-rep
 *.qdstrm
 *.sqlite
+
+# Harness development runs on a busy machine: never results
+paia-bench/results/*/debug_*/

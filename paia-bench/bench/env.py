@@ -153,17 +153,11 @@ def cpu_info():
     return d
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--session", required=True)
-    ap.add_argument("--platform-tag", default=None)
-    ap.add_argument("--probe-ncu", action="store_true", help="run a 1-kernel ncu probe to test counter access")
-    a = ap.parse_args()
-    tag = a.platform_tag or default_platform_tag()
+def collect(tag, session, probe_ncu=False):
     env = {
         "schema_version": SCHEMA_VERSION,
         "platform_tag": tag,
-        "session_id": a.session,
+        "session_id": session,
         "t_captured": dt.datetime.now(dt.timezone.utc).isoformat(),
         "host": os.environ.get("PAIA_HOST", platform.node()),
         "host_user": os.environ.get("PAIA_HOST_USER"),
@@ -173,7 +167,7 @@ def main():
         "cublas": try_(cublas_version),
         "packages": try_(py_packages),
         "nvml": try_(nvml_fields),
-        "perf_counters": try_(lambda: perf_counter_access(a.probe_ncu)),
+        "perf_counters": try_(lambda: perf_counter_access(probe_ncu)),
         "tools": {
             "ncu": sh("ncu --version | tail -1")["out"] or None,
             "nsys": sh("nsys --version")["out"] or None,
@@ -196,6 +190,17 @@ def main():
                       "nvidia_build": os.environ.get("NVIDIA_BUILD_ID"),
                       "ngc_release": os.environ.get("NVIDIA_PYTORCH_VERSION") or os.environ.get("NVIDIA_VLLM_VERSION")},
     }
+    return env
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--session", required=True)
+    ap.add_argument("--platform-tag", default=None)
+    ap.add_argument("--probe-ncu", action="store_true", help="run a 1-kernel ncu probe to test counter access")
+    a = ap.parse_args()
+    tag = a.platform_tag or default_platform_tag()
+    env = collect(tag, a.session, a.probe_ncu)
     out = session_dir(tag, a.session) / "env.json"
     write_json_atomic(out, env)
     g, p = env["gpu"], env["packages"]
