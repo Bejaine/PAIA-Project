@@ -11,3 +11,6 @@ __pycache__/
 
 # Harness development runs on a busy machine: never results
 paia-bench/results/*/debug_*/
+
+# Host venv fallback (scripts/setup_venv.sh); its lock file is recorded in env.json pip_freeze
+.venv-host/

@@ -4,6 +4,7 @@
 #   --user         : results are owned by the invoking user, not root
 #   /etc/passwd    : torch.profiler needs a passwd entry for the uid
 #   /tmp           : shared so the courtesy lockfile /tmp/paia_bench.lock is visible to everyone
+#   PAIA_GPU       : on multi-GPU hosts, the one GPU to expose (nvidia-smi index or UUID); default all
 # Usage: scripts/drun.sh [docker-run-options...] -- <cmd...>
 #        scripts/drun.sh <cmd...>
 set -euo pipefail
@@ -21,7 +22,8 @@ TTY=(); [[ -t 0 && -t 1 ]] && TTY=(-it)
 GIT_COMMIT="$(git -C "$BENCH_DIR" rev-parse HEAD 2>/dev/null || echo unknown)"
 GIT_DIRTY="$( [[ -n "$(git -C "$BENCH_DIR" status --porcelain -- . ':!results' 2>/dev/null)" ]] && echo 1 || echo 0)"
 IMAGE_ID="$(docker image inspect "$IMAGE" --format '{{.Id}}' 2>/dev/null || echo unknown)"
-exec docker run --rm "${TTY[@]}" --gpus all --pid=host --ipc=host \
+GPUS="all"; [[ -n "${PAIA_GPU:-}" ]] && GPUS="\"device=${PAIA_GPU}\""
+exec docker run --rm "${TTY[@]}" --gpus "$GPUS" --pid=host --ipc=host \
   --ulimit memlock=-1 --ulimit stack=67108864 \
   --user "$(id -u):$(id -g)" \
   -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro \

@@ -46,12 +46,13 @@ def cpu_sets():
 class _Sampler:
     """Runs inside the monitor process."""
 
-    def __init__(self, main_pid, cfg):
+    def __init__(self, main_pid, cfg, gpu_uuid=None):
         import psutil
         import pynvml as N
+        from bench.common import nvml_handle
         self.psutil, self.N = psutil, N
         N.nvmlInit()
-        self.h = N.nvmlDeviceGetHandleByIndex(0)
+        self.h = nvml_handle(N, gpu_uuid)
         self.main_pid, self.cfg = main_pid, cfg
         self.uid = os.getuid()
         self.unsupported = set()
@@ -231,13 +232,13 @@ def summarize(samples, cpu_windows, reasons, unsupported):
     }
 
 
-def _monitor_main(conn, main_pid, cfg, cpus):
+def _monitor_main(conn, main_pid, cfg, cpus, gpu_uuid):
     if cpus:
         try:
             os.sched_setaffinity(0, cpus)
         except OSError:
             pass
-    s = _Sampler(main_pid, cfg)
+    s = _Sampler(main_pid, cfg, gpu_uuid)
     conn.send({"ready": True, "pid": os.getpid()})
     while True:
         msg = conn.recv()
@@ -258,10 +259,11 @@ def _monitor_main(conn, main_pid, cfg, cpus):
 class Monitor:
     """Main-process handle for the monitor process."""
 
-    def __init__(self, mon_cfg, gate_cfg, monitor_cpus=None):
+    def __init__(self, mon_cfg, gate_cfg, monitor_cpus=None, gpu_uuid=None):
         ctx = mp.get_context("spawn")
         self.conn, child = ctx.Pipe()
-        self.proc = ctx.Process(target=_monitor_main, args=(child, os.getpid(), mon_cfg, monitor_cpus), daemon=True)
+        self.proc = ctx.Process(target=_monitor_main, args=(child, os.getpid(), mon_cfg, monitor_cpus, gpu_uuid),
+                                daemon=True)
         self.proc.start()
         hello = self.conn.recv()
         self.pid = hello["pid"]

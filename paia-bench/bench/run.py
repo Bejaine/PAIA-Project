@@ -344,7 +344,8 @@ def run(args):
     else:
         M.acquire_lock(args.contact, "estimating", args.session)
         atexit.register(M.release_lock)
-        mon = M.Monitor(mcfg, sess.gcfg, slow if (mcfg["pin_cpus"] and fast != slow) else None)
+        from bench.common import gpu_uuid
+        mon = M.Monitor(mcfg, sess.gcfg, slow if (mcfg["pin_cpus"] and fast != slow) else None, gpu_uuid())
         canary = M.Canary(sess.ccfg)
         ctx = GpuContext(sess.dir, int(args.mem_cap_gb * 2**30))
         execute = execute_gpu

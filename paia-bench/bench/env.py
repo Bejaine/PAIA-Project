@@ -88,9 +88,18 @@ def py_packages():
 def nvml_fields():
     """Which NVML queries work here. The monitor records null for the ones that do not."""
     import pynvml as N
+    from bench.common import gpu_uuid, nvml_handle
     N.nvmlInit()
-    h = N.nvmlDeviceGetHandleByIndex(0)
+    h = nvml_handle(N, gpu_uuid())
     q = {
+        "device_count_visible_to_nvml": lambda: N.nvmlDeviceGetCount(),
+        "device_index": lambda: N.nvmlDeviceGetIndex(h),
+        "device_name": lambda: N.nvmlDeviceGetName(h),
+        "device_uuid": lambda: N.nvmlDeviceGetUUID(h),
+        "pci_bus_id": lambda: N.nvmlDeviceGetPciInfo(h).busId,
+        "ecc_mode_current_pending": lambda: list(N.nvmlDeviceGetEccMode(h)),
+        "memory_bus_width_bits": lambda: N.nvmlDeviceGetMemoryBusWidth(h),
+        "mig_mode_current_pending": lambda: list(N.nvmlDeviceGetMigMode(h)),
         "driver_version": lambda: N.nvmlSystemGetDriverVersion(),
         "cuda_driver_version": lambda: N.nvmlSystemGetCudaDriverVersion_v2(),
         "utilization": lambda: vars_of(N.nvmlDeviceGetUtilizationRates(h)),
@@ -133,7 +142,8 @@ def perf_counter_access(probe_ncu):
         out["params_error"] = str(e)
     if probe_ncu:
         code = ("import torch; a=torch.empty(1<<20,device='cuda'); a.fill_(1); torch.cuda.synchronize()")
-        r = sh(f"ncu --clock-control none -c 1 --metrics gpu__time_duration.sum,lts__d_sectors_fill_sysmem.sum "
+        # Only a metric that exists on every arch: this probe tests counter permission, not metric names.
+        r = sh(f"ncu --clock-control none -c 1 --metrics gpu__time_duration.sum "
                f"python -c \"{code}\"", timeout=300)
         out["ncu_probe_rc"] = r["rc"]
         out["ncu_probe_ok"] = r["rc"] == 0 and "gpu__time_duration.sum" in r["out"]
