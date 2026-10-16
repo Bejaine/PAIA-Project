@@ -1,0 +1,359 @@
+{
+ "platform_tag": "dgxspark_gb10",
+ "session_id": "phase0_20261016",
+ "provenance": {
+  "git_commit": "756f9b8b748e810de8a0f794c9fb4c550eba8028",
+  "git_dirty": false,
+  "image": "paia-bench:25.11",
+  "image_id": "sha256:749a960f817229a3e1e2ebe6b1ea5a157506522ecc8044a84a38298e084826ec"
+ },
+ "device": "NVIDIA GB10",
+ "capability": [
+  12,
+  1
+ ],
+ "checks": {
+  "bf16_vs_cpu": {
+   "ok": true,
+   "value": {
+    "rel_err": 0.003384200157597661,
+    "correct": true
+   }
+  },
+  "e1_torch_ops": {
+   "ok": true,
+   "value": {
+    "read_sum": {
+     "kernels": [
+      "Memset (Device)",
+      "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::func_wrapper_t<float, at::native::sum_functor<float, float, float>::operator()(at::TensorIterator&)::{lambda(float, float)#1}>, unsigned int, float, 4, 4> >(at::native::ReduceOp<float, at::native::func_wrapper_t<float, at::native::sum_functor<float, float, float>::operator()(at::TensorIterator&)::{lambda(float, float)#1}>, unsigned int, float, 4, 4>)"
+     ],
+     "graph": true
+    },
+    "copy": {
+     "kernels": [
+      "Memcpy DtoD (Device -> Device)"
+     ],
+     "graph": true
+    },
+    "write_fill": {
+     "kernels": [
+      "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul> >(int, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul>)"
+     ],
+     "graph": true
+    }
+   }
+  },
+  "triton_read_probe": {
+   "ok": true,
+   "value": {
+    "triton": "3.5.0",
+    "target": "GPUTarget(backend='cuda', arch=121, warp_size=32)",
+    "correct": true,
+    "graph": true
+   }
+  },
+  "cublas_bf16": {
+   "ok": true,
+   "value": {
+    "1024x4096_M1": {
+     "rel_err": 0.001954114530235529,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "1024x4096_M16": {
+     "rel_err": 0.0025123644154518843,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "4096x4096_M1": {
+     "rel_err": 0.0034860435407608747,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "4096x4096_M16": {
+     "rel_err": 0.002784993266686797,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x1_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x1_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "14336x4096_M1": {
+     "rel_err": 0.003130287164822221,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "14336x4096_M16": {
+     "rel_err": 0.0027049006894230843,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x1_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x1_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "4096x14336_M1": {
+     "rel_err": 0.002458736998960376,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "4096x14336_M16": {
+     "rel_err": 0.002964182524010539,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x1_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x1_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "512x3584_M1": {
+     "rel_err": 0.0022446811199188232,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "512x3584_M16": {
+     "rel_err": 0.003238221164792776,
+     "correct": true,
+     "kernels": [
+      "void cublasLt::splitKreduce_kernel<32, 16, int, __nv_bfloat16, __nv_bfloat16, float, __nv_bfloat16, false, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, true, false, false, false>(cublasLt::cublasSplitKParams<float>, __nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, __nv_bfloat16*, float const*, float const*, __nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, void*, long, float*, int*, float*, float*, float const*, float const*, float const*, float const*, float const*)",
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "18944x3584_M1": {
+     "rel_err": 0.003413196885958314,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "18944x3584_M16": {
+     "rel_err": 0.0028291139751672745,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    }
+   }
+  },
+  "scaled_mm_fp8": {
+   "ok": true,
+   "value": {
+    "schema": "aten::_scaled_mm(Tensor self, Tensor mat2, Tensor scale_a, Tensor scale_b, Tensor? bias=None, Tensor? scale_result=None, ScalarType? out_dtype=None, bool use_fast_accum=False) -> Tensor",
+    "tensorwise_M1": {
+     "rel_err": 0.0027696650940924883,
+     "correct": true,
+     "kernels": [
+      "nvjet_sm121_qqtst_mma_64x64x128_6_16x32x128_tmaAB_bz_TNNN"
+     ],
+     "graph": true
+    },
+    "tensorwise_M2": {
+     "rel_err": 0.002769213169813156,
+     "correct": true,
+     "kernels": [
+      "nvjet_sm121_qqtst_mma_64x64x128_6_16x32x128_tmaAB_bz_TNNN"
+     ],
+     "graph": true
+    },
+    "tensorwise_M4": {
+     "rel_err": 0.003067311830818653,
+     "correct": true,
+     "kernels": [
+      "nvjet_sm121_qqtst_mma_192x16x128_3_48x16x128_tmaAB_bz_TNNN"
+     ],
+     "graph": true
+    },
+    "tensorwise_M8": {
+     "rel_err": 0.002763612661510706,
+     "correct": true,
+     "kernels": [
+      "nvjet_sm121_qqtst_mma_192x16x128_3_48x16x128_tmaAB_bz_TNNN"
+     ],
+     "graph": true
+    },
+    "tensorwise_M16": {
+     "rel_err": 0.0026443663518875837,
+     "correct": true,
+     "kernels": [
+      "nvjet_sm121_qqtst_mma_192x16x128_3_48x16x128_tmaAB_bz_TNNN"
+     ],
+     "graph": true
+    },
+    "rowwise_M1": {
+     "rel_err": NaN,
+     "correct": false,
+     "kernels": [
+      "Memcpy DtoD (Device -> Device)",
+      "_ZN7cutlass13device_kernelIN2at4cuda6detail34enable_3x_kernel_for_sm10_or_laterINS_4gemm6kernel13GemmUniversalIN4cute5tupleIJiiiEEENS5_10collective13CollectiveMmaINS5_31MainloopSm120TmaWarpSpecializedILi3ELi2ENS9_IJNS8_1CILi1EEESF_SF_EEENS5_37KernelTmaWarpSpecializedPingpongSm120ILi2EEEEENS9_IJNSE_ILi64EEENSE_ILi128EEESL_EEENS_12float_e4m3_tENS9_IJlSF_lEEESN_SO_NS8_8TiledMMAINS8_8MMA_AtomIJNS8_16SM120_16x8x32_TNISN_SN_fEEEEENS8_6LayoutINS9_IJNSE_ILi2EEESV_SF_EEENS9_IJSF_SV_NSE_ILi0EEEEEEEENS9_IJSK_NSE_ILi32EEES10_EEEEENS8_13SM90_TMA_LOADENS8_14ComposedLayoutINS8_7SwizzleILi3ELi4ELi3EEENS8_18smem_ptr_flag_bitsILi8EEENSU_INS9_IJNSE_ILi8EEESL_EEENS9_IJSL_SF_EEEEEEENS8_9Copy_AtomIJNS8_17SM75_U32x4_LDSM_NEhEEENS8_8identityES13_S1D_S1G_S1H_EENS_8epilogue10collective18CollectiveEpilogueINS1J_22Sm90TmaWarpSpecializedILi3ELi2ELi4ELb1ELb0EEEJSM_NS9_IJSK_S10_EEENS_10bfloat16_tESO_S1P_SO_NS1J_6fusion15Sm90TreeVisitorINS1Q_11Sm90ComputeINS1J_6thread8IdentityES1P_fLNS_15FloatRoundStyleE2EvEEJNS1R_INS1S_INS_4plusEffLS1V_2EvEEJNS1Q_16Sm90RowBroadcastILi0ESM_ffNS9_IJSX_SF_SX_EEELi4ELb1EEENS1R_INS1S_INS_10multipliesEffLS1V_2EvEEJS21_NS1R_IS23_JNS1Q_16Sm90ColBroadcastILi0ESM_ffNS9_IJSF_SX_SX_EEELi4ELb1EEENS1Q_12Sm90AccFetchEEEEEEEEEEEEES13_NS14_INS15_ILi2ELi4ELi3EEENS17_ILi16EEENSU_INS9_IJS19_S10_EEENS9_IJS10_SF_EEEEEEENS8_17SM75_U32x2_LDSM_NENS8_14SM90_TMA_STOREES2H_NS8_17SM90_U32x2_STSM_NENS1E_IJS2K_NS_6half_tEEEEvEEEvvEEEEEEvNT_6ParamsE"
+     ],
+     "graph": true
+    },
+    "rowwise_M16": {
+     "rel_err": NaN,
+     "correct": false,
+     "kernels": [
+      "Memcpy DtoD (Device -> Device)",
+      "_ZN7cutlass13device_kernelIN2at4cuda6detail34enable_3x_kernel_for_sm10_or_laterINS_4gemm6kernel13GemmUniversalIN4cute5tupleIJiiiEEENS5_10collective13CollectiveMmaINS5_31MainloopSm120TmaWarpSpecializedILi3ELi2ENS9_IJNS8_1CILi1EEESF_SF_EEENS5_37KernelTmaWarpSpecializedPingpongSm120ILi2EEEEENS9_IJNSE_ILi64EEENSE_ILi128EEESL_EEENS_12float_e4m3_tENS9_IJlSF_lEEESN_SO_NS8_8TiledMMAINS8_8MMA_AtomIJNS8_16SM120_16x8x32_TNISN_SN_fEEEEENS8_6LayoutINS9_IJNSE_ILi2EEESV_SF_EEENS9_IJSF_SV_NSE_ILi0EEEEEEEENS9_IJSK_NSE_ILi32EEES10_EEEEENS8_13SM90_TMA_LOADENS8_14ComposedLayoutINS8_7SwizzleILi3ELi4ELi3EEENS8_18smem_ptr_flag_bitsILi8EEENSU_INS9_IJNSE_ILi8EEESL_EEENS9_IJSL_SF_EEEEEEENS8_9Copy_AtomIJNS8_17SM75_U32x4_LDSM_NEhEEENS8_8identityES13_S1D_S1G_S1H_EENS_8epilogue10collective18CollectiveEpilogueINS1J_22Sm90TmaWarpSpecializedILi3ELi2ELi4ELb1ELb0EEEJSM_NS9_IJSK_S10_EEENS_10bfloat16_tESO_S1P_SO_NS1J_6fusion15Sm90TreeVisitorINS1Q_11Sm90ComputeINS1J_6thread8IdentityES1P_fLNS_15FloatRoundStyleE2EvEEJNS1R_INS1S_INS_4plusEffLS1V_2EvEEJNS1Q_16Sm90RowBroadcastILi0ESM_ffNS9_IJSX_SF_SX_EEELi4ELb1EEENS1R_INS1S_INS_10multipliesEffLS1V_2EvEEJS21_NS1R_IS23_JNS1Q_16Sm90ColBroadcastILi0ESM_ffNS9_IJSF_SX_SX_EEELi4ELb1EEENS1Q_12Sm90AccFetchEEEEEEEEEEEEES13_NS14_INS15_ILi2ELi4ELi3EEENS17_ILi16EEENSU_INS9_IJS19_S10_EEENS9_IJS10_SF_EEEEEEENS8_17SM75_U32x2_LDSM_NENS8_14SM90_TMA_STOREES2H_NS8_17SM90_U32x2_STSM_NENS1E_IJS2K_NS_6half_tEEEEvEEEvvEEEEEEvNT_6ParamsE"
+     ],
+     "graph": true
+    }
+   }
+  },
+  "vllm_cutlass_fp8": {
+   "ok": true,
+   "value": {
+    "supports_fp8": true,
+    "rowwise_M1": {
+     "rel_err": 0.002944887150079012,
+     "correct": true,
+     "kernels": [
+      "_ZN7cutlass13device_kernelINS_4gemm6kernel13GemmUniversalIN4cute5tupleIJiiiiEEENS1_10collective13CollectiveMmaINS1_31MainloopSm120TmaWarpSpecializedILi2ELi2ENS5_IJNS4_1CILi1EEESB_SB_EEENS1_40KernelTmaWarpSpecializedCooperativeSm120ILi2EEEEENS5_IJNSA_ILi128EEESG_SG_EEENS_12float_e4m3_tENS5_IJlSB_lEEESI_SJ_NS4_8TiledMMAINS4_8MMA_AtomIJNS4_16SM120_16x8x32_TNISI_SI_fEEEEENS4_6LayoutINS5_IJNSA_ILi4EEENSA_ILi2EEESB_EEENS5_IJSB_SQ_NSA_ILi0EEEEEEEENS5_IJSG_NSA_ILi32EEESW_EEEEENS4_13SM90_TMA_LOADENS4_14ComposedLayoutINS4_7SwizzleILi3ELi4ELi3EEENS4_18smem_ptr_flag_bitsILi8EEENSP_INS5_IJNSA_ILi8EEESG_EEENS5_IJSG_SB_EEEEEEENS4_9Copy_AtomIJNS4_17SM75_U32x4_LDSM_NEhEEENS4_8identityESZ_S19_S1C_S1D_EENS_8epilogue10collective18CollectiveEpilogueINS1F_22Sm90TmaWarpSpecializedILi2ELi2ELi4ELb0ELb1EEEJSH_NS5_IJNSA_ILi64EEESW_EEEvSJ_NS_10bfloat16_tESJ_NS1F_6fusion15Sm90TreeVisitorINS1N_11Sm90ComputeINS_10multipliesES1M_fLNS_15FloatRoundStyleE2EvEEJNS1N_24Sm90ColOrScalarBroadcastILi0ESH_fNS5_IJSB_ST_ST_EEELi4EEENS1O_INS1P_IS1Q_ffLS1R_2EvEEJNS1N_24Sm90RowOrScalarBroadcastILi0ESH_fNS5_IJST_SB_ST_EEELi4EEENS1N_12Sm90AccFetchEEEEEEESZ_NS10_INS11_ILi2ELi4ELi3EEENS13_ILi16EEENSP_INS5_IJS15_SW_EEENS5_IJSW_SB_EEEEEEENS4_17SM75_U32x2_LDSM_NENS4_14SM90_TMA_STOREES28_NS4_17SM90_U32x2_STSM_NENS1A_IJS2B_NS_6half_tEEEEvEEEvvEEEEvNT_6ParamsE"
+     ],
+     "graph": true
+    },
+    "rowwise_M16": {
+     "rel_err": 0.002711110981181264,
+     "correct": true,
+     "kernels": [
+      "_ZN7cutlass13device_kernelINS_4gemm6kernel13GemmUniversalIN4cute5tupleIJiiiiEEENS1_10collective13CollectiveMmaINS1_31MainloopSm120TmaWarpSpecializedILi2ELi2ENS5_IJNS4_1CILi1EEESB_SB_EEENS1_40KernelTmaWarpSpecializedCooperativeSm120ILi2EEEEENS5_IJNSA_ILi128EEESG_SG_EEENS_12float_e4m3_tENS5_IJlSB_lEEESI_SJ_NS4_8TiledMMAINS4_8MMA_AtomIJNS4_16SM120_16x8x32_TNISI_SI_fEEEEENS4_6LayoutINS5_IJNSA_ILi4EEENSA_ILi2EEESB_EEENS5_IJSB_SQ_NSA_ILi0EEEEEEEENS5_IJSG_NSA_ILi32EEESW_EEEEENS4_13SM90_TMA_LOADENS4_14ComposedLayoutINS4_7SwizzleILi3ELi4ELi3EEENS4_18smem_ptr_flag_bitsILi8EEENSP_INS5_IJNSA_ILi8EEESG_EEENS5_IJSG_SB_EEEEEEENS4_9Copy_AtomIJNS4_17SM75_U32x4_LDSM_NEhEEENS4_8identityESZ_S19_S1C_S1D_EENS_8epilogue10collective18CollectiveEpilogueINS1F_22Sm90TmaWarpSpecializedILi2ELi2ELi4ELb0ELb1EEEJSH_NS5_IJNSA_ILi64EEESW_EEEvSJ_NS_10bfloat16_tESJ_NS1F_6fusion15Sm90TreeVisitorINS1N_11Sm90ComputeINS_10multipliesES1M_fLNS_15FloatRoundStyleE2EvEEJNS1N_24Sm90ColOrScalarBroadcastILi0ESH_fNS5_IJSB_ST_ST_EEELi4EEENS1O_INS1P_IS1Q_ffLS1R_2EvEEJNS1N_24Sm90RowOrScalarBroadcastILi0ESH_fNS5_IJST_SB_ST_EEELi4EEENS1N_12Sm90AccFetchEEEEEEESZ_NS10_INS11_ILi2ELi4ELi3EEENS13_ILi16EEENSP_INS5_IJS15_SW_EEENS5_IJSW_SB_EEEEEEENS4_17SM75_U32x2_LDSM_NENS4_14SM90_TMA_STOREES28_NS4_17SM90_U32x2_STSM_NENS1A_IJS2B_NS_6half_tEEEEvEEEvvEEEEvNT_6ParamsE"
+     ],
+     "graph": true
+    }
+   }
+  },
+  "tinygemm_int4": {
+   "ok": true,
+   "value": {
+    "convert_schema": [
+     "aten::_convert_weight_to_int4pack(Tensor self, int innerKTiles) -> Tensor"
+    ],
+    "mm_schema": [
+     "aten::_weight_int4pack_mm(Tensor self, Tensor mat2, int qGroupSize, Tensor qScaleAndZeros) -> Tensor"
+    ],
+    "packed": [
+     [
+      512,
+      32,
+      32,
+      4
+     ],
+     "torch.int32"
+    ],
+    "scales_zeros": [
+     [
+      32,
+      4096,
+      2
+     ],
+     "torch.bfloat16"
+    ],
+    "M1": {
+     "rel_err": 0.003254068549722433,
+     "correct": true,
+     "kernels": [
+      "void at::native::tinygemm_m16n8k16_chunk_kernel<at::native::ALayout_RM<(at::native::KReductionType)0>, at::native::BLayout_TC_int4<8, 128>, at::native::ALayout_RM<(at::native::KReductionType)0>, 8, 8>(void const*, void const*, void const*, void*, int, int, int, int, int, int)"
+     ],
+     "graph": true
+    },
+    "M16": {
+     "rel_err": 0.004157277289777994,
+     "correct": true,
+     "kernels": [
+      "void at::native::tinygemm_m16n8k16_chunk_kernel<at::native::ALayout_RM<(at::native::KReductionType)0>, at::native::BLayout_TC_int4<8, 128>, at::native::ALayout_RM<(at::native::KReductionType)0>, 8, 8>(void const*, void const*, void const*, void*, int, int, int, int, int, int)"
+     ],
+     "graph": true
+    }
+   }
+  },
+  "marlin_int4": {
+   "ok": true,
+   "value": {
+    "supported": true,
+    "4096x4096_M1": {
+     "rel_err": 0.002658383222296834,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<__nv_bfloat16, 1125899907892224l, 1125899906909960l, 256, 1, 8, 8, true, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, int4 const*, unsigned short const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    },
+    "4096x4096_M16": {
+     "rel_err": 0.0027721307706087828,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<__nv_bfloat16, 1125899907892224l, 1125899906909960l, 256, 1, 8, 8, false, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, int4 const*, unsigned short const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    },
+    "1024x4096_M1": {
+     "rel_err": 0.0033711064606904984,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<__nv_bfloat16, 1125899907892224l, 1125899906909960l, 256, 1, 8, 8, true, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, int4 const*, unsigned short const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    },
+    "1024x4096_M16": {
+     "rel_err": 0.002895594574511051,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<__nv_bfloat16, 1125899907892224l, 1125899906909960l, 256, 1, 8, 8, false, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, int4 const*, unsigned short const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    },
+    "4096x14336_M1": {
+     "rel_err": 0.0015442699659615755,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<__nv_bfloat16, 1125899907892224l, 1125899906909960l, 256, 1, 8, 8, true, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, int4 const*, unsigned short const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    },
+    "4096x14336_M16": {
+     "rel_err": 0.0029913815669715405,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<__nv_bfloat16, 1125899907892224l, 1125899906909960l, 256, 1, 8, 8, false, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, int4 const*, unsigned short const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    },
+    "512x3584_M1": {
+     "rel_err": 0.002037269761785865,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<__nv_bfloat16, 1125899907892224l, 1125899906909960l, 256, 1, 8, 8, true, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, int4 const*, unsigned short const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    },
+    "512x3584_M16": {
+     "rel_err": 0.0030983590986579657,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<__nv_bfloat16, 1125899907892224l, 1125899906909960l, 256, 1, 8, 8, false, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, int4 const*, unsigned short const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    }
+   }
+  }
+ }
+}
