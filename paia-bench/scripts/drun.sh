@@ -19,7 +19,7 @@ HF_CACHE="${HF_HOME:-$HOME/.cache/huggingface}"
 TTY=(); [[ -t 0 && -t 1 ]] && TTY=(-it)
 # .git lives above the mounted dir, so resolve provenance on the host.
 GIT_COMMIT="$(git -C "$BENCH_DIR" rev-parse HEAD 2>/dev/null || echo unknown)"
-GIT_DIRTY="$( [[ -n "$(git -C "$BENCH_DIR" status --porcelain -- . 2>/dev/null)" ]] && echo 1 || echo 0)"
+GIT_DIRTY="$( [[ -n "$(git -C "$BENCH_DIR" status --porcelain -- . ':!results' 2>/dev/null)" ]] && echo 1 || echo 0)"
 IMAGE_ID="$(docker image inspect "$IMAGE" --format '{{.Id}}' 2>/dev/null || echo unknown)"
 exec docker run --rm "${TTY[@]}" --gpus all --pid=host --ipc=host \
   --ulimit memlock=-1 --ulimit stack=67108864 \
