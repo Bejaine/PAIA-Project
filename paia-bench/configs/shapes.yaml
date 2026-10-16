@@ -74,6 +74,8 @@ timing:
   warmup_min_calls: 20
   warmup_min_ms: 200
   samples_min: 30
+  samples_max: 300
+  sample_target_ms: 1000  # samples = clamp(target / unit time, samples_min, samples_max)
   noisy_cv: 0.03
   loop_target_ms: 5.0     # R chosen so one eager loop / graph replay lasts at least this long
   l2_rotation_factor: 4   # n_copies = max(2, ceil(4 * L2 / op_bytes))
@@ -93,3 +95,17 @@ idle_gate:
   max_foreign_cpu_cores: 2
   backoff_start_s: 30
   backoff_max_s: 600
+
+monitor:
+  gpu_sample_ms: 100        # NVML telemetry and foreign-GPU checks
+  cpu_scan_ms: 500          # psutil scan of other users' CPU use (heavier, so less often)
+  max_foreign_cpu_cores: 2  # any scan window above this contaminates the cell
+  # NVML clock-event reasons that contaminate a cell (they change clocks for reasons other than load).
+  # sw_power_cap is recorded but does not contaminate on its own.
+  contaminating_clock_reasons: [hw_slowdown, sw_thermal_slowdown, hw_thermal_slowdown, hw_power_brake_slowdown]
+  # Pin the benchmark to the fastest CPU cores and the monitor to the slowest, when cores differ.
+  pin_cpus: true
+
+runner:
+  max_retries: 5
+  shuffle_seed: 20261016    # cells run in a fixed shuffled order so slow drift is not confounded with size

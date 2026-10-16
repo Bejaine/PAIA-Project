@@ -126,6 +126,36 @@ All results below are on the stack above.
 - **Possible foreign GPU users:** an `ollama` service user exists, and so does `dgx-dashboard-service-user`. The idle gate checks NVML compute processes for any foreign PID.
 - **Login load:** 8 interactive sessions (users imc, vedant-tejas, viswas). Load average was about 1.0 to 1.5 at check time.
 
+## Phase 1: harness (2026-10-16)
+
+### Design decisions that affect accuracy
+
+- **Monitor process.** The monitor is a separate process, not a thread, pinned to the slowest CPU cores (the A725 cluster on GB10). The benchmark process is pinned to the fastest (X925). Reason: a polling thread would contend for the benchmark's GIL and inflate the host launch cost that eager mode measures. Fast and slow cores are detected from `cpuinfo_max_freq`. On GB10 they are interleaved by ID (fast: 5 to 9 and 15 to 19).
+- **Correctness before timing.** Every cell checks its op against a reference before timing. A wrong output means `failed`, and the cell is never timed. This is the lesson from the silent row-wise FP8 failure.
+- **Fixed shuffled order.** Cells run in a fixed shuffled order (seed in `configs/shapes.yaml`, stable across resumes), so slow drift such as thermals or other users cannot line up with size or op.
+- **Random buffer contents.** Probe buffers hold random data, not constants.
+- **R sizing.** R is re-sized from a measured unit until one eager loop or graph replay lasts at least 5 ms. The isolated single-op estimate includes launch and sync overhead, which made graph-mode R about 6x too small on a 1 MiB read.
+- **Cold-cell safety.** It is judged by reuse distance: bytes touched between two uses of the same copy must be at least 4x L2. When the memory cap forces fewer copies than `max(2, ...)`, a cell can use 1 copy and still be `l2_safe` (for example a 4 GiB copy). `n_copies_wanted` records the formula's value.
+- **Sample count.** It is `clamp(1000 ms / unit time, 30, 300)`. These parameters were added to `configs/shapes.yaml` before any measurement session.
+- **Clock-event reasons.** HW slowdown, SW/HW thermal and power brake contaminate a cell. `sw_power_cap` is recorded but does not contaminate on its own.
+- **Foreign CPU** is measured with psutil every 500 ms in the monitor process. Any window above 2 cores contaminates. The gate uses the same threshold over its 2 s window.
+- **Triton probe tuning.** The probe config (BLOCK, warps, waves) is tuned once per session on a cold 1 GiB buffer, under the idle gate and monitor, then persisted, so every cell and every resume uses the same probe.
+- **tmux required.** Real sessions refuse to start outside tmux.
+- **Debug sessions.** `debug_*` sessions skip waiting, record gate failures as contamination, and are git-ignored.
+
+### Verification
+
+- **`tests/test_resume.py`, 5 of 5 runs passed.**
+  - The test SIGKILLs the runner in the middle of a cell and restarts it.
+  - No clean cell was redone (same `t_start`, one execution each), and the interrupted cell was redone once.
+  - A cell with 2 injected contaminations ends `clean` with `retries=2`. A permanently contaminated one ends `unclean_exhausted` after `max_retries + 1` attempts.
+  - A third run executes 0 cells.
+- **Debug smoke run** (`debug_harness_20261016`, 48 E1 cells, GPU busy with another user's job):
+  - every cell ran and every one was marked contaminated, naming the foreign process;
+  - all schema fields are present; the lockfile was removed on exit;
+  - **not results.**
+- **Qualitative only:** with the other job running, cold reads saw about 100 to 110 GB/s and the canary reference CV was 0.30, against the required 0.02. Measuring on a busy GB10 would be badly biased, which is why the gate waits.
+
 ## Open questions
 
 1. Is `lts__t_sectors_aperture_sysmem_op_write` the right write-bytes counter? To be confirmed in E3 with a `fill_` kernel of known size.

@@ -20,6 +20,20 @@ Check `selfcheck.json` before measuring: any library path with `correct: false` 
 on that platform. See `findings.md` for what is known per platform and `configs/platform_notes.yaml` for
 per-platform measurement settings.
 
+## Running a phase
+
+```bash
+tmux new -s paia                       # real sessions refuse to run outside tmux
+scripts/drun.sh python -m bench.run --phase e1 --session s1_$(date +%Y%m%d) --platform-tag <tag> --contact "<name/email>"
+# safe to Ctrl-C or lose the connection: rerun the same command to resume; clean cells are never redone
+scripts/drun.sh python -m bench.run --phase e1 --session <session> --list    # status of every cell
+scripts/drun.sh python -m tests.test_resume                                   # GPU-free resume test
+```
+
+Before every cell the runner waits for an idle machine (no foreign GPU process, GPU util < 5%, other users
+< 2 CPU cores, canary bandwidth >= 95% of the session reference). Cells disturbed while running are marked
+contaminated and retried. Sessions named `debug_*` skip the waiting and are never results.
+
 ## Layout
 
 ```
@@ -27,6 +41,11 @@ configs/shapes.yaml          frozen shapes and methodology parameters
 configs/platform_notes.yaml  per-platform measurement settings (ncu metric names, FP8 route, ...)
 bench/env.py                 E0 fingerprint -> results/<tag>/<session>/env.json
 bench/selfcheck.py           functional checks of every library path -> selfcheck.json
+bench/monitor.py             idle gate, live monitor (separate process), bandwidth canary, lockfile
+bench/timing.py              isolated / eager / graph timing, L2 rotation, statistics
+bench/run.py                 resumable cell runner
+bench/ops/                   one module per implementation (bw_probe: E1 probes)
+tests/test_resume.py         kill-and-resume test
 docker/Dockerfile            the single image used for every phase
 scripts/drun.sh              docker run wrapper
 findings.md                  verified facts, surprises, failures

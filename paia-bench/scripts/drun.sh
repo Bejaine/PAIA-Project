@@ -28,5 +28,5 @@ exec docker run --rm "${TTY[@]}" --gpus all --pid=host --ipc=host \
   -v "$BENCH_DIR":/bench -v "$HF_CACHE":/hf -v /tmp:/tmp \
   -e HOME=/bench/.container_home -e HF_HOME=/hf -e PYTHONPATH=/bench \
   -e PAIA_IMAGE="$IMAGE" -e PAIA_IMAGE_ID="$IMAGE_ID" \
-  -e PAIA_GIT_COMMIT="$GIT_COMMIT" -e PAIA_GIT_DIRTY="$GIT_DIRTY" -e PAIA_HOST_USER="$(id -un)" -e PAIA_HOST="$(hostname)" \
+  -e PAIA_GIT_COMMIT="$GIT_COMMIT" -e PAIA_GIT_DIRTY="$GIT_DIRTY" -e PAIA_IN_TMUX="${TMUX:+1}" -e PAIA_HOST_USER="$(id -un)" -e PAIA_HOST="$(hostname)" \
   -w /bench "${EXTRA[@]}" "$IMAGE" "$@"
