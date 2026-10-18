@@ -134,46 +134,76 @@ class GpuContext:
 
 
 def execute_gpu(spec, ctx):
-    """Build, check, then time one cell. Returns the measurement part of the cell record."""
+    """Build, check, then time one cell over several independent allocations (schema v2).
+
+    A cell's median on one allocation is precise for that allocation only: on GB10, fresh allocations of the
+    same op differ by up to several percent (physical placement). So each allocation is built, checked for
+    correctness, timed, and freed; the cell reports the median across allocations and their spread.
+    R is sized on the first allocation and kept fixed; sampling time is split across allocations."""
     from bench import timing
     torch = ctx.torch
     tcfg = config.timing_cfg()
-    rec = {}
-    op = ctx.make_op(spec)
-    try:
-        rec["bytes"] = op.bytes()
-        rec["bytes"]["total"] = sum(rec["bytes"].values())
-        footprint = op.footprint_bytes()
-        if footprint > ctx.mem_cap:
-            return {**rec, "status": "failed", "error": f"footprint {footprint} B exceeds mem cap {ctx.mem_cap} B"}
-        rot = timing.plan_rotation(footprint, spec["hot_or_cold"] == "hot", ctx.mem_cap, ctx.l2,
-                                   tcfg["l2_rotation_factor"])
-        rec.update(rot)
+    k = int(tcfg.get("allocations_per_cell", 1))
+    atcfg = {**tcfg, "sample_target_ms": tcfg["sample_target_ms"] / k}
+    probe = ctx.make_op(spec)
+    rec = {"bytes": probe.bytes()}
+    rec["bytes"]["total"] = sum(rec["bytes"].values())
+    footprint = probe.footprint_bytes()
+    graph_ok = probe.graph_ok
+    del probe
+    if footprint > ctx.mem_cap:
+        return {**rec, "status": "failed", "error": f"footprint {footprint} B exceeds mem cap {ctx.mem_cap} B"}
+    rot = timing.plan_rotation(footprint, spec["hot_or_cold"] == "hot", ctx.mem_cap, ctx.l2, tcfg["l2_rotation_factor"])
+    rec.update(rot)
+    if spec["timing_mode"] == "graph" and not graph_ok:
+        return {**rec, "status": "failed", "error": "op not graph-capturable; graph mode skipped"}
+    if spec["impl"] == "triton_read":
+        rec["triton_cfg"] = {kk: ctx.triton_cfg[kk] for kk in ("BLOCK", "num_warps", "waves")}
+    allocs, R = [], None
+    for a in range(k):
+        op = ctx.make_op(spec)
         try:
-            op.build(rot["n_copies"])
-        except torch.OutOfMemoryError as e:
-            return {**rec, "status": "failed", "error": f"OOM building {rot['n_copies']} copies: {e}"[:500]}
-        ok, detail = op.check()
-        torch.cuda.synchronize()
-        rec["correctness"] = {"ok": bool(ok), **detail}
-        if not ok:
-            return {**rec, "status": "failed", "error": "incorrect output; not timed"}
-        key = (spec["op"], spec["impl"], json.dumps(spec["shape"]))
-        if key not in ctx.kernel_cache:
-            ctx.kernel_cache[key] = timing.kernel_names(op, rot["n_copies"])
-        rec["kernel_names"] = ctx.kernel_cache[key]
-        if spec["impl"] == "triton_read":
-            rec["triton_cfg"] = {k: ctx.triton_cfg[k] for k in ("BLOCK", "num_warps", "waves")}
-        if spec["timing_mode"] == "graph" and not op.graph_ok:
-            return {**rec, "status": "failed", "error": "op not graph-capturable; graph mode skipped"}
-        m = timing.measure(op, spec["timing_mode"], rot["n_copies"], tcfg)
-        rec.update(m)
-        rec["achieved_gbps"] = rec["bytes"]["total"] / (m["median_us"] * 1e-6) / 1e9
-        return rec
-    finally:
-        op.free()
-        del op
-        torch.cuda.empty_cache()
+            try:
+                op.build(rot["n_copies"])
+            except torch.OutOfMemoryError as e:
+                return {**rec, "status": "failed", "error": f"OOM building {rot['n_copies']} copies: {e}"[:500]}
+            ok, detail = op.check()
+            torch.cuda.synchronize()
+            if not ok:
+                return {**rec, "correctness": {"ok": False, "allocation": a, **detail}, "status": "failed",
+                        "error": "incorrect output; not timed"}
+            if a == 0:
+                rec["correctness"] = {"ok": True, **detail}
+                key = (spec["op"], spec["impl"], json.dumps(spec["shape"]))
+                if key not in ctx.kernel_cache:
+                    ctx.kernel_cache[key] = timing.kernel_names(op, rot["n_copies"])
+                rec["kernel_names"] = ctx.kernel_cache[key]
+            m = timing.measure(op, spec["timing_mode"], rot["n_copies"], atcfg, R=R)
+            R = m["R_per_iter"]
+            allocs.append(m)
+        finally:
+            op.free()
+            del op
+            torch.cuda.empty_cache()
+    meds = [m["median_us"] for m in allocs]
+    pooled = [x for m in allocs for x in m["samples_us"]]
+    st = timing.stats(pooled, tcfg["noisy_cv"])
+    med = statistics.median(meds)
+    rec.update({
+        **st,
+        "median_us": med,                       # primary: median across allocations
+        "median_pooled_us": st["median_us"],    # median of all samples pooled
+        "samples_us": pooled,
+        "samples_by_alloc_us": [m["samples_us"] for m in allocs],
+        "alloc_medians_us": meds,
+        "n_allocations": k,
+        "alloc_spread_pct": 100 * (max(meds) - min(meds)) / med,
+        "alloc_cv": (statistics.pstdev(meds) / statistics.fmean(meds)) if k > 1 else 0.0,
+        "R_per_iter": R, "est_op_us": allocs[0]["est_op_us"],
+        "warmup_calls": sum(m["warmup_calls"] for m in allocs), "warmup_ms": sum(m["warmup_ms"] for m in allocs),
+    })
+    rec["achieved_gbps"] = rec["bytes"]["total"] / (med * 1e-6) / 1e9
+    return rec
 
 
 def execute_fake(spec, ctx):
@@ -340,6 +370,12 @@ def run(args):
         print(f"{len(cells)} cells")
         return 0
 
+    versions = {(load_cell(p) or {}).get("schema_version") for p in sess.cells_dir.glob("*.json")}
+    versions.discard(None)
+    if versions and versions != {SCHEMA_VERSION}:
+        log.error("session %s holds cells of schema_version %s; this code writes %s. Use a new session.",
+                  args.session, sorted(versions), SCHEMA_VERSION)
+        return 2
     todo = []
     for c in cells:
         prev = load_cell(sess.cells_dir / f"{cell_id(c)}.json")
@@ -481,7 +517,8 @@ def build_record(spec, cid, sess, res, status, reasons, retries, c_before, c_aft
     keys_from_res = ["R_per_iter", "n_copies", "rotation_bytes", "l2_bytes", "l2_safe", "l2_coverage", "bytes",
                      "samples_us", "median_us", "p5_us", "p95_us", "mean_us", "std_us", "cv", "noisy", "n_samples",
                      "achieved_gbps", "kernel_names", "correctness", "est_op_us", "warmup_calls", "warmup_ms",
-                     "triton_cfg", "n_copies_wanted", "error", "traceback"]
+                     "triton_cfg", "n_copies_wanted", "error", "traceback", "median_pooled_us", "samples_by_alloc_us",
+                     "alloc_medians_us", "n_allocations", "alloc_spread_pct", "alloc_cv"]
     rec = {
         "schema_version": SCHEMA_VERSION, "cell_id": cid, "session_id": sess.args.session, "platform_tag": sess.tag,
         "phase": spec["phase"], "op": spec["op"], "impl": spec["impl"], "precision": spec["precision"],
