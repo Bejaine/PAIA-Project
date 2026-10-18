@@ -396,6 +396,7 @@ def main():
     ap.add_argument("--platform-tag", default="dgxspark_gb10")
     ap.add_argument("--compare", nargs="*", default=[])
     ap.add_argument("--use-contaminated", action="store_true")
+    ap.add_argument("--e1-session", default=None, help="E1 session providing B0 and the same-size reference (E2+)")
     ap.add_argument("--results-root", default=None)
     a = ap.parse_args()
     root = Path(a.results_root) if a.results_root else RESULTS_ROOT
@@ -411,7 +412,13 @@ def main():
     out.mkdir(exist_ok=True)
     e1 = e1_analysis(cells, l2) if any(c["phase"] == "e1" for c in cells) else None
     b0 = e1.get("R_inf_B0_gbps") if e1 else None
-    if b0:
+    e1_cells = []
+    if a.e1_session:
+        e1_dir = root / a.platform_tag / a.e1_session
+        e1_cells = load_cells(e1_dir)
+        if b0 is None and (e1_dir / "summary" / "b0.json").exists():
+            b0 = json.loads((e1_dir / "summary" / "b0.json").read_text())["R_inf_B0_gbps"]
+    if b0 and e1:
         write_json_atomic(out / "b0.json", {"R_inf_B0_gbps": b0, "source": e1["R_inf_B0_source"],
                                             "definition": e1["R_inf_B0_definition"], "session": a.session})
     rows = []
@@ -431,9 +438,18 @@ def main():
     canary = canary_summary(sess_dir, cells)
     tel = telemetry_summary(cells)
     plots = plot_e1(cells, e1, out, l2) if e1 else {}
-    fits = {"session": a.session, "valid": not a.use_contaminated, "e1": e1, "canary": canary, "telemetry": tel}
+    e2, e2_md = None, []
+    if any(c["phase"] == "e2" for c in cells):
+        from bench import analyze_e2
+        e2, e2_md, p2 = analyze_e2.analyze(cells, e1_cells, b0, out)
+        plots.update(p2)
+    fits = {"session": a.session, "valid": not a.use_contaminated, "e1": e1, "e2": e2, "b0_gbps": b0,
+            "e1_reference_session": a.e1_session, "canary": canary, "telemetry": tel}
     write_json_atomic(out / "fits.json", fits)
-    (out / "summary.md").write_text(summary_md(a.session, cells, e1, canary, tel, cmp_rows, plots, a.use_contaminated))
+    text = summary_md(a.session, cells, e1, canary, tel, cmp_rows, plots, a.use_contaminated)
+    if e2_md:
+        text = text.replace("## Canary", "\n".join(e2_md) + "\n## Canary", 1)
+    (out / "summary.md").write_text(text)
     print(f"wrote {out}/summary.md")
 
 
