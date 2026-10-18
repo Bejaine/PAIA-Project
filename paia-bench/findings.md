@@ -212,6 +212,40 @@ Two full sessions, 360 cells each, all clean, two days apart. Code: s1 at `a8d24
 
 P3's first RTX PRO 5000 Blackwell results (`paia-results/rtxpro5000bw/`, 80 of 360 E1 cells) were measured in a host venv: torch 2.14.1+cu130, cuBLAS 13.1.1, Triton 3.8.0, no vLLM, driver 595.84. Our GB10 stack is torch 2.10.0a0 (NGC 25.11), cuBLAS 13.1.0, Triton 3.5.0. Platform comparisons are confounded by software until both platforms use the same stack. Driver 595 can run the `paia-bench:25.11` image natively.
 
+## E2 (B1) cuBLAS BF16 results, GB10 (sessions e2s1_20261019 and e2s2_20261019, schema v1)
+
+218 cells per session, all clean in the end (6 and 11 attempts retried, all for `canary_after` just under its threshold). B0 = 242.10 GB/s from E1 s2. Summaries: `results/dgxspark_gb10/e2s*_20261019/summary/`.
+
+### cuBLAS's M=1 dispatch is the dominant BF16 loss on GB10, and it is per byte, not per op
+
+cuBLAS dispatches `internal::gemvx::kernel` for every real shape at M=1, in two configurations (template parameter 6 vs 7):
+
+| Kernel | Shapes | %B0 (graph mode) | Per-kernel fit (graph mode) |
+|---|---|---|---|
+| `gemvx/v6` | Llama q/k/v/o/qkv; Qwen q/o/qkv/gate/up/gate_up; synthetic K=4096 with N 768 to 36480 | **65 to 73%** | tau 1.95 us, **R_inf 169.9 GB/s**, 2.6% residual |
+| `gemvx/v7` | Llama gate/up/gate_up; both down_proj; Qwen k/v; synthetic K=14336 | **95 to 104%** | R about 235 GB/s for N <= 37504 |
+| `gemvx/v7`, very large N | lm_head (both), synthetic N >= 69120 | 72 to 75% | second regime, so v7 fits as a misfit overall |
+| `cutlass_sm80` + `splitKreduce` | synthetic K=14336, small N | | tau 5.27 us, R 245.8 GB/s, 2.1% residual |
+
+- **v6 has the ideal probe's tau (about 2 us) but streams 30% slower.** The loss is per byte (R_inf), not per op (tau).
+- **Consequence for the project:** the BF16 baseline is not at the ceiling on most attention shapes and on Qwen's MLP. Quantized-kernel speedups against cuBLAS BF16 will look larger on those shapes than against an ideal BF16 GEMV. A custom BF16 GEMV at about 240 GB/s would be about 1.4x faster than cuBLAS there.
+- **M sweep:** from M=2, cuBLAS switches to `cutlass_80_wmma_tensorop_bf16` (an sm80 GEMM), with `splitKreduce` added for small N.
+  - On every v6 shape and on the lm_heads, **t(M=2..16) is 0.69 to 0.82x t(M=1)**: the GEMM does 2 to 16x the work faster than the M=1 GEMV.
+  - On the v7 shapes it is 1.00 to 1.12x.
+  - Qwen k/v_proj at M >= 2 (split-K GEMM) is 1.16 to 1.28x.
+- **Single-model Hockney fits across kernels misfit (8 to 16%)** because efficiency depends on which kernel is chosen, not on size. `analyze_e2.py` therefore fits per dispatched kernel.
+  - The `e2_efficiency.png` in these summaries still uses the pooled (misfit) fit and should be read as provisional.
+  - The per-kernel table is the valid reading.
+- **Launch split (pooled):** exposed host launch cost (eager - graph) is about 2 us at K=4096 and about 3 us at K=14336. Isolated - graph is about 9 to 11 us.
+
+### Methodology problem found: variance between allocations (affects how precise E2 numbers are)
+
+- **Cross-session agreement is worse than in E1:** median |diff| 2.08% (E1: 0.27%), 48% of cells within 2%, max 15%. The sessions do not shift systematically: signed median +0.5%, identical SM clock (2190 MHz) and robust within-cell spread (0.45%).
+- **Within one session, identical-shape pairs** (k_proj vs v_proj, gate_proj vs up_proj: same N, K and even the same weight data) differ by median 1.4 to 1.7%, up to 17%.
+- **Direct test** (`scripts/diag/realloc_variance.py`, `e2s2_20261019/diag_realloc_variance.json`): the graph-mode median measured 10 times on one allocation spans 0.1 to 1.3%, but over 10 fresh allocations it spans 6.2% (1024x4096), 2.0% (4096x4096), 2.0% (512x3584) and 0.25% (14336x4096).
+- **Interpretation:** a cell's median is precise for its own allocation, but small and mid-size ops vary by several percent between allocations. Physical page placement across LPDDR5x channels and banks is the likely cause (unverified). Large buffers average it out, which is why E1 (mostly large) reproduced well.
+- **Proposed fix (not yet applied):** measure each cell over several independent allocations and report the median across allocations (plus the spread), as schema_version 2.
+
 ## Open questions
 
 1. Is `lts__t_sectors_aperture_sysmem_op_write` the right write-bytes counter? To be confirmed in E3 with a `fill_` kernel of known size.
