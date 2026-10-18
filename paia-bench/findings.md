@@ -156,9 +156,67 @@ All results below are on the stack above.
   - **not results.**
 - **Qualitative only:** with the other job running, cold reads saw about 100 to 110 GB/s and the canary reference CV was 0.30, against the required 0.02. Measuring on a busy GB10 would be badly biased, which is why the gate waits.
 
+## E1 (B0) results, GB10 (sessions s1_20261016 and s2_20261018)
+
+Two full sessions, 360 cells each, all clean, two days apart. Code: s1 at `a8d24b0`, s2 at `247bdc4` (adds the gate settle step only). Summaries are in `results/dgxspark_gb10/<session>/summary/`.
+
+### Headline numbers
+
+| Quantity | s1 | s2 | Prediction |
+|---|---|---|---|
+| **R_inf_B0** (cold graph read, >= 10x L2) | **241.74 GB/s** | **242.10 GB/s** | 225 (200 to 245) |
+| as % of the 273 GB/s spec | 88.6% | 88.7% | 82% |
+| torch `sum` vs Triton read plateau | 241.7 / 240.6 | 242.1 / 240.9 | |
+| copy plateau (graph mode, 2B counted) | 238.7 GB/s (0.99x read) | 239.9 GB/s | 0.85x |
+| write (fill) plateau | 196.8 GB/s (0.81x read) | 196.8 GB/s | 0.90x |
+| **probe tau**, Triton read, graph mode | **1.85 us** [1.14, 1.97] | **1.86 us** [1.53, 1.95] | 3.5 us |
+| probe tau, eager mode | 4.74 us | 4.70 us | |
+| probe tau, isolated mode | 11.48 us | 11.37 us | |
+| B_half, Triton graph mode | 0.433 MiB | 0.431 MiB | 0.75 MiB |
+| hot L2 peak (Triton read, graph mode) | 1505 GB/s at 16 MiB | 1525 GB/s at 16 MiB | about 1 TB/s at 4 to 16 MiB |
+| L2 falloff (hot falls to cold) | drop between 16 and 32 MiB; equal to cold by 64 MiB | same | 16 to 24 MiB |
+| canary reference | 240.2 GB/s, CV 0.22 to 0.83%, drift <= 0.16%/h | 237.9 GB/s, CV 0.76% | |
+
+### Cross-session agreement (Gate 1)
+
+- **Headline cells, six chosen: all within 0.7%, four within 0.2%.** Examples: 1 GiB cold Triton read -0.13%, 256 MiB cold `sum` +0.11%, 64 MiB cold fill +0.01%.
+- **All 360 matched cells:** median |diff| 0.27%; 91% within 2%, 94% within 3%.
+  - Cold cells of 2 MiB and up: 96% within 2%, max 5.1%.
+  - Cells of 64 MiB and up: median 0.13%.
+- **The 21 cells above 3% fall into two groups:**
+  - hot cells at the L2 edge (buffers 8 to 32 MiB, up to 30%), where partial L2 residency depends on the replacement state;
+  - cold ops under 1 MiB taking 1.5 to 10 us, where 0.5 us is already 25%.
+- **Not timing errors.** Both groups are properties of those cells. Tables and fits should treat them as such, not as results of record.
+
+### Things the data showed that the brief did not anticipate
+
+- **torch `sum` is not a valid single-tau probe.** It launches a memset plus a reduction whose launch configuration changes with input size, so its fixed cost is not constant. `t = tau + B/R` fits it with 11 to 15% RMS residuals, including +47% at 0.25 MiB.
+  - The single-kernel Triton read (fixed grid: BLOCK 4096, 8 warps, 2 waves x 48 SMs, re-tuned identically in both sessions) fits with 1.8 to 2.9% residuals in graph mode.
+  - **The Triton probe defines the B0 tau.** `analyze.py` marks fits above 5% residual as `misfit`.
+- **Bandwidth depends weakly on footprint.**
+  - Fits over 64 MiB and below give R of about 252 GB/s; the GiB-scale plateau is 241 GB/s, about 4% lower.
+  - Rotation is not the cause: ncu shows DRAM fills = 1.00 to 1.06x bytes for 1, 4 and 16 MiB cells at rotation factors 1, 4, 8 and 16 (with `--cache-control none`; ncu's default flushes caches and must not be used for this check).
+  - Likely TLB reach at multi-GiB footprints (open question).
+- **CV overstates noise.** About half of all clean cells have CV above 3%, but the tail-insensitive robust CV (IQR/1.349/median) has median 0.40%, with only 17 to 18 cells above 3%.
+  - Large cells show p5 = median and short bursts of slow samples (tens of ms), meaning brief episodes of bus contention.
+- **Our monitor does not bias medians.** A controlled test (64 MiB fill and read, 600 isolated samples, with no monitor, NVML polling, psutil scanning, or both) gave medians equal within 0.2% in all cases. NVML polling roughly doubles the share of slow tail samples on fill. Evidence: `scripts/diag/monitor_perturbation.py`, `s1_20261016/diag_monitor_perturbation.json`.
+- **Writes are the slow direction on LPDDR5x:** fill reaches 0.81x read. Copy reaches 0.93 to 0.99x read once both streams are counted.
+- **Graph-mode tau is tiny for fill and copy** (0.2 to 0.7 us and 1.3 us): back-to-back kernels overlap heads and tails inside a graph.
+- **Gate behavior:**
+  - In s1, NVML's trailing utilization average made the gate wait 30 s after almost every one of our own cells (321 times), roughly doubling run time without affecting validity.
+  - s2 adds a settle step (wait up to 10 s for our own utilization to decay, then the unchanged strict 2 s check). s2 took 27 minutes against about 3.2 hours.
+  - The gate also catches `gnome-shell` (user `gdm`) GPU activity from the desktop.
+- **SM clock** sat at 2177 to 2190 MHz in every cell, below the 3003 MHz max; no clock-event reasons; max temperature 49 C.
+
+### Cross-platform caution
+
+P3's first RTX PRO 5000 Blackwell results (`paia-results/rtxpro5000bw/`, 80 of 360 E1 cells) were measured in a host venv: torch 2.14.1+cu130, cuBLAS 13.1.1, Triton 3.8.0, no vLLM, driver 595.84. Our GB10 stack is torch 2.10.0a0 (NGC 25.11), cuBLAS 13.1.0, Triton 3.5.0. Platform comparisons are confounded by software until both platforms use the same stack. Driver 595 can run the `paia-bench:25.11` image natively.
+
 ## Open questions
 
 1. Is `lts__t_sectors_aperture_sysmem_op_write` the right write-bytes counter? To be confirmed in E3 with a `fill_` kernel of known size.
 2. Does an idle, unthrottled GB10 hold a stable SM clock across a session? Cell telemetry will show it.
-3. Canary sensitivity: how much does a CPU-only memory-bound job by another user reduce GPU streaming bandwidth? This could be quantified in Phase 1 with our own CPU load, if P2 approves.
+3. Canary sensitivity: how much does a CPU-only memory-bound job by another user reduce GPU streaming bandwidth? This could be quantified with our own CPU load, if P2 approves.
+5. Why is streaming bandwidth about 4% higher at <= 100 MiB footprints (about 252 GB/s) than at GiB scale (241 GB/s)? TLB reach is the leading hypothesis; testable with ncu TLB or page-walk counters.
+6. Is the slow-sample tail (bursts of tens of ms) caused by other users' sub-threshold CPU memory traffic, LPDDR housekeeping, or NVML? Medians are unaffected, so this is low priority.
 4. Does an RTX 5000-class machine have driver 580 or newer, so P3 can use the same image?

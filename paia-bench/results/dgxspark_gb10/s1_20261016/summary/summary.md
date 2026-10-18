@@ -69,6 +69,10 @@ Fits with rms relative residual above 5% are marked `misfit`: the single-tau mod
 - max temperature: 49 C
 - clock-event reasons seen: none
 
+## Cross-session comparison
+
+360 matching clean cells; |diff| median 0.26%, max 33.90%; 22 differ by more than 3% (listed in compare.csv).
+
 ## Plots
 
 - [e1_cold_bandwidth](e1_cold_bandwidth.png)
