@@ -144,9 +144,20 @@ class _Sampler:
         }
 
     # --- modes
-    def gate(self, window_s, max_util, max_cpu):
-        """Idle check while the benchmark is idle. Returns ok + reasons."""
+    def gate(self, window_s, max_util, max_cpu, settle_max_s=0.0):
+        """Idle check while the benchmark is idle. Returns ok + reasons.
+        NVML utilization is a trailing average, so right after our own cell it still shows our work. When no
+        foreign GPU process is present, first wait up to settle_max_s for it to decay below max_util; then
+        the strict window_s check runs unchanged."""
         tree = self.tree()
+        t_settle = time.time()
+        while time.time() - t_settle < settle_max_s:
+            fg, act = self.foreign_gpu(tree)
+            s = self.gpu_sample()
+            if fg or act or s["util"] is None or s["util"] < max_util:
+                break
+            time.sleep(0.2)
+        settled_s = time.time() - t_settle
         self.foreign_cpu_cores()  # prime per-process counters
         t_end = time.time() + window_s
         utils, reasons = [], []
@@ -168,6 +179,7 @@ class _Sampler:
         if cpu >= max_cpu:
             reasons.append(f"foreign_cpu {cpu:.2f} cores >= {max_cpu} top={top}")
         return {"ok": not reasons, "reasons": reasons, "util_max": max(utils) if utils else None,
+                "settle_s": round(settled_s, 2),
                 "foreign_cpu_cores": round(cpu, 3), "foreign_cpu_top": top}
 
     def sample_until_stop(self, conn):
@@ -245,7 +257,7 @@ def _monitor_main(conn, main_pid, cfg, cpus, gpu_uuid):
         cmd = msg["cmd"]
         try:
             if cmd == "gate":
-                conn.send(s.gate(msg["window_s"], msg["max_util"], msg["max_cpu"]))
+                conn.send(s.gate(msg["window_s"], msg["max_util"], msg["max_cpu"], msg.get("settle_max_s", 0.0)))
             elif cmd == "start":
                 conn.send({"started": True})
                 conn.send(s.sample_until_stop(conn))
@@ -272,7 +284,7 @@ class Monitor:
     def gate(self):
         g = self.gate_cfg
         self.conn.send({"cmd": "gate", "window_s": g["util_window_s"], "max_util": g["max_gpu_util_pct"],
-                        "max_cpu": g["max_foreign_cpu_cores"]})
+                        "max_cpu": g["max_foreign_cpu_cores"], "settle_max_s": g.get("settle_max_s", 0.0)})
         r = self.conn.recv()
         if "error" in r:
             return {"ok": False, "reasons": [f"monitor_error {r['error']}"]}
