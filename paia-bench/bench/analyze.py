@@ -41,6 +41,14 @@ def key(c):
     return f"{c['op']}/{c['impl']}"
 
 
+def robust_cv(samples):
+    """(IQR / 1.349) / median: a spread measure that, unlike CV, is not driven by a few slow tail samples."""
+    if not samples or len(samples) < 4:
+        return None
+    q1, med, q3 = np.percentile(samples, [25, 50, 75])
+    return float((q3 - q1) / 1.349 / med) if med > 0 else None
+
+
 def flat(c):
     b = c.get("bytes") or {}
     t = c.get("telemetry") or {}
@@ -54,7 +62,7 @@ def flat(c):
         "bytes_act_in": b.get("act_in"), "bytes_out": b.get("out"), "bytes_total": b.get("total"),
         "median_us": c.get("median_us"), "p5_us": c.get("p5_us"), "p95_us": c.get("p95_us"),
         "mean_us": c.get("mean_us"), "std_us": c.get("std_us"), "cv": c.get("cv"), "noisy": c.get("noisy"),
-        "n_samples": c.get("n_samples"), "achieved_gbps": c.get("achieved_gbps"), "pct_of_b0": c.get("pct_of_b0"),
+        "n_samples": c.get("n_samples"), "robust_cv": robust_cv(c.get("samples_us")), "achieved_gbps": c.get("achieved_gbps"), "pct_of_b0": c.get("pct_of_b0"),
         "status": c["status"], "retries": c.get("retries"), "canary_before_gbps": c.get("canary_before_gbps"),
         "canary_after_gbps": c.get("canary_after_gbps"), "canary_ref_gbps": c.get("canary_ref_gbps"),
         "sm_clock_min": sm.get("min"), "sm_clock_median": sm.get("median"), "sm_clock_max": sm.get("max"),
@@ -153,6 +161,16 @@ def e1_analysis(cells, l2):
                              "falloff_buffer_bytes": fall,
                              "note": "buffer size per op (copy touches 2x). falloff = first size above the peak "
                                      "where hot <= 1.1 x cold (graph mode)"}
+    for f in res["fits"].values():
+        f["fit_ok"] = f["rms_rel_residual"] <= 0.05
+    # tau of the probe: the single-kernel Triton read when available. torch.sum changes its launch configuration
+    # with input size (and launches a memset), so its fixed cost is not constant and t = tau + B/R misfits.
+    for cand in ("read/triton_read/graph", "read/torch_sum/graph"):
+        if cand in res["fits"]:
+            res["tau_B0"] = {"source": cand, **{k: res["fits"][cand][k] for k in
+                             ("tau_us", "tau_ci95_us", "R_inf_gbps", "B_half_mib", "rms_rel_residual", "fit_ok")
+                             if k in res["fits"][cand]}}
+            break
     reads = {k: v for k, v in res["plateaus"].items() if k.startswith("read/") and k.endswith("/graph")}
     if reads:
         best = max(reads, key=lambda k: reads[k]["median_gbps"])
@@ -320,22 +338,31 @@ def summary_md(sess, cells, e1, canary, tel, compare_rows, plot_paths, use_conta
         L += ["> **NOT VALID: built with --use-contaminated for testing the analysis code. Do not use these numbers.**", ""]
     L += [f"Cells: {len(cells)} total; " + ", ".join(f"{k} {v}" for k, v in sorted(st.items())), ""]
     noisy = sum(1 for c in cells if c["status"] == "clean" and c.get("noisy"))
-    L += [f"Clean cells flagged noisy (CV > 3%): {noisy}", ""]
+    rob = [robust_cv(c.get("samples_us")) for c in cells if c["status"] == "clean"]
+    rob_noisy = sum(1 for r in rob if r is not None and r > 0.03)
+    L += [f"Clean cells flagged noisy (CV > 3%): {noisy}. With the tail-insensitive robust CV (IQR/1.349/median): "
+          f"{rob_noisy} above 3%, median {100 * float(np.median([r for r in rob if r is not None])):.2f}%.", ""]
     if e1:
         L += ["## E1 (B0) achievable bandwidth", ""]
         if "R_inf_B0_gbps" in e1:
             L += [f"**R_inf_B0 = {e1['R_inf_B0_gbps']:.2f} GB/s** ({e1['R_inf_B0_source']}; {e1['R_inf_B0_definition']}).", ""]
+        if "tau_B0" in e1:
+            t = e1["tau_B0"]; ci = t.get("tau_ci95_us")
+            L += [f"**Probe tau = {t['tau_us']:.2f} us** (95% CI {fmt(ci[0]) if ci else '-'} to {fmt(ci[1]) if ci else '-'}), "
+                  f"fitted R {t['R_inf_gbps']:.1f} GB/s, B_half {t['B_half_mib']:.3f} MiB, rms residual "
+                  f"{100 * t['rms_rel_residual']:.1f}% ({t['source']}).", ""]
         L += ["### Cold plateaus (>= 10x L2)", "", "| op/impl/mode | median GB/s | min | max | n |", "|---|---|---|---|---|"]
         for k, v in sorted(e1["plateaus"].items()):
             L.append(f"| {k} | {v['median_gbps']:.2f} | {v['min_gbps']:.2f} | {v['max_gbps']:.2f} | {v['n']} |")
         L += ["", "### Fits t = tau + B / R (cold, l2-safe; weighted LS, Theil-Sen cross-check, bootstrap 95% CI)", "",
+              "Fits with rms relative residual above 5% are marked `misfit`: the single-tau model does not describe that op.", "",
               "| op/impl/mode | tau us | tau CI95 | R_inf GB/s | R CI95 | B_half MiB | R^2 | rms rel resid | Theil-Sen tau | Theil-Sen R |",
               "|---|---|---|---|---|---|---|---|---|---|"]
         for k, f in sorted(e1["fits"].items()):
             ci = f.get("tau_ci95_us"); rci = f.get("R_inf_ci95_gbps")
             L.append(f"| {k} | {f['tau_us']:.2f} | {fmt(ci[0]) + ' to ' + fmt(ci[1]) if ci else '-'} | {f['R_inf_gbps']:.1f} | "
                      f"{fmt(rci[0], 1) + ' to ' + fmt(rci[1], 1) if rci else '-'} | {f['B_half_mib']:.3f} | {fmt(f['r2'], 5)} | "
-                     f"{100 * f['rms_rel_residual']:.1f}% | {fmt(f['theil_sen']['tau_us'])} | {fmt(f['theil_sen']['R_inf_gbps'], 1)} |")
+                     f"{100 * f['rms_rel_residual']:.1f}%{'' if f['fit_ok'] else ' misfit'} | {fmt(f['theil_sen']['tau_us'])} | {fmt(f['theil_sen']['R_inf_gbps'], 1)} |")
         L += ["", "### Hot (L2) behaviour, graph mode", "", "| op/impl | peak GB/s | at buffer size | falls off at |", "|---|---|---|---|"]
         for k, v in sorted(e1["hot"].items()):
             fb = v["falloff_buffer_bytes"]
