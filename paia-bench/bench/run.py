@@ -70,7 +70,29 @@ def selftest_cells(n=12):
     return cells
 
 
-PHASES = {"e1": e1_cells, "selftest": selftest_cells}
+def e2_cells():
+    """cuBLAS BF16: synthetic sweep and real shapes at M=1 in all modes; M sweep on real shapes in graph mode."""
+    cfg = config.shapes_cfg()
+    base = {"phase": "e2", "op": "linear", "impl": "cublas_f_linear", "precision": "bf16", "hot_or_cold": "cold"}
+    cells = []
+    for name, sw in cfg["synthetic"].items():
+        for n in sw["N"]:
+            for mode in ("isolated", "eager", "graph"):
+                cells.append({**base, "shape": {"M": 1, "N": n, "K": sw["K"]}, "model": "synthetic",
+                              "layer_name": f"{name}_N{n}", "timing_mode": mode})
+    for model, m in cfg["models"].items():
+        for layer, (n, k) in m["shapes"].items():
+            for mode in ("isolated", "eager", "graph"):
+                cells.append({**base, "shape": {"M": 1, "N": n, "K": k}, "model": model, "layer_name": layer,
+                              "timing_mode": mode})
+            for M in cfg["batch_sweep"]["M"]:
+                if M > 1:
+                    cells.append({**base, "shape": {"M": M, "N": n, "K": k}, "model": model, "layer_name": layer,
+                                  "timing_mode": "graph"})
+    return cells
+
+
+PHASES = {"e1": e1_cells, "e2": e2_cells, "selftest": selftest_cells}
 
 
 def ordered(cells, seed):
@@ -104,6 +126,10 @@ class GpuContext:
                 return bp.TorchWrite(n)
             if spec["impl"] == "triton_read":
                 return bp.TritonRead(n, self.triton_cfg)
+        if spec["phase"] == "e2" and spec["impl"] == "cublas_f_linear":
+            from bench.ops.cublas_bf16 import CublasBF16Linear
+            sh = spec["shape"]
+            return CublasBF16Linear(M=sh["M"], N=sh["N"], K=sh["K"], model=spec["model"], layer_name=spec["layer_name"])
         raise ValueError(f"no op for {spec}")
 
 
