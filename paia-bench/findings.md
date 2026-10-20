@@ -280,6 +280,29 @@ sessions supersede the v1 numbers above for all later use; the v1 sessions stay 
 - **The E2 conclusion is unchanged and sharper:** `gemvx/v6` has essentially no fixed cost beyond the probe's (graph tau 0.4 us,
   CI includes 0) and streams at 168 GB/s (70% of B0). The BF16 loss on GB10 is per byte, set by cuBLAS's kernel choice.
 
+## E3 (focused): why cuBLAS `gemvx/v6` streams 30% slower than v7 (GB10, 2026-10-21)
+
+`scripts/ncu_gemv_variants.sh` profiles one M=1 `F.linear` call per shape with Nsight Compute (`--clock-control none`, idle
+machine). Raw CSVs: `results/dgxspark_gb10/e3_ncu_gemv_variants/`. ncu durations are not headline numbers.
+
+| | v6: Llama q_proj | v6: Qwen gate_proj | v7: Llama gate_proj | v7: Llama down_proj |
+|---|---|---|---|---|
+| grid x block | 1024 x 64 (16 x 4) | 4736 x 64 | 3584 x 128 (32 x 4) | 1024 x 128 |
+| registers per thread | 164 | 164 | 164 | 164 |
+| occupancy theoretical / achieved | 25% / 21.4% | 25% / 24.0% | 25% / 25.0% | 25% / 24.8% |
+| DRAM fills (sysmem x 32 B) / weight bytes | 1.002 | 1.00 | 1.002 | 1.00 |
+| long-scoreboard stall cycles per issue | 29.4 | 31.8 | 17.4 | 20.2 |
+| LSU throttle stall per issue | 23.4 | 18.7 | 14.6 | 21.4 |
+| issue active | 4.9% | 4.9% | 6.7% | 6.0% |
+
+- **Both variants move exactly the weight bytes** and are capped at 25% occupancy (12 of 48 warps per SM) by 164 registers
+  per thread.
+- **v6 uses 16-lane rows (block 16 x 4) instead of 32 (32 x 4)**, so each warp keeps about half the bytes in flight. With the
+  same resident warps, that halves the memory-level parallelism; v6 warps wait on memory (long scoreboard) about 1.7x longer
+  per issued instruction. **v6 is latency-bound for lack of bytes in flight, not moving extra data.**
+- This is the mechanism P1's kernel targets: more bytes in flight per warp (32-lane rows, wide vector loads, several rows per
+  warp) and a smaller register budget for higher occupancy.
+
 ## Platform `rtxpro5000bw`: environment and preliminary E1 (P3)
 
 Raw evidence: `paia-results/rtxpro5000bw/{env_20261016,s1_20261016}/`, preflight report on the host at
