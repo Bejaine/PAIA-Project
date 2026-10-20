@@ -1,0 +1,6 @@
+{
+ "R_inf_B0_gbps": 239.49189830408883,
+ "source": "read/torch_sum/graph",
+ "definition": "median achieved GB/s of clean, l2-safe, cold, graph-mode reads with >= 240 MiB (10x L2); best read implementation",
+ "session": "e1v2_s2"
+}

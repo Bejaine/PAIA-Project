@@ -246,6 +246,40 @@ cuBLAS dispatches `internal::gemvx::kernel` for every real shape at M=1, in two 
 - **Interpretation:** a cell's median is precise for its own allocation, but small and mid-size ops vary by several percent between allocations. Physical page placement across LPDDR5x channels and banks is the likely cause (unverified). Large buffers average it out, which is why E1 (mostly large) reproduced well.
 - **Proposed fix (not yet applied):** measure each cell over several independent allocations and report the median across allocations (plus the spread), as schema_version 2.
 
+## Schema v2 reruns, GB10: E1 and E2 (results of record)
+
+Each cell is measured on 5 independent allocations; its value is the median across allocations (code `ad228d9`, rebased as
+`2c0aeb6`). Sessions `e1v2_s1`, `e2v2_s1`, `e1v2_s2` and `e2v2_s2` ran back to back on 2026-10-18 from 21:48 to 23:42 UTC, so
+same-phase sessions are about 1 hour apart (not different days). All 1,156 cells were clean (10 attempts retried). **These v2
+sessions supersede the v1 numbers above for all later use; the v1 sessions stay in the repo as the record.**
+
+| Quantity | v2 s1 | v2 s2 | (v1 s1 / s2) |
+|---|---|---|---|
+| R_inf_B0 | 239.0 GB/s | 239.5 GB/s | 241.7 / 242.1 |
+| probe tau, Triton read, graph / eager / isolated | 1.70 / 4.85 / 11.31 us | 1.66 / 4.66 / 11.43 us | 1.85 / 4.7 / 11.4 |
+| B_half (graph) | 0.39 MiB | 0.38 MiB | 0.43 |
+| copy / write plateau | 240.2 / 196.4 GB/s | 241.8 / 196.8 GB/s | 239 / 197 |
+| E2 `gemvx/v6` fit (graph): tau, R_inf | | 0.38 us, 167.8 GB/s (1.9% residual) | 1.95 us, 169.9 |
+| E2 v6 shapes, %B0 | 68 to 72% | 68 to 72% | 65 to 73% |
+| E2 v7 shapes (MLP, down_proj, Qwen k/v), %B0 | 87 to 98% | 87 to 98% | 84 to 104% |
+| E2 lm_head, %B0 | 72 to 73% | 72 to 73% | 75 |
+
+**Reproducibility, v2 vs v1**
+
+| | E2 v1 | **E2 v2** | E1 v1 | E1 v2 |
+|---|---|---|---|---|
+| cross-session median |diff| | 2.08% | **0.27%** | 0.27% | 0.38% |
+| max |diff| | 15% | **6%** | 30% | 20 to 25% (hot L2-edge cells) |
+| cells above 3% | 64 / 218 | **8 / 218** | 21 / 360 | 17 to 18 / 360 |
+| per-allocation spread (median / p90) | n/a | 0.44% / 1.3 to 1.7% | n/a | 0.38% / 2.9 to 3.2% |
+
+- **v2 removes most of E2's allocation variance.** The remaining E1 outliers are the hot cells at the L2 edge, where a single
+  allocation's placement decides how much of the buffer stays in L2 (per-allocation spread up to 85% on those cells).
+- **B0 is about 1% lower in v2** (239 vs 242 GB/s). The median across 5 allocations is more representative than one allocation;
+  v2 B0 is the denominator for later phases.
+- **The E2 conclusion is unchanged and sharper:** `gemvx/v6` has essentially no fixed cost beyond the probe's (graph tau 0.4 us,
+  CI includes 0) and streams at 168 GB/s (70% of B0). The BF16 loss on GB10 is per byte, set by cuBLAS's kernel choice.
+
 ## Platform `rtxpro5000bw`: environment and preliminary E1 (P3)
 
 Raw evidence: `paia-results/rtxpro5000bw/{env_20261016,s1_20261016}/`, preflight report on the host at
