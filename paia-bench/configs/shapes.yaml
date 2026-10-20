@@ -75,7 +75,8 @@ timing:
   warmup_min_ms: 200
   samples_min: 30
   samples_max: 300
-  sample_target_ms: 1000  # samples = clamp(target / unit time, samples_min, samples_max)
+  sample_target_ms: 1000  # samples = clamp(target / unit time, samples_min, samples_max); split across allocations
+  allocations_per_cell: 5  # schema v2: independent allocations per cell; median across them is the cell's value
   noisy_cv: 0.03
   loop_target_ms: 5.0     # R chosen so one eager loop / graph replay lasts at least this long
   l2_rotation_factor: 4   # n_copies = max(2, ceil(4 * L2 / op_bytes))

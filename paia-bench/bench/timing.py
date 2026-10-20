@@ -143,13 +143,16 @@ def stats(samples, noisy_cv):
             "std_us": std, "cv": cv, "noisy": bool(cv is not None and cv > noisy_cv), "n_samples": n}
 
 
-def measure(op, mode, n_copies, tcfg):
-    """Full measurement of one cell's op in one mode. Returns samples, stats and parameters."""
+def measure(op, mode, n_copies, tcfg, R=None):
+    """Full measurement of one cell's op in one mode. Returns samples, stats and parameters.
+    R=None sizes R from this allocation; pass the first allocation's R to keep R fixed across allocations."""
     est = estimate_op_us(op, n_copies)
-    R = 1 if mode == "isolated" else choose_R(est, tcfg["loop_target_ms"])
+    fixed_R = R is not None
+    if R is None:
+        R = 1 if mode == "isolated" else choose_R(est, tcfg["loop_target_ms"])
     runner = Runner(op, n_copies, mode, R)
     try:
-        if mode != "isolated":
+        if mode != "isolated" and not fixed_R:
             # The isolated estimate includes launch/sync overhead, so back-to-back ops are faster and R is
             # too small. Re-size R from a measured unit until one unit lasts at least loop_target_ms.
             for _ in range(3):

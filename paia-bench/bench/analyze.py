@@ -68,6 +68,8 @@ def flat(c):
         "sm_clock_min": sm.get("min"), "sm_clock_median": sm.get("median"), "sm_clock_max": sm.get("max"),
         "temp_c_max": t.get("temp_c_max"), "power_w_median": t.get("power_w_median"),
         "kernel_names": ";".join(c.get("kernel_names") or []), "git_commit": c.get("git_commit"),
+        "schema_version": c.get("schema_version"), "n_allocations": c.get("n_allocations"),
+        "alloc_spread_pct": c.get("alloc_spread_pct"),
         "t_start": c.get("t_start"),
     }
 
@@ -337,6 +339,10 @@ def summary_md(sess, cells, e1, canary, tel, compare_rows, plot_paths, use_conta
     if use_contaminated:
         L += ["> **NOT VALID: built with --use-contaminated for testing the analysis code. Do not use these numbers.**", ""]
     L += [f"Cells: {len(cells)} total; " + ", ".join(f"{k} {v}" for k, v in sorted(st.items())), ""]
+    sp = [c["alloc_spread_pct"] for c in cells if c["status"] == "clean" and c.get("alloc_spread_pct") is not None]
+    if sp:
+        L += [f"Schema v2: {cells[0].get('n_allocations')} allocations per cell; spread of per-allocation medians "
+              f"(max - min) / median: median {np.median(sp):.2f}%, p90 {np.percentile(sp, 90):.2f}%, max {max(sp):.2f}%.", ""]
     noisy = sum(1 for c in cells if c["status"] == "clean" and c.get("noisy"))
     rob = [robust_cv(c.get("samples_us")) for c in cells if c["status"] == "clean"]
     rob_noisy = sum(1 for r in rob if r is not None and r > 0.03)

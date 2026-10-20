@@ -172,20 +172,21 @@ def plot_e2(c2, res, ref, out_dir):
 
     fig, ax = plt.subplots(figsize=(8.5, 4.8), facecolor=SURFACE)
     xs = np.geomspace(2 ** 17, 2 ** 31, 300)
-    for mode in MODES:
-        f = res["fits"].get(f"pooled_M1/{mode}")
-        if not f:
-            continue
-        ax.plot(xs, xs / (xs + f["B_half_bytes"]), color=MODE_COL[mode], lw=2,
-                label=f"{mode}: B/(B+B_half), B_half {f['B_half_mib']:.2f} MiB")
+    palette = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100"]  # fixed order, assigned by sorted kernel label
+    kfits = sorted((k, f) for k, f in res["fits"].items() if k.startswith("kernel:") and k.endswith("/graph") and f["fit_ok"])
+    for (k, f), col in zip(kfits, palette):
+        lab = k[len("kernel:"):-len("/graph")]
+        ax.plot(xs, xs / (xs + f["B_half_bytes"]), color=col, lw=2,
+                label=f"{lab}: tau {f['tau_us']:.2f} us, R {f['R_inf_gbps']:.0f} GB/s, B_half {f['B_half_mib']:.2f} MiB")
         pts = [(c["bytes"]["total"], (c["bytes"]["total"] / (f["R_inf_gbps"] * 1e3)) / c["median_us"]) for c in c2
-               if c["shape"]["M"] == 1 and c["timing_mode"] == mode]
-        ax.plot(*zip(*pts), ls="none", marker="o", ms=5, color=MODE_COL[mode], mfc=SURFACE, mew=1.5)
-    _style(ax, "Efficiency vs bytes (M=1): model curve and measured points", "bytes per op",
-           "efficiency = (B / R_inf) / t")
+               if c["shape"]["M"] == 1 and c["timing_mode"] == "graph" and kernel_label(c.get("kernel_names")) == lab]
+        if pts:
+            ax.plot(*zip(*pts), ls="none", marker="o", ms=5, color=col, mfc=SURFACE, mew=1.5)
+    _style(ax, "Graph mode, M=1: efficiency against each kernel's own R_inf (fits with <= 5% residual)",
+           "bytes per op", "(B / R_inf) / t")
     _size_axis(ax)
-    ax.set_ylim(0, 1.1)
-    ax.legend(frameon=False, fontsize=8, labelcolor=INK, loc="lower right")
+    ax.set_ylim(0, 1.15)
+    ax.legend(frameon=False, fontsize=7, labelcolor=INK, loc="lower right")
     fig.tight_layout()
     paths["e2_efficiency"] = out_dir / "e2_efficiency.png"
     fig.savefig(paths["e2_efficiency"], dpi=140, facecolor=SURFACE)

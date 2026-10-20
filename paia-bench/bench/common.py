@@ -6,7 +6,7 @@ from pathlib import Path
 
 BENCH_ROOT = Path(__file__).resolve().parent.parent
 RESULTS_ROOT = BENCH_ROOT / "results"
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2  # v2 (2026-10-19): each cell measured over several independent allocations
 
 
 def default_platform_tag():
