@@ -246,6 +246,99 @@ cuBLAS dispatches `internal::gemvx::kernel` for every real shape at M=1, in two 
 - **Interpretation:** a cell's median is precise for its own allocation, but small and mid-size ops vary by several percent between allocations. Physical page placement across LPDDR5x channels and banks is the likely cause (unverified). Large buffers average it out, which is why E1 (mostly large) reproduced well.
 - **Proposed fix (not yet applied):** measure each cell over several independent allocations and report the median across allocations (plus the spread), as schema_version 2.
 
+## Platform `rtxpro5000bw`: environment and preliminary E1 (P3)
+
+Raw evidence: `paia-results/rtxpro5000bw/{env_20261016,s1_20261016}/`, preflight report on the host at
+`paia-bench/results/preflight/server_20261016_200948.txt`. E1 numbers below come from `bench.analyze` run on a copy
+of the 80 cells (summary not committed, since the session is incomplete).
+
+### Machine and stack
+
+| Item | Value | Source |
+|---|---|---|
+| GPU | NVIDIA RTX PRO 5000 Blackwell, cc 12.0, 110 SMs, L2 100,663,296 B (96 MiB), 50,754,289,664 B memory, 384-bit GDDR7 | `env.json` gpu, nvml |
+| Spec bandwidth | 1344 GB/s (384 bit x 28 Gbps at the 14001 MHz max memory clock) | NVML max mem clock, bus width |
+| Memory clock under load | 13365 MHz in every busy cell, i.e. 1283 GB/s raw at the running clock | cell telemetry |
+| Driver | 595.84; ECC disabled (current and pending); persistence on; power limit 300 W; max SM clock 3090 MHz | `env.json` nvml |
+| CPU | Intel Core Ultra 9 285K, 24 cores, 1 NUMA node; 125 GiB RAM | `env.json` cpu |
+| Stack | host venv (no Docker on this server): torch 2.14.1+cu130, cuBLAS 13.1.1, Triton 3.8.0, Python 3.12.3, no vLLM | `env.json` packages, cublas |
+| Profilers | host ncu 2026.2.1, nsys 2026.1.3; `RmProfilingAdminOnly: 0`, ncu probe as uid 1019 succeeded | `env.json` perf_counters, preflight |
+| Sharing | single GPU, shared by course teams; idle at survey time | preflight |
+
+- **The stack differs from GB10's** (NGC 25.11: torch 2.10.0a0, cuBLAS 13.1.0, Triton 3.5.0). The server has no Docker, so the
+  `paia-bench:25.11` image is not an option unless the admin provides Docker. Cross-platform comparisons carry this confound.
+- **Triton needed Python headers.** The first venv used Ubuntu's Python without `python3.12-dev`; Triton could not build its
+  launcher (`Python.h: No such file`), so the Triton probe failed. Fixed before E1; the selfcheck in `env_20261016` is the fixed run.
+
+### Library paths (`selfcheck.json`, functional only)
+
+- **BF16 vs CPU, cuBLAS BF16 on 6 shapes at M = 1 and 16:** correct and graph-capturable.
+  - M=1 dispatches `internal::gemvx::kernel` on every shape, as on GB10.
+  - M=16 dispatches `cutlass_80_wmma_tensorop_bf16` (an sm80 GEMM), with `splitKreduce` for 1024x4096 and 512x3584, as on GB10.
+- **FP8 `_scaled_mm`, per-tensor scales:** correct at M = 1 to 16 (rel. error 0.003), graph-capturable, `nvjet_sm120_qqtst_mma_64x32x64...`. M=1 needs no padding.
+- **FP8 `_scaled_mm`, row-wise scales: correct on sm_120** (rel. error 0.0026 to 0.0028), unlike GB10 (sm_121), where it returns garbage.
+  It dispatches the same `cutlass ... enable_3x_kernel_for_sm10_or_later` kernel that fails on GB10, **plus a `Memcpy DtoD`**,
+  so row-wise FP8 costs an extra operation per call on this stack. Row-wise FP8 is therefore usable here, but not on GB10.
+- **INT4 tinygemm:** correct (rel. error 0.004) and graph-capturable at M = 1 and 16; kernel `tinygemm_m16n8k16_chunk_kernel`.
+- **vLLM CUTLASS FP8 and Marlin:** not tested (vLLM not installed).
+
+### Preliminary E1 (session `s1_20261016`, 80 of 360 cells, all clean, code `ddf2d53`)
+
+The run was stopped by hand after 80 cells. Cells are a fixed shuffled sample, so some op/mode series have only 1 to 4 sizes.
+**Treat the fits as indicative.** The plateaus rest on several independent cells and are solid.
+
+| Quantity | RTX PRO 5000 (s1, partial) | GB10 (s1 / s2) |
+|---|---|---|
+| **R_inf_B0**, cold graph Triton read, >= 10x L2 | **1238.8 GB/s** | 241.7 / 242.1 |
+| as % of spec | **92.2%** of 1344 (96.6% of the 1283 GB/s at the running memory clock) | 88.6% |
+| read plateaus, all probes and modes | 1232 to 1239 GB/s | |
+| copy plateau (2B counted) | 1105.6 GB/s, **0.89x read** | 0.99x |
+| write (fill) plateau | 1233.6 GB/s, **1.00x read** | 0.81x |
+| probe tau, Triton read, graph mode | 1.36 us [1.36, 1.51] (4 sizes, smallest 8 MiB: poorly constrained) | 1.85 / 1.86 |
+| **B_half**, Triton graph mode | **1.61 MiB** | 0.43 |
+| hot L2 peak, Triton read graph | 4572 GB/s at 16 MiB; falls off by 128 MiB | 1505 at 16 MiB |
+| hot copy peak | 5547 GB/s at 32 MiB | |
+| canary reference | 1127.0 GB/s, CV 0.04%; per-cell canaries 1123 to 1127 (n=160) | 240.2, CV 0.22 to 0.83% |
+
+- **Hypothesis check (early): B_half is about 3.7x larger than on GB10** (1.61 vs 0.43 MiB), driven by 5.1x the bandwidth with a
+  similar or smaller tau. This is inside P2's prediction of "3 to 6x larger B_half", but the measured tau on both platforms
+  (1.4 and 1.9 us) is below the predicted 3 to 5 us.
+- **GDDR7 writes are as fast as reads** (fill 1.00x read), unlike GB10's LPDDR5x (0.81x). Copy is the slow pattern here (0.89x).
+- **The canary is about 10x quieter than on GB10** (CV 0.04% vs 0.2 to 0.8%): dedicated GPU memory, no CPU traffic on the bus.
+- **Eager-mode per-op floor is about 5.8 us** for the Triton probe (cold reads of 0.25 to 2 MiB all take 5.8 us), so eager
+  mode is host-launch-bound below about 7 MiB. The fit across sizes misfits (16% residual) for this reason. GB10's eager tau was 4.7 us.
+  The benchmark process was pinned to CPUs 2 and 3 only (see below), and Triton 3.8's launcher differs from 3.5's, so this is
+  not yet a CPU comparison.
+- **torch `sum` and `fill_` fits** here rest on 1 to 4 points; the GB10 conclusion that only the Triton probe defines tau stands.
+
+### Measurement issues found on this platform
+
+1. **SM clock is not stable under load.** In graph and eager cells with the GPU 84 to 100% busy and the memory clock at
+   13365 MHz, the median SM clock ranged from 180 to 2595 MHz between cells (GB10: 2177 to 2190 MHz in every cell).
+   - Large-buffer bandwidth is unaffected: busy cells of 512 MiB and up reach 1233 to 1239 GB/s at SM clock medians from
+     765 to 2595 MHz.
+   - **tau is likely affected,** since launch, ramp and tail run on the SM clock. Clock state therefore has to be controlled or
+     stratified before small-op and tau numbers from this GPU are compared across platforms.
+   - The `sw_power_cap` reason was seen; no thermal or hardware slowdown (max 41 C).
+   - Isolated-mode cells finish in well under 1 s, so they got only 1 to 3 telemetry samples, all taken while the GPU was idle
+     during setup (memory clock 405 MHz). **Their clock telemetry is uninformative, not low.**
+2. **Same gate slowdown as GB10 s1.** After almost every cell the gate waited 30 s for NVML's trailing utilization from our
+   own cell (`gpu_util max 100%`): 80 cells took 45 minutes. The settle step added in `247bdc4` fixes this; it does not
+   change the measurement code (`timing.py`, `bw_probe.py` are identical between `ddf2d53` and HEAD).
+3. **Benchmark pinned to 2 cores.** `cpu_sets()` selects cores whose `cpuinfo_max_freq` equals the maximum. This CPU reports
+   three levels (2 cores at 7.2 GHz, 6 at 6.9, 16 at 6.5), so the benchmark ran on CPUs 2 and 3 only and the monitor on the 16
+   slowest cores. Intended: all 8 performance cores. **Fixed:** `cpu_sets()` now takes every core above the lowest
+   frequency level as fast (8 P-cores here; unchanged 10-core split on GB10).
+
+### Next steps on this platform
+
+- Ask the admin whether `nvidia-smi -lgc` can be used during our windows (it fixes item 1). Otherwise add a clock check:
+  record the SM clock inside the timed loop (or make `sw_power_cap`/low-clock cells retry) and report tau per clock band.
+- Because the CPU pinning changed (item 3), do not resume `s1_20261016`: its 80 cells stay as a pilot. Run a fresh full
+  E1 session on current HEAD, then `s2` on another day.
+- Predictions for this platform were not committed before these cells ran, so E1 predictions here are no longer
+  pre-registered. Commit E2, E4 and E5 predictions for `rtxpro5000bw` before those phases run.
+
 ## Open questions
 
 1. Is `lts__t_sectors_aperture_sysmem_op_write` the right write-bytes counter? To be confirmed in E3 with a `fill_` kernel of known size.

@@ -27,7 +27,10 @@ def decode_clock_reasons(mask):
 # ----------------------------------------------------------------------------- CPU topology
 
 def cpu_sets():
-    """(fast_cpus, slow_cpus) by cpuinfo_max_freq. Equal sets when cores are homogeneous or unreadable."""
+    """(fast_cpus, slow_cpus) by cpuinfo_max_freq. Equal sets when cores are homogeneous or unreadable.
+    slow = the lowest-frequency cluster; fast = every other core. Hybrid x86 parts report more than two levels
+    (Core Ultra 9 285K: 2 favored cores at 7.2 GHz, 6 P-cores at 6.9, 16 E-cores at 6.5), and taking only the
+    top level would pin the benchmark to 2 cores. With two levels (GB10) this is the same split as before."""
     allowed = sorted(os.sched_getaffinity(0))
     freq = {}
     for c in allowed:
@@ -38,7 +41,7 @@ def cpu_sets():
     hi, lo = max(freq.values()), min(freq.values())
     if hi == lo:
         return allowed, allowed
-    return [c for c in allowed if freq[c] == hi], [c for c in allowed if freq[c] == lo]
+    return [c for c in allowed if freq[c] > lo], [c for c in allowed if freq[c] == lo]
 
 
 # ----------------------------------------------------------------------------- monitor child
