@@ -68,3 +68,52 @@ Because B_half = tau x R_inf, GB10 should be less tau-sensitive than a fast disc
 **Prediction:** GB10 graph-mode tau is about the same as a discrete Blackwell GPU's (about 3 to 5 us on both). Kernel launch and ramp-up are GPU front-end costs and scale weakly with memory technology.
 
 So GB10's B_half (about 0.8 to 1.3 MiB) will be about 3 to 6x smaller than on an RTX 5000-class card with 3 to 6x the bandwidth. GB10 is therefore predicted to be much **less** tau-sensitive. That means its quantization speedups should come closer to the byte ratio, except on small ops such as k_proj and v_proj at 4-bit.
+
+---
+
+## Platform: `rtx6000ada`
+
+Predicted by Claude, at P2's request, before any timing on this machine (E0 and selfcheck only, no E1 or E2 cell).
+Date committed: 2026-10-22.
+
+**Inputs used**
+- RTX 6000 Ada Generation spec: 384-bit GDDR6 at 20 Gbps (NVML max memory clock 10001 MHz), so **960 GB/s**; 142 SMs;
+  96 MB L2; max SM clock 3105 MHz, default application clock 2505 MHz; 300 W. SM count, L2 and bus width are checked
+  against `env.json` before this commit.
+- GB10 v2 sessions and the RTX PRO 5000 partial pilot (`findings.md`), used as priors.
+- Stack: torch 2.11.0+cu128, cuBLAS 12.8.4.1 (host venv; driver 575 rules out the cu130 stacks of GB10 and P3).
+
+**Not used:** no timing on this GPU exists yet.
+
+### E1 (B0)
+
+| Quantity | Prediction | Reasoning |
+|---|---|---|
+| Cold read plateau R_inf_B0 | **875 GB/s** (range 830 to 910) | The other discrete GDDR card (RTX PRO 5000) reached 92% of spec. GDDR6 has similar refresh and turnaround overheads to GDDR7, so about 91%. |
+| R_inf_B0 as % of spec | **91%** (86 to 95%) | 875 / 960. |
+| probe tau, Triton read, graph mode | **1.6 us** (1.2 to 2.5) | GB10 1.7 us, RTX PRO 5000 about 1.4 us. Graph-mode tau is a GPU front-end cost (launch gap, ramp, tail), and Ada's front end runs at a similar SM clock. 142 SMs means a slightly longer ramp to fill every SM. |
+| probe tau, eager mode | **6.5 us** (5 to 8) | Eager is host-launch-bound at small sizes. The EPYC 9124 (Zen 4, 3.7 GHz max) has slower single-thread speed than the Core Ultra 9 285K (RTX PRO 5000 floor about 5.8 us), so the floor should be a little higher. |
+| probe tau, isolated mode | **12 us** (10 to 15) | GB10 11.4 us: event and sync bracket overhead, dominated by host and driver round trips. |
+| B_half (graph) | **1.3 MiB** (1.0 to 2.2) | 1.6 us x 875 GB/s = 1.40 MB = 1.34 MiB. About 3.4x GB10's 0.39 MiB, below the RTX PRO 5000's 1.61 MiB. |
+| write (fill) vs read | **0.97x** | GDDR7 on the RTX PRO 5000 gave 1.00x; GDDR6 pure writes avoid bus turnaround, with a small write-allocate cost. |
+| copy (2B counted) vs read | **0.90x** | RTX PRO 5000 0.89x: mixed read and write streams pay turnaround penalties on GDDR. |
+| hot L2 peak (Triton read, graph) | **about 4 TB/s** (2.5 to 5.5) at 32 to 64 MiB | The L2 bandwidth of AD102 is several TB/s. At L2-resident sizes tau caps the observed rate: 32 MiB at 1.6 us tau plus 6.7 us at 5 TB/s gives about 4 TB/s. |
+| hot falloff size | **drop between 64 and 128 MiB; hot equals cold by 256 MiB** | Nominal 96 MB L2; effective capacity is lower (hashing, two L2 partitions). Same shape as the RTX PRO 5000 (96 MiB L2, fell off by 128 MiB). |
+
+### E2 (cuBLAS BF16)
+
+| Quantity | Prediction | Reasoning |
+|---|---|---|
+| Kernel family at M=1 | **`gemvx` on every real shape** | GB10 and RTX PRO 5000 both dispatch `gemvx` at M=1. The heuristic in cuBLAS 12.8 for sm_89 may differ from 13.1, so confidence is moderate (about 80%). |
+| v6 on the same shapes as GB10 | **Yes, mostly** (about 60% confidence): v6 on attention shapes and Qwen gate/up; v7 on Llama MLP and down_proj | The variant split looks tied to shape (K and N per CTA), but the cuBLAS version differs, so some shapes may switch variant. |
+| v6 %B0 | **75%** (65 to 85%) | Little's law: the bytes in flight per SM needed for full speed are R_inf x latency / SMs, about 875 GB/s x 0.6 us / 142 = 3.7 KB here, against about 240 x 0.8 / 48 = 4.0 KB on GB10 (latencies are guesses). With 164 registers per thread and 64K registers per SM, occupancy is also 25% here (12 warps), so v6 should be about as short of bytes in flight as on GB10, slightly less. |
+| v7 %B0 | **90 to 98%** | As on GB10. |
+| lm_head %B0 | **80%** (70 to 95) | GB10 72 to 73% on a large-N v7 regime; its cause is unknown, so the prior is wide. |
+| M sweep, t(M=2..16)/t(1) on v6 shapes | **0.80** (0.70 to 0.95) | If cuBLAS switches to an sm80 GEMM at M >= 2 that streams at about 90 to 95% of B0, the ratio is about 75/93. |
+| M sweep on v7 shapes | **1.00 to 1.10** | As on GB10. |
+| per-allocation spread (median / p90) | **0.15% / 0.6%** | Dedicated GDDR with no CPU traffic on the bus: the RTX PRO 5000 canary was 10x quieter than GB10's. Page-placement effects should be smaller than on LPDDR5x (GB10 0.45% / 1.3%). |
+| Llama k_proj (8 MiB) efficiency, BF16 / at 4-bit size | **86% / 61%** | eff = B / (B + B_half) with B_half 1.3 MiB, using only the per-op cost. |
+
+**Note added after drafting, before commit (2026-10-22):** the table above was written before `selfcheck.json` was read.
+Selfcheck then showed that at M=1 Qwen gate_proj (18944x3584) dispatches `gemvx` v7 here (v6 on GB10), while Llama q/k_proj
+are v6 as on GB10. The predictions were not changed; E2 will test them as written.

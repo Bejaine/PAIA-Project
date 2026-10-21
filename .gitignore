@@ -14,3 +14,6 @@ paia-bench/results/*/debug_*/
 
 # Host venv fallback (scripts/setup_venv.sh); its lock file is recorded in env.json pip_freeze
 .venv-host/
+
+# GitHub classic token (local only, never commit)
+.github_classic_token

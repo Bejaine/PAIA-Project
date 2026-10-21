@@ -52,7 +52,7 @@ fi
 for cc in $ccs; do
   case "$cc" in
     7.5) note "cc 7.5 (Turing, Quadro RTX 5000): NGC 25.11 torch has no sm_75 build -> venv path; no BF16 tensor cores (FP16 baseline), no FP8, no tinygemm INT4; 16 GB too small for BF16 8B E5" ;;
-    8.9) note "cc 8.9 (RTX 5000 Ada): FP8 yes, FP4 no; record ECC state (ECC costs bandwidth)" ;;
+    8.9) note "cc 8.9 (RTX 5000 Ada / RTX 6000 Ada): FP8 yes, FP4 no; record ECC state (ECC costs bandwidth)" ;;
     12.0) note "cc 12.0 (RTX PRO 5000 Blackwell): needs CUDA 12.8+ torch; highest bandwidth, strongest tau effect expected" ;;
   esac
 done
@@ -105,6 +105,9 @@ sec "summary"
 for n in "${NOTES[@]}"; do echo "  - $n"; done
 name="$(nvidia-smi --query-gpu=name --format=csv,noheader | head -1)"
 case "$name" in
+  *"RTX 6000 Ada"*)            tag=rtx6000ada ;;
+  *"RTX PRO 6000"*)            tag=rtxpro6000bw ;;
+  *"Quadro RTX 6000"*)         tag=quadrortx6000 ;;
   *"RTX 5000 Ada"*)            tag=rtx5000ada ;;
   *"RTX PRO 5000"*|*Blackwell*) tag=rtxpro5000bw ;;
   *"Quadro RTX 5000"*)         tag=quadrortx5000 ;;

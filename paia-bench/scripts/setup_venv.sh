@@ -38,7 +38,9 @@ cc = torch.cuda.get_device_capability()
 arch = torch.cuda.get_arch_list()
 print("torch", torch.__version__, "cuda", torch.version.cuda, "device", torch.cuda.get_device_name(0), "cc", cc)
 print("arch list", arch)
-assert f"sm_{cc[0]}{cc[1]}" in arch or any(a.startswith("compute_") and int(a[8:]) <= cc[0] * 10 + cc[1] for a in arch), \
+# SASS runs on any GPU of the same major version with an equal or higher minor (sm_86 code runs on cc 8.9).
+sass_ok = any(a.startswith("sm_") and len(a) == 5 and a[3] == str(cc[0]) and int(a[4]) <= cc[1] for a in arch)
+assert f"sm_{cc[0]}{cc[1]}" in arch or sass_ok or any(a.startswith("compute_") and int(a[8:]) <= cc[0] * 10 + cc[1] for a in arch), \
     f"this torch build has no code for sm_{cc[0]}{cc[1]}; pick another PAIA_TORCH_INDEX"
 x = torch.randn(1024, 1024, device="cuda")
 print("matmul ok", float((x @ x).sum()) == float((x @ x).sum()))

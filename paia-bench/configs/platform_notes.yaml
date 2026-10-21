@@ -35,3 +35,14 @@ dgxspark_gb10:
   fp8_rowwise_impl: vllm_cutlass_scaled_mm
   nsys_flags: ["--trace=cuda,nvtx", "--cuda-graph-trace=node"]
   vllm_env: {VLLM_ENABLE_V1_MULTIPROCESSING: "0"}   # keep the engine in-process so one nsys trace sees it
+
+rtx6000ada:
+  verified_on: 2026-10-22
+  stack: host-venv   # torch 2.11.0+cu128, cuBLAS 12.8.4.1, Triton 3.6.0; venv at /scratch/bejaine.birju/paia/.venv-host on node01
+  driver: "575.51.03"
+  memory_kind: discrete_gddr6
+  # ncu_metrics: defaults (dram__*), present in `ncu --query-metrics --chip ad102`.
+  # Counter access is held by the cluster's DCGM exporter (DCP metrics): ncu fails until the admin runs `dcgmi profile --pause`.
+  ncu_blocker: dcgm_profiling
+  clock_lock: not_attempted   # needs root; persistence mode off
+  fp8_rowwise_impl: torch_scaled_mm   # selfcheck correct on sm_89

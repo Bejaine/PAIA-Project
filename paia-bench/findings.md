@@ -396,6 +396,89 @@ The run was stopped by hand after 80 cells. Cells are a fixed shuffled sample, s
 - Predictions for this platform were not committed before these cells ran, so E1 predictions here are no longer
   pre-registered. Commit E2, E4 and E5 predictions for `rtxpro5000bw` before those phases run.
 
+## Platform `rtx6000ada`: environment (2026-10-22)
+
+Raw evidence: `results/rtx6000ada/env_20261022/{env.json,selfcheck.json}`, preflight report on the host at
+`paia-bench/results/preflight/node01_20261022_011446.txt` (not committed: it lists other users of the server).
+
+### Machine and stack
+
+| Item | Value | Source |
+|---|---|---|
+| GPU | NVIDIA RTX 6000 Ada Generation, cc 8.9, 142 SMs, L2 100,663,296 B (96 MiB), 50,866,356,224 B memory, 384-bit GDDR6, 1536 threads and 65,536 registers per SM | `env.json` gpu, nvml |
+| Spec bandwidth | 960 GB/s (384 bit x 20 Gbps at the 10001 MHz max memory clock) | NVML max mem clock, bus width |
+| Memory clock with a CUDA context | 9501 MHz in pstate P2 at E0 time, i.e. 912 GB/s raw. Ada caps the memory clock in the CUDA P2 state; E1 cell telemetry will show the clock under load | `env.json` nvml |
+| Driver | 575.51.03 (CUDA 12.9); ECC disabled (current and pending); **persistence off**; power limit 300 W; max SM clock 3105 MHz, application clock 2505 MHz | `env.json` nvml |
+| Host | `node01` of a SLURM cluster (partition `u22`), 4 GPUs in the node; our job sees 1 GPU (`GPU-885eda7c-...`, PCI 07:00.0) via the SLURM GPU cgroup, so `device_count_visible_to_nvml` = 1 | `env.json`, `scontrol` |
+| CPU | 2x AMD EPYC 9124 (2x 16 cores, SMT, 64 logical), 2 NUMA nodes, 377 GiB RAM. Our SLURM job is limited to 10 logical CPUs (`10-12,18,19,42-44,50,51`) and 20 GB RAM. GPU NUMA affinity: CPUs `10-12,42-44` (NUMA 0) | `lscpu`, `nvidia-smi topo -m` |
+| Stack | host venv (no Docker): **torch 2.11.0+cu128, cuBLAS 12.8.4.1, Triton 3.6.0**, Python 3.10.12, no vLLM | `env.json` packages, cublas |
+| Profilers | host ncu 2025.2.0, nsys 2025.1.3 (`/usr/local/cuda-12.9/bin`, not on the default PATH); `RmProfilingAdminOnly: 0` | `env.json` tools, perf_counters |
+
+- **The stack matches neither GB10 (cuBLAS 13.1.0) nor P3 (cuBLAS 13.1.1).** Driver 575 cannot run CUDA 13 wheels or the
+  `paia-bench:25.11` image, and there is no Docker. `setup_venv.sh` picks the cu128 index for drivers 570 to 579; the newest
+  torch there is 2.11.0. **Every cross-platform comparison from this machine is stack-confounded,** above all the cuBLAS
+  dispatch question (Q2).
+- **Venv location.** `$HOME` (NFS) had 9.3 GB free, shared with other running work, so the venv lives on node-local scratch:
+  `PAIA_VENV=/scratch/bejaine.birju/paia/.venv-host`. Sessions must run on `node01` to use the same venv.
+- **Wheels fetched with resumable curl.** Egress from `node01` dropped to a few hundred B/s for about 20 minutes during setup.
+  The exact wheels `pip` would install from the cu128 index (torch's pinned `nvidia-*-cu12` set, Triton 3.6.0) were downloaded
+  with `curl -C -`, checked against the index sha256, installed from local files, and then `setup_venv.sh` ran unchanged
+  (no-op install, freeze, arch check). The lock file records each wheel's sha256.
+
+### Script fixes (no methodology change)
+
+- `scripts/preflight.sh`: added the three RTX 6000 names to the tag `case`, before the `*Blackwell*` pattern, which would have
+  suggested `rtxpro5000bw` for an RTX PRO 6000 Blackwell.
+- `scripts/setup_venv.sh`: the arch check rejected torch 2.11.0+cu128 because its arch list (`sm_75, sm_80, sm_86, sm_90,
+  sm_100, sm_120`) has no `sm_89` and no PTX. SASS runs on any GPU with the same major version and an equal or higher minor, so
+  `sm_86` code runs natively on cc 8.9. The check now accepts that case. Consequence: torch's own kernels (`sum` reduce,
+  `fill_`) run `sm_86` SASS here, while cuBLAS ships its own sm_89 kernels and Triton compiles for sm_89 directly.
+
+### Performance counters: ncu blocked by DCGM (E3 blocker)
+
+- The ncu probe fails (rc 9): "Profiling failed because a driver resource was unavailable. Ensure that no other tool (like
+  DCGM) is concurrently collecting profiling data."
+- Cause: the cluster runs `nv-hostengine` and `dcgm-exporter` as root (up 65 days). Its counter set includes DCP metrics
+  (`DCGM_FI_PROF_GR_ENGINE_ACTIVE`, `PIPE_TENSOR_ACTIVE`, `DRAM_ACTIVE`, `PCIE_TX/RX_BYTES`), which hold the hardware
+  counters permanently.
+- **E3 needs the admin to pause DCGM profiling** (`dcgmi profile --pause`, then `--resume`) during an agreed window. Not
+  attempted by us: it affects cluster monitoring.
+- `ncu --query-metrics --chip ad102` lists `dram__bytes_read`, `dram__bytes_write`, `dram__throughput`, `lts__t_bytes`
+  and the stall ratios used on GB10, so the default discrete metric names in `platform_notes.yaml` apply.
+- **Timing side effect:** DCGM's DCP sampling runs in the background during every cell on this machine (not on GB10 or the
+  RTX PRO 5000 as far as we know). It is constant across sessions; its size is unknown.
+
+### Library paths (`selfcheck.json`, functional only)
+
+- **BF16 vs CPU; cuBLAS BF16 on 6 shapes at M = 1 and 16: correct and graph-capturable.** Triton read probe correct and
+  graph-capturable. E1 torch ops: `sum` = Memset + `reduce_kernel` (two kernels, as on GB10), `copy_` = Memcpy DtoD.
+- **cuBLAS at M=1 dispatches `internal::gemvx::kernel` on every shape,** but the v6/v7 split differs from GB10:
+
+| Shape (N x K) | rtx6000ada (cuBLAS 12.8.4) | GB10 (13.1.0) | RTX PRO 5000 (13.1.1) |
+|---|---|---|---|
+| 1024x4096 (Llama k/v) | v6 | v6 | v6 |
+| 4096x4096 (Llama q/o) | v6 | v6 | v7 |
+| 14336x4096 (Llama gate/up) | v7 | v7 | v7 |
+| 4096x14336 (Llama down) | v7 | v7 | v7 |
+| 512x3584 (Qwen k/v) | v7 | v7 | v7 |
+| 18944x3584 (Qwen gate/up) | **v7** | v6 | v7 |
+
+  Selfcheck covers 6 shapes; E2 gives the full table.
+- **M=16:** `cutlass_80_wmma_tensorop_bf16 ... 128x2`, plus `splitKreduce` for 1024x4096 and 512x3584 (same as the RTX PRO 5000).
+- **FP8 `_scaled_mm` per-tensor (M = 1 to 16) and row-wise (M = 1, 16): correct and graph-capturable on sm_89.**
+- **INT4 tinygemm:** correct and graph-capturable at M = 1 and 16.
+- **vLLM CUTLASS FP8 and Marlin:** not tested (vLLM not installed, as on the RTX PRO 5000).
+
+### Measurement-setup questions for P2 (before E1 s1)
+
+1. **CPU pinning.** All 64 cores report the same `cpuinfo_max_freq` (3713 MHz), so `cpu_sets()` returns the same 10 allowed
+   CPUs for the benchmark and the monitor: they are not separated. Options: leave as is, or pin the benchmark to the GPU-local
+   CPUs `10-12,42-44` and the monitor to `18,19,50,51`.
+2. **Foreign CPU load** at preflight: about 1 core (one other user), under the 2-core gate. No threshold change proposed.
+3. **Other jobs of our own uid** (another of P2's SLURM jobs on a different GPU of this node) are not counted by the gate,
+   which only checks other users. Sessions should run when no such job is active.
+4. **No clock locking** (needs root). Persistence mode is off; SM and memory clocks are recorded per cell.
+
 ## Open questions
 
 1. Is `lts__t_sectors_aperture_sysmem_op_write` the right write-bytes counter? To be confirmed in E3 with a `fill_` kernel of known size.
