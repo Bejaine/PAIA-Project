@@ -27,8 +27,8 @@ exec docker run --rm "${TTY[@]}" --gpus "$GPUS" --pid=host --ipc=host \
   --ulimit memlock=-1 --ulimit stack=67108864 \
   --user "$(id -u):$(id -g)" \
   -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro \
-  -v "$BENCH_DIR":/bench -v "$HF_CACHE":/hf -v /tmp:/tmp \
-  -e HOME=/bench/.container_home -e HF_HOME=/hf -e PYTHONPATH=/bench \
+  -v "$BENCH_DIR":/bench -v "$BENCH_DIR/../src":/src -v "$HF_CACHE":/hf -v /tmp:/tmp \
+  -e HOME=/bench/.container_home -e HF_HOME=/hf -e PYTHONPATH=/bench:/src -e PAIA_GEMV_LIB=/src/build/$(uname -m)/libpaia_gemv.so \
   -e PAIA_IMAGE="$IMAGE" -e PAIA_IMAGE_ID="$IMAGE_ID" \
   -e PAIA_GIT_COMMIT="$GIT_COMMIT" -e PAIA_GIT_DIRTY="$GIT_DIRTY" -e PAIA_IN_TMUX="${TMUX:+1}" -e PAIA_HOST_USER="$(id -un)" -e PAIA_HOST="$(hostname)" \
   -w /bench "${EXTRA[@]}" "$IMAGE" "$@"
