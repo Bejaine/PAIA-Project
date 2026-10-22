@@ -9,7 +9,7 @@ Last updated 2026-10-22. Status words: **verified**, **not verified**. Nothing h
 |---|---|---|---|
 | `main` | the team's branch (P2's harness and results). I never push to it | `05476b2` | [tree](https://github.com/Bejaine/PAIA-Project/tree/main) |
 | `p1-s1` | **the pull-request branch**: S1 BF16 GEMV, the harness op, the first integration patch. Two commits on top of `main` | `1859d1e` | [tree](https://github.com/Bejaine/PAIA-Project/tree/p1-s1/src) · [diff vs main](https://github.com/Bejaine/PAIA-Project/compare/main...p1-s1) · [open PR](https://github.com/Bejaine/PAIA-Project/pull/new/p1-s1) |
-| `p1-wip-quant` | `p1-s1` plus **one commit** that adds FP8, INT4, tests, the README rewrite and the second patch. **Work in progress, FP8/INT4 not GPU-verified.** It is a straight line on top of `p1-s1`, so it fast-forwards into it once verified | `8878453` | [tree](https://github.com/Bejaine/PAIA-Project/tree/p1-wip-quant/src) · [diff vs p1-s1](https://github.com/Bejaine/PAIA-Project/compare/p1-s1...p1-wip-quant) |
+| `p1-wip-quant` | `p1-s1` plus **one commit** that adds FP8, INT4, tests, the README rewrite and the second patch. **Work in progress, FP8/INT4 not GPU-verified.** It is a straight line on top of `p1-s1`, so it fast-forwards into it once verified | `613c821` | [tree](https://github.com/Bejaine/PAIA-Project/tree/p1-wip-quant/src) · [diff vs p1-s1](https://github.com/Bejaine/PAIA-Project/compare/p1-s1...p1-wip-quant) |
 | `results/rtx6000ada` | not mine (another teammate's results branch) | `3cf7803` | [tree](https://github.com/Bejaine/PAIA-Project/tree/results/rtx6000ada) |
 
 Rule: P1 never merges into `main`. P2 (or whoever the team agrees on) merges the pull request. Build outputs (`src/build/`) are git-ignored and never committed.
@@ -65,3 +65,4 @@ Rule: P1 never merges into `main`. P2 (or whoever the team agrees on) merges the
 | Date | Change |
 |---|---|
 | 2026-10-22 | `p1-s1` pushed (`add0de4`, `1859d1e`); `p1-wip-quant` pushed (`8878453`); this guide added |
+| 2026-10-22 | `p1-wip-quant` moved to `613c821` (adds this guide) |
