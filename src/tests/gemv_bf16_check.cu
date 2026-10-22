@@ -347,17 +347,20 @@ static bool check_int4_shape(const Shape& sh, double* worst) {
     std::mt19937 rng(6); std::vector<int> rows = pick_rows(N, rng);
     std::vector<double> ref(rows.size()); double maxref = 0;
     for (size_t i = 0; i < rows.size(); ++i) { double s = 0; for (int k = 0; k < K; ++k) s += (double)paia_host::dequant_int4(pk.data(), sc.data(), K, rows[i], k) * d.xf[k]; ref[i] = s; maxref = std::max(maxref, std::fabs(s)); }
+    // The unfused control rounds every dequantized weight to bf16 before its GEMV, so it is checked against its own reference.
+    std::vector<double> refu(rows.size()); double maxrefu = 0;
+    for (size_t i = 0; i < rows.size(); ++i) { double s = 0; for (int k = 0; k < K; ++k) s += (double)bf(__float2bfloat16_rn(paia_host::dequant_int4(pk.data(), sc.data(), K, rows[i], k))) * d.xf[k]; refu[i] = s; maxrefu = std::max(maxrefu, std::fabs(s)); }
     void *dW, *dS, *dx, *dy, *dsc; CK(cudaMalloc(&dW, pk.size())); CK(cudaMalloc(&dS, sc.size() * 2)); CK(cudaMalloc(&dx, (size_t)K * 2)); CK(cudaMalloc(&dy, (size_t)N * 2)); CK(cudaMalloc(&dsc, (size_t)N * K * 2));
     CK(cudaMemcpy(dW, pk.data(), pk.size(), cudaMemcpyHostToDevice)); CK(cudaMemcpy(dS, sc.data(), sc.size() * 2, cudaMemcpyHostToDevice)); CK(cudaMemcpy(dx, d.hx.data(), (size_t)K * 2, cudaMemcpyHostToDevice));
     bool ok = true; std::vector<__nv_bfloat16> hy(N);
-    auto verify = [&](const char* what, int v, int rc) {
+    auto verify = [&](const char* what, int v, int rc, bool unf = false) {
         CK(cudaDeviceSynchronize()); CK(cudaMemcpy(hy.data(), dy, (size_t)N * 2, cudaMemcpyDeviceToHost));
-        int miss = -1; const double err = rc ? 1e9 : compare_y(hy, rows, ref, maxref, &miss); *worst = std::max(*worst, rc ? 0.0 : err);
+        int miss = -1; const double err = rc ? 1e9 : compare_y(hy, rows, unf ? refu : ref, unf ? maxrefu : maxref, &miss); *worst = std::max(*worst, rc ? 0.0 : err);
         if (rc || miss || !(err < 2e-2)) { printf("FAIL int4 %s %s variant %d: rc=%d rel_err=%.3e unwritten=%d\n", what, sh.name, v, rc, err, miss); ok = false; }
     };
     for (int v = 0; v < paia_gemv_int4_variant_count(); ++v) { CK(cudaMemset(dy, 0xFF, (size_t)N * 2)); verify("fused", v, paia_gemv_int4(dW, dS, dx, dy, N, K, v, nullptr)); }
     CK(cudaMemset(dy, 0xFF, (size_t)N * 2)); verify("naive", -1, paia_gemv_int4_naive(dW, dS, dx, dy, N, K, nullptr));
-    CK(cudaMemset(dy, 0xFF, (size_t)N * 2)); verify("unfused", -1, paia_gemv_int4_unfused(dW, dS, dx, dy, dsc, N, K, nullptr));
+    CK(cudaMemset(dy, 0xFF, (size_t)N * 2)); verify("unfused", -1, paia_gemv_int4_unfused(dW, dS, dx, dy, dsc, N, K, nullptr), true);
     cudaFree(dW); cudaFree(dS); cudaFree(dx); cudaFree(dy); cudaFree(dsc); return ok;
 }
 

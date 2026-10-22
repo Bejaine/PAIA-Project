@@ -118,3 +118,23 @@ use R >= 2 (x conversion and x loads are shared by the rows of a warp).
 Asymmetric INT4 (scale plus zero point) and M > 1 (the deck promises M = 1..16; the kernels here are M = 1); Triton cross-check of S1; NVFP4; SASS check
 (`cuobjdump -sass`, count LDG.E.128 before the first FFMA in one loop body); sm_121 build on the Spark; P2's pointer-chase latency probe to replace the
 3 to 6 KB per SM bytes-in-flight range.
+
+## Result vs prediction: Ada dev run (Slurm job 47537, 2026-10-22; raw output in `src/dev_runs/`)
+
+Scope: the predictions above were registered for GB10 and the gated harness. This run is on an RTX 6000 Ada, ungated (dev), so it is an informal out-of-platform comparison, not a test of record. The gated GB10 runs remain the test.
+
+Correctness: BF16 (96 variants) passes, worst relative error 3.1e-3. FP8 (36 variants, 16 shapes) passes, worst 3.2e-3. INT4 fused (48 variants) and naive pass on every shape. The unfused control failed once (1x128, error 2.7e-2): the test compared it against exact dequantized weights although it rounds them to bf16 first; in a CPU simulation of one row the control exceeds the 2e-2 gate with probability 4.7% (0.14% at N=3, 0% from N=7; the fused kernel never does). The test now uses a bf16-weight reference for the control. A re-run (Slurm job 47612) is queued; this section will be updated with its result.
+
+| Item | Predicted | Observed (Ada, dev) | Verdict |
+|---|---|---|---|
+| FP8 vs best BF16, shapes of 24 MiB or more | 1.85 to 1.97x | 1.89 to 1.98x (both gate/up shapes 1.98x) | inside, at the ideal's edge |
+| FP8 Llama k/v, Qwen k/v | 1.6 to 1.85x, 1.4 to 1.7x | 1.75x, 1.56x | inside |
+| INT4 fused, 24 MiB or more | 3.2 to 3.8x | 3.43 to 3.91x (four shapes 3.86 to 3.91x = 99 to 100% of ideal) | at or above the upper end |
+| INT4 fused Llama k/v, Qwen k/v | 2.4 to 3.1x, 1.8 to 2.4x | 2.85x, 1.94x | inside |
+| INT4 naive K1, large shapes | 0.8 to 1.6x | 3.17 to 3.71x (80 to 95% of B0) | **wrong by more than 2x** |
+| INT4 naive K1, k/v shapes | within the same band | 1.59x, 0.96x | inside |
+| INT4 unfused | 0.35 to 0.5x | 0.48 to 0.54x where the scratch (2NK) exceeds the 96 MiB L2; 1.4 to 1.8x where it fits | held where meant to; cache artifact confirmed |
+| Best INT4 variant uses R >= 2 | yes | R=1 best on 7 of 10 shapes; top variants of large shapes are near-ties | **wrong** |
+| Dequant issue load at most about 15% (ncu) | | not measured | open |
+
+Read-outs (dev, Ada only): INT4 fused reaches 98 to 100% of the bytes-ratio speedup on shapes of 112 MiB or more, so no per-byte loss remains there at batch 1. GEMV-only per layer: INT4 3.79x (Llama) and 3.77x (Qwen) over our best BF16, 3.84x and 3.83x over cuBLAS; FP8 1.96x. What remains is per-op: the effective fixed cost (time minus bytes over the dev read probe) is 1.0 to 1.7 us, and Qwen k/v with INT4 reaches 1.94x of an ideal 3.85x, but k/v are only 3.9 to 5.6% of an INT4 layer. The dev B0 probe is slightly low (INT4 reached 100.2% of it). Whether any of this holds on GB10, where P2 measured cuBLAS's loss per byte, is what the gated runs decide.
