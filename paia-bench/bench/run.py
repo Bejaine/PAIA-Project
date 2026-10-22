@@ -92,7 +92,26 @@ def e2_cells():
     return cells
 
 
-PHASES = {"e1": e1_cells, "e2": e2_cells, "selftest": selftest_cells}
+def s1_cells():
+    """P1's S1 BF16 GEMV (ours_bf16_gemv): same shapes and modes as E2 at M=1, so cells pair with cuBLAS cell by cell.
+    Own phase name, so bench.analyze_e2 (which reads phase e2) is not confused by a second implementation."""
+    cfg = config.shapes_cfg()
+    base = {"phase": "s1", "op": "linear", "impl": "ours_bf16_gemv", "precision": "bf16", "hot_or_cold": "cold"}
+    cells = []
+    for name, sw in cfg["synthetic"].items():
+        for n in sw["N"]:
+            for mode in ("isolated", "eager", "graph"):
+                cells.append({**base, "shape": {"M": 1, "N": n, "K": sw["K"]}, "model": "synthetic",
+                              "layer_name": f"{name}_N{n}", "timing_mode": mode})
+    for model, m in cfg["models"].items():
+        for layer, (n, k) in m["shapes"].items():
+            for mode in ("isolated", "eager", "graph"):
+                cells.append({**base, "shape": {"M": 1, "N": n, "K": k}, "model": model, "layer_name": layer,
+                              "timing_mode": mode})
+    return cells
+
+
+PHASES = {"e1": e1_cells, "e2": e2_cells, "s1": s1_cells, "selftest": selftest_cells}
 
 
 def ordered(cells, seed):
@@ -130,6 +149,11 @@ class GpuContext:
             from bench.ops.cublas_bf16 import CublasBF16Linear
             sh = spec["shape"]
             return CublasBF16Linear(M=sh["M"], N=sh["N"], K=sh["K"], model=spec["model"], layer_name=spec["layer_name"])
+        if spec["phase"] == "s1" and spec["impl"] == "ours_bf16_gemv":
+            from bench.ops.ours_bf16 import OursBF16Gemv
+            sh = spec["shape"]
+            return OursBF16Gemv(M=sh["M"], N=sh["N"], K=sh["K"], model=spec["model"], layer_name=spec["layer_name"],
+                                platform_tag=self.sess_dir.parent.name)   # results/<platform_tag>/<session>
         raise ValueError(f"no op for {spec}")
 
 
@@ -148,6 +172,8 @@ def execute_gpu(spec, ctx):
     probe = ctx.make_op(spec)
     rec = {"bytes": probe.bytes()}
     rec["bytes"]["total"] = sum(rec["bytes"].values())
+    if hasattr(probe, "impl_config"):
+        rec["impl_config"] = probe.impl_config()
     footprint = probe.footprint_bytes()
     graph_ok = probe.graph_ok
     del probe
