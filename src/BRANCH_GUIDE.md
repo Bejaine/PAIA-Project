@@ -14,13 +14,14 @@ Last updated 2026-10-22. Status words: **verified**, **not verified**. Nothing h
 
 Rule: P1 never merges into `main`. P2 (or whoever the team agrees on) merges the pull request. Build outputs (`src/build/`) are git-ignored and never committed.
 
-## 2. The three commits
+## 2. The commits
 
 | Commit | Branch | Content | Touches P2's files? |
 |---|---|---|---|
 | [`add0de4`](https://github.com/Bejaine/PAIA-Project/commit/add0de4) | `p1-s1` | S1 BF16 GEMV (96 variants), C ABI, ctypes loader, `Op` adapter `ours_bf16.py`, standalone check and bench, CPU checks, tools, README (S1 only) | no |
 | [`1859d1e`](https://github.com/Bejaine/PAIA-Project/commit/1859d1e) | `p1-s1` | the integration patch: phase `s1`, one branch in `make_op`, records the chosen variant per cell, mounts `src/` into the container | **yes**: `paia-bench/bench/run.py`, `scripts/drun.sh`, `scripts/hrun.sh` (30 added lines, 4 changed). Please review this commit on its own |
 | [`8878453`](https://github.com/Bejaine/PAIA-Project/commit/8878453) | `p1-wip-quant` | FP8 W8A16 and INT4 W4A16 kernels, `ours_quant.py`, quantizers, CPU emulation tests, README v2, `src/patches/integration_quant.patch` (phases `s3`, `s4`) | no (the patch is a file, not applied) |
+| [`613c821`](https://github.com/Bejaine/PAIA-Project/commit/613c821) | `p1-wip-quant` | this guide (`src/BRANCH_GUIDE.md`) | no |
 
 ## 3. Reading order (about 30 minutes)
 
