@@ -16,7 +16,7 @@ elif [[ "$N_GPUS" -gt 1 && -z "${CUDA_VISIBLE_DEVICES:-}" ]]; then
   echo "this host has $N_GPUS GPUs: set PAIA_GPU to the nvidia-smi index or UUID of yours" >&2; exit 1
 fi
 source "$VENV/bin/activate"
-export HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}" PYTHONPATH="$BENCH_DIR"
+export HF_HOME="${HF_HOME:-$HOME/.cache/huggingface}" PYTHONPATH="$BENCH_DIR:$BENCH_DIR/../src"
 export PAIA_IMAGE="host-venv:$(basename "$VENV")"
 export PAIA_IMAGE_ID="$(sha1sum "$VENV/requirements.lock.txt" 2>/dev/null | cut -c1-16 || echo unknown)"
 export PAIA_GIT_COMMIT="$(git -C "$BENCH_DIR" rev-parse HEAD 2>/dev/null || echo unknown)"
