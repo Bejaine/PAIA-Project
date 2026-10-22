@@ -1,0 +1,100 @@
+==========================================
+SLURM_JOB_ID = 47537
+SLURM_NODELIST = node01
+SLURM_JOB_GPUS = 0
+==========================================
+job 47537 node node01
+name, compute_cap, clocks.current.sm [MHz], clocks.max.sm [MHz], utilization.gpu [%], memory.used [MiB]
+NVIDIA RTX 6000 Ada Generation, 8.9, 210 MHz, 3105 MHz, 0 %, 2 MiB
+NVIDIA RTX 6000 Ada Generation  cc 8.9  SMs 142  L2 96 MiB  variants 96
+worst relative error over all passing cases: 3.10e-03
+ALL CHECKS PASSED
+=== QUANT CORRECTNESS ===
+NVIDIA RTX 6000 Ada Generation  cc 8.9  SMs 142  L2 96 MiB  variants 96
+FAIL int4 unfused 1x128 variant -1: rc=0 rel_err=2.706e-02 unwritten=0
+quantized worst relative error: fp8 3.23e-03  int4 2.71e-02
+QUANT CHECKS FAILED
+=== QUANT BENCH (dev, graph mode) ===
+NVIDIA RTX 6000 Ada Generation  cc 8.9  SMs 142  L2 96 MiB  variants 96
+DEV BENCHMARK: no idle gate, not a result. Timing: CUDA graph.
+dev B0 (streaming read probe, best grid): 890.7 GB/s
+
+llama q/o      N=4096   K=4096    bf16 32.0 MiB | fp8 16.0 MiB | int4 8.3 MiB
+  bf16 best-of-18     864.4 GB/s (97% of B0)     38.84 us   [reference for every speedup below]
+  bf16 cuBLAS         845.2 GB/s (94% of B0)     39.72 us
+  fp8  best           845.4 GB/s (94% of B0)     19.88 us   R=1 U=1 W=4 H=1   speedup vs bf16 1.95x of ideal 2.00x (97%)
+  int4 fused best     809.7 GB/s (90% of B0)     10.70 us   R=1 U=1 W=8 H=0   speedup vs bf16 3.63x of ideal 3.87x (93%)
+  int4 naive (K1)     743.0 GB/s (83% of B0)     11.67 us   speedup vs bf16 3.33x
+  int4 unfused        390.6 GB/s (43% of B0)     22.19 us   speedup vs bf16 1.75x   (sanity control: writes and re-reads a bf16 copy)
+
+llama k/v      N=1024   K=4096    bf16 8.0 MiB | fp8 4.0 MiB | int4 2.1 MiB
+  bf16 best-of-18     805.0 GB/s (90% of B0)     10.43 us   [reference for every speedup below]
+  bf16 cuBLAS         719.1 GB/s (80% of B0)     11.68 us
+  fp8  best           706.9 GB/s (79% of B0)      5.95 us   R=1 U=2 W=4 H=1   speedup vs bf16 1.75x of ideal 2.00x (87%)
+  int4 fused best     594.1 GB/s (66% of B0)      3.66 us   R=1 U=1 W=4 H=1   speedup vs bf16 2.85x of ideal 3.87x (73%)
+  int4 naive (K1)     331.5 GB/s (37% of B0)      6.55 us   speedup vs bf16 1.59x
+  int4 unfused        284.4 GB/s (31% of B0)      7.64 us   speedup vs bf16 1.37x   (sanity control: writes and re-reads a bf16 copy)
+
+llama gate/up  N=14336  K=4096    bf16 112.0 MiB | fp8 56.1 MiB | int4 28.9 MiB
+  bf16 best-of-18     882.5 GB/s (99% of B0)    133.12 us   [reference for every speedup below]
+  bf16 cuBLAS         877.9 GB/s (98% of B0)    133.81 us
+  fp8  best           874.7 GB/s (98% of B0)     67.24 us   R=2 U=2 W=4 H=0   speedup vs bf16 1.98x of ideal 2.00x (99%)
+  int4 fused best     889.1 GB/s (99% of B0)     34.10 us   R=4 U=4 W=4 H=1   speedup vs bf16 3.90x of ideal 3.88x (100%)
+  int4 naive (K1)     782.9 GB/s (87% of B0)     38.72 us   speedup vs bf16 3.44x
+  int4 unfused        120.4 GB/s (13% of B0)    251.87 us   speedup vs bf16 0.53x   (sanity control: writes and re-reads a bf16 copy)
+
+llama down     N=4096   K=14336   bf16 112.0 MiB | fp8 56.1 MiB | int4 28.9 MiB
+  bf16 best-of-18     881.9 GB/s (99% of B0)    133.21 us   [reference for every speedup below]
+  bf16 cuBLAS         872.8 GB/s (97% of B0)    134.60 us
+  fp8  best           870.9 GB/s (97% of B0)     67.49 us   R=1 U=2 W=8 H=1   speedup vs bf16 1.97x of ideal 2.00x (98%)
+  int4 fused best     878.0 GB/s (98% of B0)     34.53 us   R=2 U=2 W=4 H=1   speedup vs bf16 3.86x of ideal 3.88x (99%)
+  int4 naive (K1)     762.9 GB/s (85% of B0)     39.73 us   speedup vs bf16 3.35x
+  int4 unfused        122.5 GB/s (13% of B0)    247.48 us   speedup vs bf16 0.54x   (sanity control: writes and re-reads a bf16 copy)
+
+qwen q/o       N=3584   K=3584    bf16 24.5 MiB | fp8 12.3 MiB | int4 6.3 MiB
+  bf16 best-of-18     869.0 GB/s (97% of B0)     29.58 us   [reference for every speedup below]
+  bf16 cuBLAS         806.0 GB/s (90% of B0)     31.89 us
+  fp8  best           822.0 GB/s (92% of B0)     15.66 us   R=1 U=1 W=4 H=0   speedup vs bf16 1.89x of ideal 2.00x (94%)
+  int4 fused best     770.5 GB/s (86% of B0)      8.61 us   R=1 U=1 W=4 H=0   speedup vs bf16 3.43x of ideal 3.87x (88%)
+  int4 naive (K1)     715.4 GB/s (80% of B0)      9.28 us   speedup vs bf16 3.19x
+  int4 unfused        379.4 GB/s (42% of B0)     17.49 us   speedup vs bf16 1.69x   (sanity control: writes and re-reads a bf16 copy)
+
+qwen k/v       N=512    K=3584    bf16 3.5 MiB | fp8 1.8 MiB | int4 0.9 MiB
+  bf16 best-of-18     694.6 GB/s (77% of B0)      5.30 us   [reference for every speedup below]
+  bf16 cuBLAS         627.8 GB/s (70% of B0)      5.86 us
+  fp8  best           545.0 GB/s (61% of B0)      3.39 us   R=1 U=2 W=4 H=1   speedup vs bf16 1.56x of ideal 1.99x (78%)
+  int4 fused best     349.2 GB/s (39% of B0)      2.73 us   R=1 U=2 W=4 H=1   speedup vs bf16 1.94x of ideal 3.85x (50%)
+  int4 naive (K1)     173.3 GB/s (19% of B0)      5.51 us   speedup vs bf16 0.96x
+  int4 unfused        179.5 GB/s (20% of B0)      5.32 us   speedup vs bf16 1.00x   (sanity control: writes and re-reads a bf16 copy)
+
+qwen gate/up   N=18944  K=3584    bf16 129.5 MiB | fp8 64.9 MiB | int4 33.4 MiB
+  bf16 best-of-18     883.7 GB/s (99% of B0)    153.71 us   [reference for every speedup below]
+  bf16 cuBLAS         880.2 GB/s (98% of B0)    154.31 us
+  fp8  best           876.7 GB/s (98% of B0)     77.58 us   R=2 U=4 W=4 H=1   speedup vs bf16 1.98x of ideal 2.00x (99%)
+  int4 fused best     892.2 GB/s (100% of B0)     39.29 us   R=1 U=1 W=4 H=0   speedup vs bf16 3.91x of ideal 3.88x (100%)
+  int4 naive (K1)     846.5 GB/s (95% of B0)     41.41 us   speedup vs bf16 3.71x
+  int4 unfused        110.5 GB/s (12% of B0)    317.19 us   speedup vs bf16 0.48x   (sanity control: writes and re-reads a bf16 copy)
+
+qwen down      N=3584   K=18944   bf16 129.5 MiB | fp8 64.8 MiB | int4 33.4 MiB
+  bf16 best-of-18     884.3 GB/s (99% of B0)    153.60 us   [reference for every speedup below]
+  bf16 cuBLAS         871.5 GB/s (97% of B0)    155.86 us
+  fp8  best           871.5 GB/s (97% of B0)     77.97 us   R=4 U=4 W=4 H=1   speedup vs bf16 1.97x of ideal 2.00x (98%)
+  int4 fused best     884.0 GB/s (99% of B0)     39.65 us   R=2 U=2 W=4 H=1   speedup vs bf16 3.87x of ideal 3.88x (99%)
+  int4 naive (K1)     724.0 GB/s (81% of B0)     48.41 us   speedup vs bf16 3.17x
+  int4 unfused        114.2 GB/s (12% of B0)    306.85 us   speedup vs bf16 0.50x   (sanity control: writes and re-reads a bf16 copy)
+
+llama qkv      N=6144   K=4096    bf16 48.0 MiB | fp8 24.0 MiB | int4 12.4 MiB
+  bf16 best-of-18     872.3 GB/s (97% of B0)     57.72 us   [reference for every speedup below]
+  bf16 cuBLAS         859.8 GB/s (96% of B0)     58.56 us
+  fp8  best           856.3 GB/s (96% of B0)     29.44 us   R=1 U=2 W=4 H=0   speedup vs bf16 1.96x of ideal 2.00x (98%)
+  int4 fused best     838.2 GB/s (94% of B0)     15.51 us   R=1 U=1 W=4 H=0   speedup vs bf16 3.72x of ideal 3.87x (96%)
+  int4 naive (K1)     787.2 GB/s (88% of B0)     16.51 us   speedup vs bf16 3.50x
+  int4 unfused        351.8 GB/s (39% of B0)     36.94 us   speedup vs bf16 1.56x   (sanity control: writes and re-reads a bf16 copy)
+
+qwen qkv       N=4608   K=3584    bf16 31.5 MiB | fp8 15.8 MiB | int4 8.1 MiB
+  bf16 best-of-18     863.4 GB/s (96% of B0)     38.28 us   [reference for every speedup below]
+  bf16 cuBLAS         825.3 GB/s (92% of B0)     40.04 us
+  fp8  best           838.2 GB/s (94% of B0)     19.75 us   R=1 U=1 W=4 H=0   speedup vs bf16 1.94x of ideal 2.00x (97%)
+  int4 fused best     797.6 GB/s (89% of B0)     10.70 us   R=1 U=1 W=4 H=0   speedup vs bf16 3.58x of ideal 3.87x (92%)
+  int4 naive (K1)     741.3 GB/s (83% of B0)     11.51 us   speedup vs bf16 3.33x
+  int4 unfused        400.4 GB/s (44% of B0)     21.31 us   speedup vs bf16 1.80x   (sanity control: writes and re-reads a bf16 copy)

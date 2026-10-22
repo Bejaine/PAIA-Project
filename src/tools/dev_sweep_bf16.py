@@ -30,6 +30,7 @@ def parse_filter(expr):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--platform-tag", required=True)
+    ap.add_argument("--kind", choices=["bf16", "fp8", "int4"], default="bf16", help="which kernel family to sweep")
     ap.add_argument("--shapes", nargs="*", default=[], help="model:layer, e.g. llama31_8b:q_proj")
     ap.add_argument("--all-real", action="store_true")
     ap.add_argument("--variants", default="")
@@ -42,16 +43,21 @@ def main():
     import torch
     from bench import config, timing
     from bench.ops.ours_bf16 import OursBF16Gemv
+    from bench.ops.ours_quant import OursFP8Gemv, OursInt4Gemv
     from paia_gemv import load_lib
 
     lib, cfg, tcfg = load_lib(), config.shapes_cfg(), config.timing_cfg()
+    OpCls = {"bf16": OursBF16Gemv, "fp8": OursFP8Gemv, "int4": OursInt4Gemv}[a.kind]
+    variants = {"bf16": lib.variants, "fp8": lib.variants_fp8, "int4": lib.variants_int4}[a.kind]
+    kmult = {"bf16": 8, "fp8": 16, "int4": 128}[a.kind]
+    tkey = {"bf16": "shapes", "fp8": "fp8_shapes", "int4": "int4_shapes"}[a.kind]
     props = torch.cuda.get_device_properties(0)
     mem_cap = int(tcfg["mem_cap_gb"] * 2**30)
     keep = parse_filter(a.variants)
     targets = []
     for model, m in cfg["models"].items():
         for layer, (n, k) in m["shapes"].items():
-            if a.all_real or f"{model}:{layer}" in a.shapes:
+            if (a.all_real or f"{model}:{layer}" in a.shapes) and k % kmult == 0:
                 targets.append((model, layer, n, k))
     seen, uniq = set(), []
     for t in targets:                      # identical N x K share one tuned entry
@@ -59,13 +65,14 @@ def main():
             seen.add((t[2], t[3])); uniq.append(t)
     out_f = HERE.parent / "tuned" / f"{a.platform_tag}.json"
     tuned = json.load(open(out_f)) if out_f.exists() else {"platform": a.platform_tag, "shapes": {}}
+    tuned.setdefault(tkey, {})
     atcfg = {**tcfg, "sample_target_ms": 400, "warmup_min_ms": 100}
     for model, layer, N, K in uniq:
         rows = []
-        for v in lib.variants:
+        for v in variants:
             if not keep(v):
                 continue
-            op = OursBF16Gemv(M=1, N=N, K=K, model=model, layer_name=layer, variant=v["id"])
+            op = OpCls(M=1, N=N, K=K, model=model, layer_name=layer, variant=v["id"])
             rot = timing.plan_rotation(op.footprint_bytes(), False, mem_cap, props.L2_cache_size, tcfg["l2_rotation_factor"])
             try:
                 op.build(rot["n_copies"])
@@ -82,7 +89,7 @@ def main():
         for us, v, _ in rows[:5]:
             print(f"  {tb/(us*1e-6)/1e9:7.1f} GB/s  {us:9.2f} us   R={v['R']} U={v['U']} W={v['W']} S={v['S']} H={v['H']}")
         if rows:
-            tuned["shapes"][f"{N}x{K}"] = {"variant": {k: rows[0][1][k] for k in "RUWSH"}, "us": rows[0][0],
+            tuned[tkey][f"{N}x{K}"] = {"variant": {k: rows[0][1][k] for k in "RUWSH"}, "us": rows[0][0],
                                             "gbps": tb / (rows[0][0] * 1e-6) / 1e9,
                                             "top5": [{"variant": {k: v[k] for k in "RUWSH"}, "pct_of_best": 100 * rows[0][0] / us}
                                                      for us, v, _ in rows[:5]],

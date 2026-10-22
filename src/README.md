@@ -1,77 +1,140 @@
-# src/: P1 kernels (S1 BF16 GEMV first)
+# src/: P1 kernels (BF16 S1, FP8 B3, INT4 K1/K2)
 
-Owner: P1. Companion to `paia-bench/` (P2's harness). Status of every claim below is marked
-**[verified here]** (done in the authoring sandbox, no GPU), **[not verified]** (needs a GPU run) or **[assumption]**.
+Owner: P1. Companion to `paia-bench/` (P2's harness). Every claim carries a status:
+**[verified]** done and checked in the authoring sandbox or on a GPU, **[dev]** measured on a GPU without the idle gate
+(a hint, never a result), **[not verified]** needs a run, **[assumption]** reasoned, unchecked.
 
-## What S1 is
+## Files
 
-`y[N] = W[N,K] @ x[K]`, bf16 in/out, fp32 accumulate, M = 1. One warp owns R rows; each lane issues R*U independent 16 B
-loads per row-chunk before consuming any, so a warp keeps R*U*512 B in flight. No split-K, no shared memory, no atomics.
-Motivation: P2's E3 shows cuBLAS `gemvx/v6` (16-lane rows) streams at 68-72% of B0 on GB10 while v7 (32-lane rows) reaches
-87-98%, with identical bytes and identical 25% occupancy (164 regs); the gap is bytes in flight per warp.
+| Path | What |
+|---|---|
+| `paia_gemv/gemv_bf16.cuh`, `gemv_bf16.cu` | S1 BF16 GEMV (96 variants) and its C ABI |
+| `paia_gemv/gemv_fp8.cuh`, `gemv_int4.cuh`, `gemv_quant.cu` | FP8 W8A16 (36 variants), INT4 W4A16 fused K2 (48 variants), naive K1, unfused control, and their C ABI |
+| `paia_gemv/quant_host.h` | host quantizers and reference decoders (C++), format definitions |
+| `paia_gemv/quant.py`, `loader.py` | torch quantizers (GPU), ctypes loader |
+| `paia_gemv/build.sh` | builds `src/build/<arch>/libpaia_gemv.so` (static cudart, no torch dependency) |
+| `tests/gemv_bf16_check.cu` | standalone CUDA check and dev benchmark, no Python (`--quant`, `--bench`, `--bench-quant`) |
+| `tests/emulate_mapping.py`, `emulate_formats.py`, `quant_host_selftest.cpp` | CPU checks (no GPU) |
+| `tests/test_gemv_bf16.py` | torch-based GPU test (for the container; the standalone check is the one to use on turing) |
+| `tools/nvrtc_check.py` | compile every variant without a GPU or nvcc: NVRTC then ptxas, registers and spills |
+| `tools/dev_sweep_bf16.py` | variant sweep with the harness's own timing (`--kind bf16\|fp8\|int4`), dev only |
+| `tools/compare_to_cublas.py` | per-shape table from harness cell JSONs |
+| `../paia-bench/bench/ops/ours_bf16.py`, `ours_quant.py` | harness `Op` adapters (phases s1, s3, s4 via the integration patches) |
 
-Knobs (all compiled in, 96 variants): R rows/warp {1,2,4}; U chunks in flight {1,2,4,8}; W warps/block {4,8};
-S weight loads via `ld.global.nc.L1::no_allocate` (keeps x in L1); H `__launch_bounds__(W*32,1)` (see next section).
+## Formats (fixed here; `quant_host.h` and `quant.py` implement exactly this)
 
-## Finding that shaped the design [verified here, ptxas 12.9 -v, sm_121/sm_120/sm_89]
+- **FP8 W8A16.** e4m3fn weights (bias 7, no inf, 0x7F/0xFF NaN, max 448), one fp32 scale per output row, `scale = amax/448`,
+  round-to-nearest-even. Activations bf16, fp32 accumulate. Bytes per weight 1 + 4/K. Ideal speedup over BF16 about 2.0x.
+- **INT4 W4A16 g128.** Unsigned nibbles, zero point 8, group 128 along K, fp16 scale = `fp16(amax/7)`, `n = clamp(rint(w/scale), -7, 7) + 8`.
+  Byte j of a row = weight 2j (low nibble), 2j+1 (high nibble). Scales `[N][K/128]`. 4.125 bits per weight, ideal speedup about 3.88x.
+  The asymmetric variants some libraries use (scale plus zero point, 4.25 bits, ideal 3.76x) are **not implemented**; the zero point in
+  tinygemm is an additive real-domain offset, not an integer subtract, so it needs its own kernel path and reference.
 
-With default launch bounds, ptxas holds registers near the full-occupancy limit (about 40) and does **not** keep all R*U
-loads in flight: R=2,U=8 uses 40 registers where 16 resident 16 B loads alone need 64. With `__launch_bounds__(W*32, 1)`
-(H=1) the same variant uses 123 registers, matching the predicted need (4*U*(R+1) = 96 plus addressing). So U alone does
-not set loads-in-flight; the register budget does. H is therefore a sweep dimension. `nvrtc_check.py` flags (`*`) every
-variant whose registers are below the need, and in those rows the in-flight column is an upper bound, not a measurement.
-No variant spills on any of the three architectures (288 builds). Whether H=1 or H=0 is faster is **[not verified]**.
+## Kernel designs
 
-Little's law, **[assumption]**: bytes in flight per SM needed = B0 x L / 48 SMs; for L = 0.6 to 1.2 us that is about 3 to 6 KB
-per SM on GB10. Every variant exceeds that on paper, so differences should come from scheduling, LSU queueing and
-small-shape tail effects, not from raw in-flight capacity. P2's pointer-chase probe (S5) will replace this range with L.
+All kernels: one warp owns R rows; a lane issues R*U independent 16 B weight loads before consuming any; fp32 accumulate; warp-shuffle
+reduction; one bf16 store per row; no split-K, no shared memory, no atomics. Knobs: R rows/warp, U chunks in flight, W warps/block, H hoist
+(`__launch_bounds__(W*32,1)`), S weight loads via `ld.global.nc.L1::no_allocate` (bf16 only; the quantized kernels always use it).
 
-## Verified here / not verified
+- **S1 BF16.** 256 columns per warp-chunk. Needs K % 8 == 0.
+- **FP8.** 512 columns per chunk (16 weights per lane). Decode is pure integer bit work and exact for every finite code: the 7 magnitude
+  bits go to bits 13..7 of a half (exponent field = e instead of e+8, so the half equals value/256 exactly, subnormals included), the sign to
+  bit 15; the factor 256 is folded into the per-row scale at the end. No per-weight multiply. Needs K % 16 == 0.
+- **INT4 fused (K2).** 1024 columns per chunk (32 weights per lane, one fp16 scale per lane per chunk). **No repack is needed**: with natural
+  packing, `w & 0x0F0F0F0F` gives the four even-position weights of a 32-bit word and `(w>>4) & 0x0F0F0F0F` the four odd ones; each byte becomes
+  the float 8388608+n with one PRMT against 0x4B000000, and subtracting 8388616 gives n-8 exactly. Even weights pair with the low bf16 half of each
+  x word, odd weights with the high half. About 3.4 thread-instructions per weight; at B0 that is roughly 12% of issue capacity on GB10 and 14% on Ada
+  **[assumption, check with ncu]**. Needs K % 128 == 0.
+- **INT4 naive (K1).** One row per warp, one 4 B load per lane per iteration, scale reloaded from global every iteration, shift/mask/I2F per
+  weight, no unrolling. The deliberate per-byte-loss control.
+- **INT4 unfused.** Kernel A writes a bf16 copy of the weights (2 B per weight), then S1 reads it back: 4.5 B per weight of traffic against BF16's
+  2. A sanity control that is slower than BF16 by construction, never a headline.
+
+## Findings that shaped the design
+
+1. **ptxas register policy [verified, ptxas 12.9 -v].** With default launch bounds ptxas holds registers near the full-occupancy limit (about 40) and
+   does not keep all R*U loads in flight (R=2,U=8 BF16: 40 registers where 16 resident 16 B loads alone need 64). `__launch_bounds__(W*32,1)` lets
+   it allocate what the batch needs (123 registers). H is therefore a sweep dimension. A few INT4 variants with H=0 and R>=4 spill 4 to 24 bytes
+   (R=8,U=2,W=4; R=4,U=2,W=4 and 8; R=4,U=4,W=4); the H=1 variants do not spill. The `need*` column of `nvrtc_check.py` is the BF16 formula and is only a
+   rough guide for FP8 and INT4.
+2. **Dev benchmark on an RTX 6000 Ada [dev, BF16 only so far].** Dev read probe B0 = 891 GB/s (93% of 960 spec). S1 reaches 96 to 99% of B0 on shapes of
+   24 MiB or more and is 1.00 to 1.13x over `cublasGemmEx` (n=1); the fixed cost per op (time minus bytes/B0) is about 0.8 to 1.3 us for S1 against 1.8 to
+   3.6 us for cuBLAS. On Ada cuBLAS's loss is per op; on GB10 P2 measured it per byte (gemvx v6). `cublasGemmEx` is not the `F.linear` path.
+
+## Status
 
 | Item | Status |
 |---|---|
-| Device code compiles for sm_89, sm_120, sm_121 (NVRTC 12.9 -> ptxas 12.9), all 96 variants, `L1::no_allocate` accepted | verified |
-| No register spills in any variant on any of the three archs | verified |
-| Index logic: every (row, col) read exactly once, every row stored once, incl. K%256 != 0, N not a multiple of R*W, remainder batches (`tests/emulate_mapping.py`, 1056 combinations) | verified (CPU emulation of the control flow) |
-| `integration.patch` applies cleanly to P2's tree; patched `run.py` parses | verified |
-| Python files byte-compile; `compare_to_cublas.py` runs on synthetic cells | verified |
-| nvcc build (CUDA 13.0 in paia-bench:25.11), the .so loads, launches work, graph capture works | **not verified** |
-| Numerical correctness on a device (`tests/test_gemv_bf16.py`) | **not verified** |
-| That ptxas actually issues the loads back to back (registers say yes for H=1; SASS not inspected) | **not verified**: on turing run `cuobjdump -sass libpaia_gemv.so`, count `LDG.E.128` before the first `FFMA` in one loop body |
-| Performance of any variant | **not verified** |
+| All variants of all kernels compile for sm_89, sm_120, sm_121 (NVRTC then ptxas 12.9) | verified |
+| Index and loop logic (coverage of every element once, remainders, partial chunks) for BF16, FP8, INT4 | verified (CPU emulation) |
+| e4m3 decode exact for all finite codes; nibble decode exact; kernel dataflow equals the dequantized reference | verified (bit-exact numpy port of the device code) |
+| Host quantizers: round trips, nearest code, ties to even, fp16 conversion over all 65536 patterns | verified (CPU self-test) |
+| BF16: all 96 variants correct on RTX 6000 Ada, worst relative error 3.1e-3 | verified (GPU) |
+| FP8 and INT4: correctness on a GPU (`gemv_check --quant`) | **not verified** |
+| Any performance of FP8 and INT4 | **not verified** |
+| sm_121 build and any run on the Spark | **not verified** |
+| Harness phases s1, s3, s4 under P2's gate | **not verified** |
+| That ptxas issues the loads back to back (SASS not inspected) | **not verified** |
 
-## Build, test, integrate (in this order)
+## Build, test
 
-1. Copy `src/` to the repo root and `paia-bench/bench/ops/ours_bf16.py` into P2's tree. Ask P2 to review and apply
-   `integration.patch` (adds phase `s1`, the op factory branch, records the chosen variant per cell, and mounts `src/` into the
-   container with `PYTHONPATH=/bench:/src`). Own phase name on purpose: `analyze_e2.py` reads phase `e2` only.
-2. Build where nvcc exists, once per CPU architecture (GB10 is aarch64, the RTX server x86_64; the .so uses static cudart and
-   no torch headers, so it does not depend on the torch version):
-   `scripts/drun.sh bash /src/paia_gemv/build.sh` then read `src/build/<arch>/ptxas_report.txt`.
-   The RTX server has no Docker and probably no nvcc: build the x86_64 .so on turing (`NVCC=~/cuda-12.9/bin/nvcc`) and copy it.
-3. `scripts/drun.sh python /src/tests/test_gemv_bf16.py` (add `--full` for every variant on every shape).
-4. Sweep: `scripts/drun.sh python /src/tools/dev_sweep_bf16.py --platform-tag dgxspark_gb10 --all-real --write-tuned`.
-   It refuses to run while `/tmp/paia_bench.lock` exists (P2's gated session). Dev numbers are never results.
-5. P2 runs `bench.run --phase s1` under the gate (two sessions), then
-   `python src/tools/compare_to_cublas.py <e2 sessions> --ours <s1 sessions> --b0 <B0>`.
-6. ncu on the winning variant with the same metric set as P2's E3 (long-scoreboard and LSU stall per issue, occupancy,
-   sysmem fill bytes / weight bytes).
+Standalone (no Python, no torch; only the CUDA toolkit):
 
-## Pre-registered predictions for S1 (written before any GPU run)
+    NVCC=$HOME/cuda-12.9/bin/nvcc
+    $NVCC -O3 -std=c++17 -gencode arch=compute_80,code=sm_80 -gencode arch=compute_89,code=sm_89 -gencode arch=compute_120,code=sm_120 \
+      -DWITH_CUBLAS -I src/paia_gemv src/tests/gemv_bf16_check.cu src/paia_gemv/gemv_bf16.cu src/paia_gemv/gemv_quant.cu \
+      -lcublas -Xlinker -rpath,$HOME/cuda-12.9/lib64 -o src/build/gemv_check        # one line
+    src/build/gemv_check              # BF16 correctness
+    src/build/gemv_check --quant      # FP8 + INT4 correctness (all variants, naive, unfused)
+    src/build/gemv_check --bench-quant
 
-Setup: GB10, M = 1, graph mode, best variant per shape, B0 = 239.5 GB/s, tau = 1.7 us (v2 probe). Ceiling = B/(B + B_half) x B0.
-Percentages are of B0. "cuBLAS" values are P2's E2 v2 numbers.
+For the Spark use `-gencode arch=compute_121,code=sm_121` inside `paia-bench:25.11` (CUDA 13.0). The Spark is aarch64 and the RTX server x86_64:
+build once per CPU architecture. CPU-only checks: `python3 src/tests/emulate_mapping.py`, `emulate_formats.py`, and
+`g++ -std=c++17 -I src/paia_gemv src/tests/quant_host_selftest.cpp && ./a.out`.
 
-| Shape class | tau ceiling | cuBLAS | Predicted ours | Confidence |
-|---|---|---|---|---|
-| Large, cuBLAS on v6 (Llama q/o, qkv; Qwen q/o, qkv, gate/up, gate_up) | 98 to 100% | 68 to 72% | **93 to 99%**, i.e. **1.30 to 1.45x** over cuBLAS | high |
-| Large, cuBLAS on v7 (Llama gate/up/down, gate_up; Qwen down) | 99 to 100% | 87 to 98% | 95 to 99%, i.e. **0.98 to 1.10x** | medium |
-| Llama k/v (8 MiB) | 95% | v6 ~70% | 88 to 95% | medium |
-| Qwen k/v (3.5 MiB) | 90% | v7 87% | 80 to 88%; **no more than 3% better than cuBLAS** | medium |
-| lm_head (about 1 GiB) | 99.9% | 72 to 73% | 85 to 97%; P(>= 90%) about 50% | low: cause of cuBLAS's drop unknown, GiB footprints plateau about 4% lower on this machine |
+## Pre-registered predictions (written before any run of the code they concern)
 
-Variant structure: no single dimension (S, H, W) moves a shape >= 24 MiB by more than 5%; R and U matter mainly at <= 8 MiB.
-Eager mode: our per-op eager time is within 1.5 us of cuBLAS's (we pay one ctypes call; cuBLAS pays the allocator).
-ncu on the best large-shape variant: long-scoreboard stall per issue <= 17 cycles (v7's value) and issue-active 4 to 10%.
-RTX PRO 5000 (preliminary tau 1.36 us, B0 1239 GB/s, mismatched software stack): large shapes 88 to 97% of B0, Qwen k/v
-55 to 68% (its ceiling is 68.5%); low confidence until P3 has a full, same-stack E1/E2.
+Setup for GB10: M = 1, graph mode, best variant per shape, B0 = 239.5 GB/s, tau = 1.7 us, P2's gated harness. "Ideal" = bytes ratio including metadata
+and x/y traffic.
+
+BF16 S1 (committed earlier): large shapes with cuBLAS on v6 reach 93 to 99% of B0 (1.30 to 1.45x over cuBLAS); shapes where cuBLAS is on v7: 0.98 to 1.10x;
+Qwen k/v no more than 3% better than cuBLAS; lm_head 85 to 97% with low confidence.
+
+FP8 W8A16 (new): speedup over our best BF16 on shapes of 24 MiB or more is 1.85 to 1.97x (ideal 1.99x, so 93 to 99% of ideal); Llama k/v (8 MiB) 1.6 to 1.85x;
+Qwen k/v (3.5 MiB) 1.4 to 1.7x (its tau ceiling limits it). Achieved bandwidth on the actual bytes is 88 to 99% of B0 on large shapes.
+
+INT4 fused K2 (new): speedup over our best BF16 on shapes of 24 MiB or more is 3.2 to 3.8x (ideal 3.88x, so 82 to 98% of ideal); Llama k/v 2.4 to 3.1x;
+Qwen k/v 1.8 to 2.4x. Dequant issue load at most about 15% of issue slots on GB10 and 15 to 25% on Ada / RTX PRO 5000 (ncu), so latency exposure, not
+issue throughput, is the loss when K2 falls short of ideal.
+
+INT4 naive K1: 0.8 to 1.6x over our BF16 on large shapes (it keeps about one 128 B load in flight per warp, far below the 3 to 6 KB per SM needed),
+i.e. at most about 40% of K2's speed. INT4 unfused: 0.35 to 0.5x of BF16 (slower than BF16 by construction; on GB10 writes are about 19% slower than reads).
+
+Variant structure: no single knob changes a shape of 24 MiB or more by more than 5%; R and U matter mainly at 8 MiB and below; the best INT4 variants
+use R >= 2 (x conversion and x loads are shared by the rows of a warp).
+
+## Open items
+
+Asymmetric INT4 (scale plus zero point) and M > 1 (the deck promises M = 1..16; the kernels here are M = 1); Triton cross-check of S1; NVFP4; SASS check
+(`cuobjdump -sass`, count LDG.E.128 before the first FFMA in one loop body); sm_121 build on the Spark; P2's pointer-chase latency probe to replace the
+3 to 6 KB per SM bytes-in-flight range.
+
+## Result vs prediction: Ada dev run (Slurm job 47537, 2026-10-22; raw output in `src/dev_runs/`)
+
+Scope: the predictions above were registered for GB10 and the gated harness. This run is on an RTX 6000 Ada, ungated (dev), so it is an informal out-of-platform comparison, not a test of record. The gated GB10 runs remain the test.
+
+Correctness: BF16 (96 variants) passes, worst relative error 3.1e-3. FP8 (36 variants, 16 shapes) passes, worst 3.2e-3. INT4 fused (48 variants) and naive pass on every shape. The unfused control failed once (1x128, error 2.7e-2): the test compared it against exact dequantized weights although it rounds them to bf16 first; in a CPU simulation of one row the control exceeds the 2e-2 gate with probability 4.7% (0.14% at N=3, 0% from N=7; the fused kernel never does). The test now uses a bf16-weight reference for the control. A re-run (Slurm job 47612) is queued; this section will be updated with its result.
+
+| Item | Predicted | Observed (Ada, dev) | Verdict |
+|---|---|---|---|
+| FP8 vs best BF16, shapes of 24 MiB or more | 1.85 to 1.97x | 1.89 to 1.98x (both gate/up shapes 1.98x) | inside, at the ideal's edge |
+| FP8 Llama k/v, Qwen k/v | 1.6 to 1.85x, 1.4 to 1.7x | 1.75x, 1.56x | inside |
+| INT4 fused, 24 MiB or more | 3.2 to 3.8x | 3.43 to 3.91x (four shapes 3.86 to 3.91x = 99 to 100% of ideal) | at or above the upper end |
+| INT4 fused Llama k/v, Qwen k/v | 2.4 to 3.1x, 1.8 to 2.4x | 2.85x, 1.94x | inside |
+| INT4 naive K1, large shapes | 0.8 to 1.6x | 3.17 to 3.71x (80 to 95% of B0) | **wrong by more than 2x** |
+| INT4 naive K1, k/v shapes | within the same band | 1.59x, 0.96x | inside |
+| INT4 unfused | 0.35 to 0.5x | 0.48 to 0.54x where the scratch (2NK) exceeds the 96 MiB L2; 1.4 to 1.8x where it fits | held where meant to; cache artifact confirmed |
+| Best INT4 variant uses R >= 2 | yes | R=1 best on 7 of 10 shapes; top variants of large shapes are near-ties | **wrong** |
+| Dequant issue load at most about 15% (ncu) | | not measured | open |
+
+Read-outs (dev, Ada only): INT4 fused reaches 98 to 100% of the bytes-ratio speedup on shapes of 112 MiB or more, so no per-byte loss remains there at batch 1. GEMV-only per layer: INT4 3.79x (Llama) and 3.77x (Qwen) over our best BF16, 3.84x and 3.83x over cuBLAS; FP8 1.96x. What remains is per-op: the effective fixed cost (time minus bytes over the dev read probe) is 1.0 to 1.7 us, and Qwen k/v with INT4 reaches 1.94x of an ideal 3.85x, but k/v are only 3.9 to 5.6% of an INT4 layer. The dev B0 probe is slightly low (INT4 reached 100.2% of it). Whether any of this holds on GB10, where P2 measured cuBLAS's loss per byte, is what the gated runs decide.
