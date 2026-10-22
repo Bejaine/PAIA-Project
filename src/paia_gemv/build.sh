@@ -11,7 +11,7 @@ OUT="${OUT:-$HERE/../build/$(uname -m)}"
 GENCODE="${GENCODE:--gencode arch=compute_89,code=sm_89 -gencode arch=compute_120,code=sm_120 -gencode arch=compute_121,code=sm_121 -gencode arch=compute_120,code=compute_120}"
 mkdir -p "$OUT"
 if ! $NVCC -O3 -std=c++17 -lineinfo -Xcompiler -fPIC -shared -cudart static $GENCODE \
-  -Xptxas -v "$HERE/gemv_bf16.cu" -o "$OUT/libpaia_gemv.so" 2> "$OUT/ptxas_report.txt"; then
+  -Xptxas -v "$HERE/gemv_bf16.cu" "$HERE/gemv_quant.cu" -o "$OUT/libpaia_gemv.so" 2> "$OUT/ptxas_report.txt"; then
   echo "BUILD FAILED. First 40 lines of the compiler output:" >&2
   head -40 "$OUT/ptxas_report.txt" >&2
   exit 1

@@ -8,6 +8,8 @@
 // Run:
 //   src/build/gemv_check                       correctness: every variant on awkward and real shapes
 //   src/build/gemv_check --full                also lm_head and fused shapes (sampled rows)
+//   src/build/gemv_check --quant               correctness of FP8 W8A16 and INT4 W4A16 g128 (all variants, naive, unfused)
+//   src/build/gemv_check --bench-quant         DEV benchmark: per real shape, bf16 best/cuBLAS vs fp8, int4 fused/naive/unfused
 //   src/build/gemv_check --bench               DEV benchmark: read-bandwidth probe (B0), then top variants per real shape vs
 //                                              cuBLAS GemmEx (n=1); CUDA-graph timing, random weights. --eager for a plain loop.
 //                                              Refuses to run while /tmp/paia_bench.lock exists unless --ignore-lock.
@@ -30,11 +32,20 @@
 #include <random>
 #include <string>
 #include <vector>
+#include "quant_host.h"
 
 extern "C" {
 int paia_gemv_bf16_variant_count();
 int paia_gemv_bf16_variant_info(int v, int* R, int* U, int* W, int* S, int* H);
 int paia_gemv_bf16(const void* W, const void* x, void* y, int N, int K, int variant, void* stream);
+int paia_gemv_fp8_variant_count();
+int paia_gemv_fp8_variant_info(int v, int* R, int* U, int* W, int* H);
+int paia_gemv_fp8(const void* Wq, const void* scale, const void* x, void* y, int N, int K, int variant, void* stream);
+int paia_gemv_int4_variant_count();
+int paia_gemv_int4_variant_info(int v, int* R, int* U, int* W, int* H);
+int paia_gemv_int4(const void* Wq, const void* scales, const void* x, void* y, int N, int K, int variant, void* stream);
+int paia_gemv_int4_naive(const void* Wq, const void* scales, const void* x, void* y, int N, int K, void* stream);
+int paia_gemv_int4_unfused(const void* Wq, const void* scales, const void* x, void* y, void* scratch_bf16, int N, int K, void* stream);
 }
 
 #define CK(x) do { cudaError_t e_ = (x); if (e_ != cudaSuccess) { \
@@ -129,27 +140,10 @@ __global__ void read_probe(const uint4* __restrict__ p, size_t n16, unsigned* ou
 
 static double median(std::vector<double> v) { std::sort(v.begin(), v.end()); return v[v.size() / 2]; }
 
-struct Bench {
-    int N, K, ncopies; size_t wbytes;
-    std::vector<void*> W, x, y;
-    cudaStream_t st;
-    Bench(int N_, int K_, size_t l2) : N(N_), K(K_) {
-        wbytes = (size_t)N * K * 2;
-        size_t want = std::max<size_t>(2, (4 * l2 + wbytes - 1) / wbytes);
-        size_t fit = std::max<size_t>(1, (10ull << 30) / wbytes);
-        ncopies = (int)std::min(want, fit);
-        CK(cudaStreamCreateWithFlags(&st, cudaStreamNonBlocking));
-        for (int i = 0; i < ncopies; ++i) {
-            void *w, *xx, *yy;
-            CK(cudaMalloc(&w, wbytes)); CK(cudaMalloc(&xx, (size_t)K * 2)); CK(cudaMalloc(&yy, (size_t)N * 2));
-            fill_random<<<1024, 256, 0, st>>>((uint32_t*)w, wbytes / 4, 1234u + i);
-            fill_random<<<64, 256, 0, st>>>((uint32_t*)xx, (size_t)K / 2, 99u + i);
-            W.push_back(w); x.push_back(xx); y.push_back(yy);
-        }
-        CK(cudaStreamSynchronize(st));
-    }
-    ~Bench() { for (int i = 0; i < ncopies; ++i) { cudaFree(W[i]); cudaFree(x[i]); cudaFree(y[i]); } cudaStreamDestroy(st); }
-    // launch(copy_index, stream). Returns median per-op microseconds over 5 repeats, or -1 if graph capture failed.
+struct Timer {
+    cudaStream_t st = nullptr;
+    int ncopies = 1;
+    // launch(copy_index, stream). Median per-op microseconds over 5 repeats, or -1 if graph capture failed.
     template <class F> double time_us(F launch, bool graph) {
         for (int i = 0; i < 20; ++i) launch(i % ncopies, st);
         CK(cudaStreamSynchronize(st));
@@ -181,6 +175,53 @@ struct Bench {
         CK(cudaEventDestroy(a)); CK(cudaEventDestroy(b));
         return median(reps);
     }
+};
+
+struct Bench : Timer {
+    int N, K; size_t wbytes;
+    std::vector<void*> W, x, y;
+    Bench(int N_, int K_, size_t l2) : N(N_), K(K_) {
+        wbytes = (size_t)N * K * 2;
+        size_t want = std::max<size_t>(2, (4 * l2 + wbytes - 1) / wbytes);
+        size_t fit = std::max<size_t>(1, (10ull << 30) / wbytes);
+        ncopies = (int)std::min(want, fit);
+        CK(cudaStreamCreateWithFlags(&st, cudaStreamNonBlocking));
+        for (int i = 0; i < ncopies; ++i) {
+            void *w, *xx, *yy;
+            CK(cudaMalloc(&w, wbytes)); CK(cudaMalloc(&xx, (size_t)K * 2)); CK(cudaMalloc(&yy, (size_t)N * 2));
+            fill_random<<<1024, 256, 0, st>>>((uint32_t*)w, wbytes / 4, 1234u + i);
+            fill_random<<<64, 256, 0, st>>>((uint32_t*)xx, (size_t)K / 2, 99u + i);
+            W.push_back(w); x.push_back(xx); y.push_back(yy);
+        }
+        CK(cudaStreamSynchronize(st));
+    }
+    ~Bench() { for (int i = 0; i < ncopies; ++i) { cudaFree(W[i]); cudaFree(x[i]); cudaFree(y[i]); } cudaStreamDestroy(st); }
+};
+
+// Quantized operands: Wq (nbytes_w per copy), S (nbytes_s per copy), x, y. Random bytes are fine for timing: the decode
+// has no data-dependent branches. Footprint rotation as in Bench.
+struct QBench : Timer {
+    int N, K; size_t wb, sb;
+    std::vector<void*> W, S, x, y;
+    void* scratch = nullptr;
+    QBench(int N_, int K_, size_t wb_, size_t sb_, size_t l2, bool want_scratch) : N(N_), K(K_), wb(wb_), sb(sb_) {
+        const size_t per = wb + sb + (size_t)K * 2 + (size_t)N * 2;
+        size_t want = std::max<size_t>(2, (4 * l2 + per - 1) / per);
+        size_t fit = std::max<size_t>(1, (8ull << 30) / per);
+        ncopies = (int)std::min(want, fit);
+        CK(cudaStreamCreateWithFlags(&st, cudaStreamNonBlocking));
+        for (int i = 0; i < ncopies; ++i) {
+            void *w, *s_, *xx, *yy;
+            CK(cudaMalloc(&w, wb)); CK(cudaMalloc(&s_, sb)); CK(cudaMalloc(&xx, (size_t)K * 2)); CK(cudaMalloc(&yy, (size_t)N * 2));
+            fill_random<<<1024, 256, 0, st>>>((uint32_t*)w, wb / 4, 4321u + i);
+            fill_random<<<256, 256, 0, st>>>((uint32_t*)s_, sb / 4, 777u + i);
+            fill_random<<<64, 256, 0, st>>>((uint32_t*)xx, (size_t)K / 2, 99u + i);
+            W.push_back(w); S.push_back(s_); x.push_back(xx); y.push_back(yy);
+        }
+        if (want_scratch) CK(cudaMalloc(&scratch, (size_t)N * K * 2));
+        CK(cudaStreamSynchronize(st));
+    }
+    ~QBench() { for (int i = 0; i < ncopies; ++i) { cudaFree(W[i]); cudaFree(S[i]); cudaFree(x[i]); cudaFree(y[i]); } if (scratch) cudaFree(scratch); cudaStreamDestroy(st); }
 };
 
 // Dev B0: best streaming-read bandwidth over a few grid sizes on a buffer of at least 12x L2 (and 1 GiB).
@@ -243,12 +284,161 @@ static void bench_shape(const Shape& sh, int nvar, double b0, size_t l2, bool gr
     if (cub > 0) printf("  cuBLAS%7.1f GB/s (%s) %9.2f us   -> ours/cuBLAS speedup %.2fx\n", gbps(cub), pct(cub).c_str(), cub, cub / res[0].first);
 }
 
+
+// ------------------------------------------------------------------------------------------------------------------
+// Quantized kernels: FP8 W8A16 and INT4 W4A16 g128 (+ naive and unfused INT4 controls)
+// ------------------------------------------------------------------------------------------------------------------
+static const Shape QAWK_FP8[] = {{1, 16, "1x16"}, {3, 528, "3x528"}, {7, 1040, "7x1040"}, {33, 1552, "33x1552"},
+                                 {129, 4112, "129x4112"}, {1000, 3584, "1000x3584"}, {4097, 4096, "4097x4096"}, {513, 14336, "513x14336"}};
+static const Shape QAWK_I4[] = {{1, 128, "1x128"}, {3, 384, "3x384"}, {7, 1152, "7x1152"}, {33, 2176, "33x2176"},
+                                {129, 4224, "129x4224"}, {1000, 3584, "1000x3584"}, {4097, 4096, "4097x4096"}, {513, 14336, "513x14336"}};
+
+struct QData {
+    int N, K; std::vector<float> W; std::vector<__nv_bfloat16> hx; std::vector<float> xf;
+};
+static QData make_q(const Shape& sh) {
+    QData d; d.N = sh.N; d.K = sh.K;
+    std::mt19937 rng(31337u * sh.N + sh.K);
+    std::uniform_real_distribution<float> U(-0.5f, 0.5f);
+    d.W.resize((size_t)sh.N * sh.K); d.hx.resize(sh.K); d.xf.resize(sh.K);
+    for (auto& v : d.W) v = U(rng) * 0.04f;
+    for (int k = 0; k < sh.K; ++k) { d.hx[k] = __float2bfloat16_rn(U(rng)); d.xf[k] = bf(d.hx[k]); }
+    return d;
+}
+static std::vector<int> pick_rows(int N, std::mt19937& rng) {
+    std::vector<int> rows;
+    if (N <= 4200) { for (int r = 0; r < N; ++r) rows.push_back(r); }
+    else { for (int r = 0; r < 8; ++r) { rows.push_back(r); rows.push_back(N - 1 - r); } for (int i = 0; i < 64; ++i) rows.push_back((int)(rng() % N)); }
+    return rows;
+}
+// Compares y against ref (rows) and checks every row was written. Returns the relative error, or 1e9 on a missing row.
+static double compare_y(const std::vector<__nv_bfloat16>& hy, const std::vector<int>& rows, const std::vector<double>& ref, double maxref, int* missing) {
+    *missing = 0; for (size_t r = 0; r < hy.size(); ++r) if (std::isnan(bf(hy[r]))) ++(*missing);
+    double err = 0; for (size_t i = 0; i < rows.size(); ++i) err = std::max(err, std::fabs((double)bf(hy[rows[i]]) - ref[i]));
+    return maxref > 0 ? err / maxref : err;
+}
+
+static bool check_fp8_shape(const Shape& sh, double* worst) {
+    QData d = make_q(sh); const int N = sh.N, K = sh.K;
+    std::vector<uint8_t> q((size_t)N * K); std::vector<float> scale(N);
+    paia_host::quantize_fp8_rowwise(d.W.data(), N, K, q.data(), scale.data());
+    std::mt19937 rng(5); std::vector<int> rows = pick_rows(N, rng);
+    std::vector<double> ref(rows.size()); double maxref = 0;
+    for (size_t i = 0; i < rows.size(); ++i) { double s = 0; for (int k = 0; k < K; ++k) s += (double)paia_host::dequant_fp8(q.data(), scale.data(), K, rows[i], k) * d.xf[k]; ref[i] = s; maxref = std::max(maxref, std::fabs(s)); }
+    void *dW, *dS, *dx, *dy; CK(cudaMalloc(&dW, q.size())); CK(cudaMalloc(&dS, N * 4)); CK(cudaMalloc(&dx, (size_t)K * 2)); CK(cudaMalloc(&dy, (size_t)N * 2));
+    CK(cudaMemcpy(dW, q.data(), q.size(), cudaMemcpyHostToDevice)); CK(cudaMemcpy(dS, scale.data(), N * 4, cudaMemcpyHostToDevice)); CK(cudaMemcpy(dx, d.hx.data(), (size_t)K * 2, cudaMemcpyHostToDevice));
+    bool ok = true; std::vector<__nv_bfloat16> hy(N);
+    for (int v = 0; v < paia_gemv_fp8_variant_count(); ++v) {
+        CK(cudaMemset(dy, 0xFF, (size_t)N * 2));
+        const int rc = paia_gemv_fp8(dW, dS, dx, dy, N, K, v, nullptr); CK(cudaDeviceSynchronize());
+        CK(cudaMemcpy(hy.data(), dy, (size_t)N * 2, cudaMemcpyDeviceToHost));
+        int R, U, W, H; paia_gemv_fp8_variant_info(v, &R, &U, &W, &H); int miss;
+        const double err = rc ? 1e9 : compare_y(hy, rows, ref, maxref, &miss); if (rc) miss = -1;
+        *worst = std::max(*worst, rc ? 0.0 : err);
+        if (rc || miss || !(err < 2e-2)) { printf("FAIL fp8 %s variant %d (R=%d U=%d W=%d H=%d): rc=%d rel_err=%.3e unwritten=%d\n", sh.name, v, R, U, W, H, rc, err, miss); ok = false; }
+    }
+    cudaFree(dW); cudaFree(dS); cudaFree(dx); cudaFree(dy); return ok;
+}
+
+static bool check_int4_shape(const Shape& sh, double* worst) {
+    QData d = make_q(sh); const int N = sh.N, K = sh.K;
+    std::vector<uint8_t> pk((size_t)N * K / 2); std::vector<uint16_t> sc((size_t)N * K / 128);
+    paia_host::quantize_int4_g128(d.W.data(), N, K, pk.data(), sc.data());
+    std::mt19937 rng(6); std::vector<int> rows = pick_rows(N, rng);
+    std::vector<double> ref(rows.size()); double maxref = 0;
+    for (size_t i = 0; i < rows.size(); ++i) { double s = 0; for (int k = 0; k < K; ++k) s += (double)paia_host::dequant_int4(pk.data(), sc.data(), K, rows[i], k) * d.xf[k]; ref[i] = s; maxref = std::max(maxref, std::fabs(s)); }
+    void *dW, *dS, *dx, *dy, *dsc; CK(cudaMalloc(&dW, pk.size())); CK(cudaMalloc(&dS, sc.size() * 2)); CK(cudaMalloc(&dx, (size_t)K * 2)); CK(cudaMalloc(&dy, (size_t)N * 2)); CK(cudaMalloc(&dsc, (size_t)N * K * 2));
+    CK(cudaMemcpy(dW, pk.data(), pk.size(), cudaMemcpyHostToDevice)); CK(cudaMemcpy(dS, sc.data(), sc.size() * 2, cudaMemcpyHostToDevice)); CK(cudaMemcpy(dx, d.hx.data(), (size_t)K * 2, cudaMemcpyHostToDevice));
+    bool ok = true; std::vector<__nv_bfloat16> hy(N);
+    auto verify = [&](const char* what, int v, int rc) {
+        CK(cudaDeviceSynchronize()); CK(cudaMemcpy(hy.data(), dy, (size_t)N * 2, cudaMemcpyDeviceToHost));
+        int miss = -1; const double err = rc ? 1e9 : compare_y(hy, rows, ref, maxref, &miss); *worst = std::max(*worst, rc ? 0.0 : err);
+        if (rc || miss || !(err < 2e-2)) { printf("FAIL int4 %s %s variant %d: rc=%d rel_err=%.3e unwritten=%d\n", what, sh.name, v, rc, err, miss); ok = false; }
+    };
+    for (int v = 0; v < paia_gemv_int4_variant_count(); ++v) { CK(cudaMemset(dy, 0xFF, (size_t)N * 2)); verify("fused", v, paia_gemv_int4(dW, dS, dx, dy, N, K, v, nullptr)); }
+    CK(cudaMemset(dy, 0xFF, (size_t)N * 2)); verify("naive", -1, paia_gemv_int4_naive(dW, dS, dx, dy, N, K, nullptr));
+    CK(cudaMemset(dy, 0xFF, (size_t)N * 2)); verify("unfused", -1, paia_gemv_int4_unfused(dW, dS, dx, dy, dsc, N, K, nullptr));
+    cudaFree(dW); cudaFree(dS); cudaFree(dx); cudaFree(dy); cudaFree(dsc); return ok;
+}
+
+static bool check_quant(bool* any) {
+    bool ok = true; double w8 = 0, w4 = 0;
+    for (const Shape& s : QAWK_FP8) ok &= check_fp8_shape(s, &w8);
+    for (const Shape& s : REAL) if (s.K % 16 == 0) ok &= check_fp8_shape(s, &w8);
+    for (const Shape& s : QAWK_I4) ok &= check_int4_shape(s, &w4);
+    for (const Shape& s : REAL) if (s.K % 128 == 0) ok &= check_int4_shape(s, &w4);
+    // contract checks
+    void* d; CK(cudaMalloc(&d, 1 << 16));
+    if (paia_gemv_fp8(d, d, d, d, 4, 24, 0, nullptr) != -2) { printf("FAIL: fp8 K%%16 contract\n"); ok = false; }
+    if (paia_gemv_int4(d, d, d, d, 4, 64, 0, nullptr) != -2) { printf("FAIL: int4 K%%128 contract\n"); ok = false; }
+    cudaFree(d); *any = true;
+    printf("quantized worst relative error: fp8 %.2e  int4 %.2e\n%s\n", w8, w4, ok ? "QUANT CHECKS PASSED" : "QUANT CHECKS FAILED");
+    return ok;
+}
+
+static void bench_quant_shape(const Shape& sh, double b0, size_t l2, bool graph) {
+    const int N = sh.N, K = sh.K;
+    const double by16 = 2.0 * N * K + 2.0 * K + 2.0 * N, by8 = 1.0 * N * K + 4.0 * N + 2.0 * K + 2.0 * N,
+                 by4 = 0.5 * N * K + 2.0 * N * (K / 128) + 2.0 * K + 2.0 * N;
+    auto gb = [&](double bytes, double us) { return bytes / (us * 1e-6) / 1e9; };
+    auto pc = [&](double g) { return b0 > 0 ? std::to_string((int)(100 * g / b0)) : std::string("?"); };
+    // bf16 reference: best of a fixed set of 18 S1 variants, and cuBLAS
+    double t16 = 1e30, tcub = -1; int bv = 0;
+    {
+        Bench B(N, K, l2);
+        for (int v = 0; v < paia_gemv_bf16_variant_count(); ++v) {
+            int R, U, W, S, H; paia_gemv_bf16_variant_info(v, &R, &U, &W, &S, &H);
+            if (!(W == 4 && S == 1 && (R == 1 || R == 2 || R == 4) && (U == 1 || U == 4 || U == 8))) continue;
+            const double t = B.time_us([&](int i, cudaStream_t s) { paia_gemv_bf16(B.W[i], B.x[i], B.y[i], N, K, v, s); }, graph);
+            if (t > 0 && t < t16) { t16 = t; bv = v; }
+        }
+#ifdef WITH_CUBLAS
+        static cublasHandle_t h = nullptr; if (!h) cublasCreate(&h); cublasSetStream(h, B.st);
+        const float alpha = 1.f, beta = 0.f;
+        auto cl = [&](int i, cudaStream_t) { cublasGemmEx(h, CUBLAS_OP_T, CUBLAS_OP_N, N, 1, K, &alpha, B.W[i], CUDA_R_16BF, K, B.x[i], CUDA_R_16BF, K, &beta, B.y[i], CUDA_R_16BF, N, CUBLAS_COMPUTE_32F, CUBLAS_GEMM_DEFAULT_TENSOR_OP); };
+        tcub = B.time_us(cl, graph); if (tcub < 0) tcub = B.time_us(cl, false);
+#endif
+    }
+    (void)bv;
+    printf("\n%-14s N=%-6d K=%-6d  bf16 %.1f MiB | fp8 %.1f MiB | int4 %.1f MiB\n", sh.name, N, K, by16 / 1048576.0, by8 / 1048576.0, by4 / 1048576.0);
+    printf("  bf16 best-of-18   %7.1f GB/s (%s%% of B0) %9.2f us   [reference for every speedup below]\n", gb(by16, t16), pc(gb(by16, t16)).c_str(), t16);
+    if (tcub > 0) printf("  bf16 cuBLAS       %7.1f GB/s (%s%% of B0) %9.2f us\n", gb(by16, tcub), pc(gb(by16, tcub)).c_str(), tcub);
+    {   // FP8
+        QBench B(N, K, (size_t)N * K, (size_t)N * 4, l2, false);
+        double best = 1e30; int bvv = 0;
+        for (int v = 0; v < paia_gemv_fp8_variant_count(); ++v) {
+            const double t = B.time_us([&](int i, cudaStream_t s) { paia_gemv_fp8(B.W[i], B.S[i], B.x[i], B.y[i], N, K, v, s); }, graph);
+            if (t > 0 && t < best) { best = t; bvv = v; }
+        }
+        int R, U, W, H; paia_gemv_fp8_variant_info(bvv, &R, &U, &W, &H);
+        printf("  fp8  best         %7.1f GB/s (%s%% of B0) %9.2f us   R=%d U=%d W=%d H=%d   speedup vs bf16 %.2fx of ideal %.2fx (%d%%)\n",
+               gb(by8, best), pc(gb(by8, best)).c_str(), best, R, U, W, H, t16 / best, by16 / by8, (int)(100 * (t16 / best) / (by16 / by8)));
+    }
+    {   // INT4
+        QBench B(N, K, (size_t)N * K / 2, (size_t)N * (K / 128) * 2, l2, true);
+        double best = 1e30; int bvv = 0;
+        for (int v = 0; v < paia_gemv_int4_variant_count(); ++v) {
+            const double t = B.time_us([&](int i, cudaStream_t s) { paia_gemv_int4(B.W[i], B.S[i], B.x[i], B.y[i], N, K, v, s); }, graph);
+            if (t > 0 && t < best) { best = t; bvv = v; }
+        }
+        int R, U, W, H; paia_gemv_int4_variant_info(bvv, &R, &U, &W, &H);
+        printf("  int4 fused best   %7.1f GB/s (%s%% of B0) %9.2f us   R=%d U=%d W=%d H=%d   speedup vs bf16 %.2fx of ideal %.2fx (%d%%)\n",
+               gb(by4, best), pc(gb(by4, best)).c_str(), best, R, U, W, H, t16 / best, by16 / by4, (int)(100 * (t16 / best) / (by16 / by4)));
+        const double tn = B.time_us([&](int i, cudaStream_t s) { paia_gemv_int4_naive(B.W[i], B.S[i], B.x[i], B.y[i], N, K, s); }, graph);
+        if (tn > 0) printf("  int4 naive (K1)   %7.1f GB/s (%s%% of B0) %9.2f us   speedup vs bf16 %.2fx\n", gb(by4, tn), pc(gb(by4, tn)).c_str(), tn, t16 / tn);
+        const double tu = B.time_us([&](int i, cudaStream_t s) { paia_gemv_int4_unfused(B.W[i], B.S[i], B.x[i], B.y[i], B.scratch, N, K, s); }, graph);
+        if (tu > 0) printf("  int4 unfused      %7.1f GB/s (%s%% of B0) %9.2f us   speedup vs bf16 %.2fx   (sanity control: writes and re-reads a bf16 copy)\n", gb(by4, tu), pc(gb(by4, tu)).c_str(), tu, t16 / tu);
+    }
+}
+
 int main(int argc, char** argv) {
-    bool full = false, bench = false, eager = false, ignore_lock = false;
+    bool full = false, bench = false, eager = false, ignore_lock = false, quant = false, bench_quant = false;
     for (int i = 1; i < argc; ++i) {
         if (!strcmp(argv[i], "--full")) full = true;
         else if (!strcmp(argv[i], "--bench")) bench = true;
         else if (!strcmp(argv[i], "--eager")) eager = true;
+        else if (!strcmp(argv[i], "--quant")) quant = true;
+        else if (!strcmp(argv[i], "--bench-quant")) bench_quant = true;
         else if (!strcmp(argv[i], "--ignore-lock")) ignore_lock = true;
     }
     int ndev = 0;
@@ -257,7 +447,8 @@ int main(int argc, char** argv) {
     printf("%s  cc %d.%d  SMs %d  L2 %.0f MiB  variants %d\n", p.name, p.major, p.minor, p.multiProcessorCount,
            p.l2CacheSize / 1048576.0, paia_gemv_bf16_variant_count());
     const int nvar = paia_gemv_bf16_variant_count();
-    if (bench) {
+    if (quant) { bool any = false; return check_quant(&any) ? 0 : 1; }
+    if (bench || bench_quant) {
         if (!ignore_lock) {
             if (FILE* f = fopen("/tmp/paia_bench.lock", "r")) {
                 char buf[256] = {0}; size_t n = fread(buf, 1, sizeof(buf) - 1, f); (void)n; fclose(f);
@@ -268,6 +459,7 @@ int main(int argc, char** argv) {
         printf("DEV BENCHMARK: no idle gate, not a result. Timing: %s.\n", eager ? "eager loop" : "CUDA graph");
         const double b0 = measure_b0(p);
         printf("dev B0 (streaming read probe, best grid): %.1f GB/s\n", b0);
+        if (bench_quant) { for (const Shape& s : REAL) if (s.K % 128 == 0) bench_quant_shape(s, b0, p.l2CacheSize, !eager); return 0; }
         for (const Shape& s : REAL) bench_shape(s, nvar, b0, p.l2CacheSize, !eager);
         return 0;
     }

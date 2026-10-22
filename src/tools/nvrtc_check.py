@@ -41,6 +41,20 @@ def nvrtc_ptx(src, arch):
     return ptx.value.decode(), log.value.decode()
 
 
+KERNELS = {
+    "bf16": dict(header="gemv_bf16.cuh", tmpl="gemv_bf16_kernel", args="const __nv_bfloat16*, const __nv_bfloat16*, __nv_bfloat16*, int, int"),
+    "fp8": dict(header="gemv_fp8.cuh", tmpl="gemv_fp8_kernel", args="const unsigned char*, const float*, const __nv_bfloat16*, __nv_bfloat16*, int, int"),
+    "int4": dict(header="gemv_int4.cuh", tmpl="gemv_int4_kernel", args="const unsigned char*, const __half*, const __nv_bfloat16*, __nv_bfloat16*, int, int"),
+}
+
+
+def variants_quant(kind):
+    Rs = (1, 2, 4) if kind == "fp8" else (1, 2, 4, 8)
+    Us = (1, 2, 4)
+    for R, U, H, W in itertools.product(Rs, Us, (0, 1), (4, 8)):
+        yield R, U, W, 0, H
+
+
 def variants():
     for R, U, S, H, W in itertools.product((1, 2, 4), (1, 2, 4, 8), (0, 1), (0, 1), (4, 8)):
         yield R, U, W, S, H
@@ -49,9 +63,17 @@ def variants():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--arch", nargs="+", default=["sm_121", "sm_120", "sm_89"])
+    ap.add_argument("--kernel", choices=list(KERNELS), default="bf16")
     args = ap.parse_args()
-    vs = list(variants())
-    src = '#include "gemv_bf16.cuh"\n' + "".join(
+    kd = KERNELS[args.kernel]
+    vs = list(variants()) if args.kernel == "bf16" else list(variants_quant(args.kernel))
+    if args.kernel != "bf16":
+        src = f'#include "{kd["header"]}"\n' + "".join(
+            f"template __global__ void paia::{kd['tmpl']}<{R},{U},{W},{'true' if H else 'false'}>({kd['args']});\n" for R, U, W, S, H in vs)
+        if args.kernel == "int4":
+            src += f"template __global__ void paia::gemv_int4_naive_kernel<4>({kd['args']});\n"
+    else:
+      src = '#include "gemv_bf16.cuh"\n' + "".join(
         f"template __global__ void paia::gemv_bf16_kernel<{R},{U},{W},{'true' if S else 'false'},{'true' if H else 'false'}>"
         "(const __nv_bfloat16*, const __nv_bfloat16*, __nv_bfloat16*, int, int);\n" for R, U, W, S, H in vs)
     ptxas = find("nvidia/cuda_nvcc/bin/ptxas")
@@ -80,7 +102,8 @@ def main():
         print(f"{'R':>2} {'U':>2} {'W':>2} {'S':>1} {'H':>1} {'regs':>5} {'need*':>5} {'spill':>5} {'warps/SM':>8} {'occ%':>5} {'inflight KB/SM':>14}")
         print('   (* need = 4*U*(R+1): registers to hold all R*U weight and U x loads at once; regs >= need suggests the loads batch)')
         for R, U, W, S, H in vs:
-            name = next((k for k in regs if f"gemv_bf16_kernel" in k and f"ILi{R}ELi{U}ELi{W}ELb{S}ELb{H}E" in k), None)
+            pat = f"ILi{R}ELi{U}ELi{W}ELb{S}ELb{H}E" if args.kernel == "bf16" else f"ILi{R}ELi{U}ELi{W}ELb{H}E"
+            name = next((k for k in regs if kd["tmpl"] in k and pat in k), None)
             if not name: continue
             g = regs[name]
             gran = ((g + 7) // 8) * 8                       # register allocation granularity

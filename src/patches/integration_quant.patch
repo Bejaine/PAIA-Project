@@ -1,0 +1,63 @@
+diff --git a/paia-bench/bench/run.py b/paia-bench/bench/run.py
+--- a/paia-bench/bench/run.py	2026-10-22 04:02:43.750919505 +0000
++++ b/paia-bench/bench/run.py	2026-10-22 04:02:43.778071687 +0000
+@@ -111,7 +111,41 @@
+     return cells
+ 
+ 
+-PHASES = {"e1": e1_cells, "e2": e2_cells, "s1": s1_cells, "selftest": selftest_cells}
++def _quant_cells(phase, impl, precision, kmult, modes):
++    """Cells for P1's quantized kernels at M=1 over the same shapes as E2/S1 (those whose K is a multiple of kmult)."""
++    cfg = config.shapes_cfg()
++    base = {"phase": phase, "op": "linear", "impl": impl, "precision": precision, "hot_or_cold": "cold"}
++    cells = []
++    for name, sw in cfg["synthetic"].items():
++        if sw["K"] % kmult:
++            continue
++        for n in sw["N"]:
++            for mode in modes:
++                cells.append({**base, "shape": {"M": 1, "N": n, "K": sw["K"]}, "model": "synthetic",
++                              "layer_name": f"{name}_N{n}", "timing_mode": mode})
++    for model, m in cfg["models"].items():
++        for layer, (n, k) in m["shapes"].items():
++            if k % kmult:
++                continue
++            for mode in modes:
++                cells.append({**base, "shape": {"M": 1, "N": n, "K": k}, "model": model, "layer_name": layer,
++                              "timing_mode": mode})
++    return cells
++
++
++def s3_cells():
++    """B3: FP8 W8A16 (ours_fp8_w8a16)."""
++    return _quant_cells("s3", "ours_fp8_w8a16", "fp8_w8a16", 16, ("isolated", "eager", "graph"))
++
++
++def s4_cells():
++    """INT4 W4A16 g128: fused K2 in all timing modes; the naive (K1) and unfused controls in graph mode only."""
++    return (_quant_cells("s4", "ours_int4_fused", "int4_g128_w4a16", 128, ("isolated", "eager", "graph"))
++            + _quant_cells("s4", "ours_int4_naive", "int4_g128_w4a16", 128, ("graph",))
++            + _quant_cells("s4", "ours_int4_unfused", "int4_g128_w4a16", 128, ("graph",)))
++
++
++PHASES = {"e1": e1_cells, "e2": e2_cells, "s1": s1_cells, "s3": s3_cells, "s4": s4_cells, "selftest": selftest_cells}
+ 
+ 
+ def ordered(cells, seed):
+@@ -154,6 +188,16 @@
+             sh = spec["shape"]
+             return OursBF16Gemv(M=sh["M"], N=sh["N"], K=sh["K"], model=spec["model"], layer_name=spec["layer_name"],
+                                 platform_tag=self.sess_dir.parent.name)   # results/<platform_tag>/<session>
++        if spec["phase"] == "s3" and spec["impl"] == "ours_fp8_w8a16":
++            from bench.ops.ours_quant import OursFP8Gemv
++            sh = spec["shape"]
++            return OursFP8Gemv(M=sh["M"], N=sh["N"], K=sh["K"], model=spec["model"], layer_name=spec["layer_name"],
++                               platform_tag=self.sess_dir.parent.name)
++        if spec["phase"] == "s4" and spec["impl"].startswith("ours_int4_"):
++            from bench.ops.ours_quant import OursInt4Gemv
++            sh = spec["shape"]
++            return OursInt4Gemv(M=sh["M"], N=sh["N"], K=sh["K"], model=spec["model"], layer_name=spec["layer_name"],
++                                platform_tag=self.sess_dir.parent.name, mode=spec["impl"][len("ours_int4_"):])
+         raise ValueError(f"no op for {spec}")
+ 
+ 
