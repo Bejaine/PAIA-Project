@@ -46,3 +46,8 @@ rtx6000ada:
   ncu_blocker: dcgm_profiling
   clock_lock: not_attempted   # needs root; persistence mode off
   fp8_rowwise_impl: torch_scaled_mm   # selfcheck correct on sm_89
+  # The driver works on memory returned by empty_cache() for ~33 ms per GiB, slowing GPU streaming ~7% meanwhile
+  # (scratchpad diag 2026-10-23: 8 GiB -> 267 ms). Without a wait, the post-cell canary failed the 95% guard after every
+  # cell with a >= 2 GiB footprint (779 vs 825 GB/s) although the cell's own allocations agreed within 0.36%.
+  # 1.0 s covers the 12 GiB memory cap (~400 ms) with margin. Guard timing only; cell timing is unchanged.
+  canary_settle_after_cell_s: 1.0

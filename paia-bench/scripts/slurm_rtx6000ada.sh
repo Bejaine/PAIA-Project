@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # One SLURM job = one physical GPU for every session, so E1/E2 s1 and s2 are measured on the same card.
-# Order: E0 env + selfcheck, monitor-perturbation diag, E1 s1, E2 s1, E1 s2, E2 s2, analysis.
+# Order: venv (identical rebuild if missing on this node), resume test, E0 env + selfcheck, monitor-perturbation diag,
+# E1 s1, E2 s1, E1 s2, E2 s2, analysis. Submit with -w <node> (the quietest node at submit time).
+# Aborts if the card has ECC enabled (the sessions of record use ECC off) or the venv's lock hash differs.
 # Runs under sbatch (no SSH session to lose), hence --no-tmux-check. The idle gate is unchanged.
 # A node-state logger records load and our own uid's processes every 60 s, because the gate ignores our own uid.
 #SBATCH -J paia-rtx6000ada
 #SBATCH -p u22
-#SBATCH -w node01
 #SBATCH --gres=gpu:1
 #SBATCH -c 10
 #SBATCH --mem=20G
@@ -22,7 +23,9 @@ D=${PAIA_DATE:-$(date +%Y%m%d)}
 CONTACT="Bejaine <bejainebirju@gmail.com>"
 R=scripts/hrun.sh
 ENV_S=env_${D}; E1S1=e1v2_s1_${D}; E2S1=e2v2_s1_${D}; E1S2=e1v2_s2_${D}; E2S2=e2v2_s2_${D}
-STEPS="${PAIA_STEPS:-env diag e1s1 e2s1 e1s2 e2s2}"
+STEPS="${PAIA_STEPS:-venv test env diag e1s1 e2s1 e1s2 e2s2}"
+REBUILD=/home/bejaine.birju/paia/project/venv_rebuild
+LOCK_ID=ca97c3a32dcc3d75   # sha1 prefix of the node01 venv lock file (env_20261023 image_id)
 
 mkdir -p results/$TAG/$ENV_S
 NODELOG=results/$TAG/$ENV_S/node_state_${SLURM_JOB_ID}.log
@@ -40,10 +43,22 @@ trap 'kill $LOGGER 2>/dev/null' EXIT
 echo "job $SLURM_JOB_ID on $(hostname) GPU $PAIA_GPU cpus $(taskset -pc $$ | cut -d: -f2) steps: $STEPS"
 nvidia-smi --query-gpu=name,uuid,pci.bus_id,ecc.mode.current,ecc.mode.pending,persistence_mode,pstate --format=csv
 uptime
+if [[ "$(nvidia-smi --query-gpu=ecc.mode.current --format=csv,noheader | head -1)" != "Disabled" ]]; then
+  echo "ABORT: ECC is enabled on this card; sessions of record use ECC off"; exit 3
+fi
 
-run() { echo; echo "##### $(date -Is) $*"; "$@"; echo "##### rc=$? $(date -Is)"; }
+run() { echo; echo "##### $(date -Is) $*"; "$@"; local rc=$?; echo "##### rc=$rc $(date -Is)"; return $rc; }
 for step in $STEPS; do
   case $step in
+    venv) if [[ ! -x $PAIA_VENV/bin/python ]]; then
+            run bash $REBUILD/fetch_wheels.sh || { echo "ABORT: wheel fetch failed"; exit 4; }
+            run python3 -m venv $PAIA_VENV
+            run $PAIA_VENV/bin/pip install --no-deps -r $REBUILD/requirements.lock.txt
+            run bash scripts/setup_venv.sh
+          fi
+          id=$(sha1sum $PAIA_VENV/requirements.lock.txt | cut -c1-16); echo "venv lock id $id (want $LOCK_ID)"
+          [[ "$id" == "$LOCK_ID" ]] || { echo "ABORT: venv differs from the node01 stack"; diff $REBUILD/requirements.lock.txt $PAIA_VENV/requirements.lock.txt; exit 5; } ;;
+    test) run $R python -m tests.test_resume ;;
     env)  run $R python -m bench.env --session $ENV_S --platform-tag $TAG --probe-ncu
           run $R python -m bench.selfcheck --session $ENV_S --platform-tag $TAG ;;
     diag) run $R python scripts/diag/monitor_perturbation.py results/$TAG/$ENV_S/diag_monitor_perturbation.json ;;

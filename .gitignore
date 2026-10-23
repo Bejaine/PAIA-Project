@@ -20,3 +20,7 @@ paia-bench/results/*/debug_*/
 
 # Local agent handoff (never commit)
 handoff.md
+
+# Node-state logs list other users' processes: keep on the host
+paia-bench/results/*/*/node_state_*.log
+paia-bench/results/preflight/

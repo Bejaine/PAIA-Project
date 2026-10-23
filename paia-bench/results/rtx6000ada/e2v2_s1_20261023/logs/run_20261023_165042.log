@@ -1,0 +1,31 @@
+2026-10-23 16:50:42,410 INFO session e2v2_s1_20261023 phase e2: 218 cells, 218 to run (resume skips clean cells)
+2026-10-23 16:50:47,637 INFO canary reference 825.06 GB/s (cv 0.0007)
+2026-10-23 16:50:53,015 INFO [1/218] 486a72a444ac8f82 linear cublas_f_linear eager N=3584 cold -> clean median 32.88 us 781.8 GB/s
+2026-10-23 16:50:58,814 INFO [2/218] 6747c27c2da23f1c linear cublas_f_linear eager N=32 cold -> clean median 9.97 us 27.1 GB/s
+2026-10-23 16:51:04,433 INFO [3/218] 391704ec06f0cb88 linear cublas_f_linear graph N=256 cold -> clean median 4.45 us 472.7 GB/s
+2026-10-23 16:51:09,628 INFO [4/218] 37febf58cf6abb31 linear cublas_f_linear isolated N=37888 cold -> clean median 318.80 us 852.1 GB/s
+2026-10-23 16:51:15,270 INFO [5/218] 772d7a77a15288ab linear cublas_f_linear graph N=3584 cold -> clean median 159.38 us 853.1 GB/s
+2026-10-23 16:51:20,238 INFO [6/218] f135d916774cb986 linear cublas_f_linear graph N=4096 cold -> clean median 40.64 us 828.9 GB/s
+2026-10-23 16:51:24,200 INFO [7/218] 9429605a6f3fb2ab linear cublas_f_linear isolated N=64 cold -> clean median 26.98 us 69.1 GB/s
+2026-10-23 16:51:29,209 INFO [8/218] 3701e4a5a165ed40 linear cublas_f_linear graph N=14336 cold -> clean median 138.37 us 853.0 GB/s
+2026-10-23 16:51:34,446 INFO [9/218] ee299ca111092a22 linear cublas_f_linear eager N=64 cold -> clean median 9.93 us 53.6 GB/s
+2026-10-23 16:51:40,254 INFO [10/218] 887a8a2c2b8937f1 linear cublas_f_linear eager N=36480 cold -> clean median 338.17 us 883.9 GB/s
+2026-10-23 16:51:45,443 INFO [11/218] 2f1336fdadc67330 linear cublas_f_linear graph N=512 cold -> clean median 7.33 us 502.9 GB/s
+2026-10-23 16:51:51,229 INFO [12/218] a8e336561ad5324f linear cublas_f_linear graph N=4096 cold -> clean median 40.42 us 830.5 GB/s
+2026-10-23 16:51:55,203 INFO [13/218] 5c3e03fd06601afb linear cublas_f_linear isolated N=2944 cold -> clean median 109.46 us 771.5 GB/s
+2026-10-23 16:52:00,123 INFO [14/218] 1e835771a436698d linear cublas_f_linear eager N=256 cold -> clean median 13.42 us 549.3 GB/s
+2026-10-23 16:52:05,327 INFO [15/218] cfb05762416e3574 linear cublas_f_linear graph N=512 cold -> clean median 7.54 us 504.5 GB/s
+2026-10-23 16:52:10,111 INFO [16/218] c2d245dfdfb6b2fc linear cublas_f_linear graph N=3584 cold -> clean median 156.29 us 869.1 GB/s
+2026-10-23 16:52:14,167 INFO [17/218] 09669cbd986ff4a6 linear cublas_f_linear isolated N=14336 cold -> clean median 145.66 us 806.5 GB/s
+2026-10-23 16:52:19,198 INFO [18/218] 7a329a57d8730e67 linear cublas_f_linear graph N=4096 cold -> clean median 136.76 us 863.0 GB/s
+2026-10-23 16:52:24,288 INFO [19/218] 5f5aeb6555113622 linear cublas_f_linear eager N=19200 cold -> clean median 179.46 us 876.7 GB/s
+2026-10-23 16:52:29,038 INFO [20/218] 67fbcda9d9f42916 linear cublas_f_linear eager N=512 cold -> clean median 9.93 us 370.3 GB/s
+2026-10-23 16:52:34,235 INFO [21/218] 1b7ebcef9db79352 linear cublas_f_linear graph N=1024 cold -> clean median 12.69 us 667.7 GB/s
+2026-10-23 16:52:38,228 INFO [22/218] 1c89bf67c101564e linear cublas_f_linear isolated N=5376 cold -> contaminated median 63.23 us 696.8 GB/s reasons=["foreign_cpu 2.16 cores > 2 top=[('pavan.harshit', 2.1109999999999998)]", "foreign_cpu 2.27 cores > 2 top=[('pavan.harshit', 2.174)]", "foreign_cpu 2.25 cores > 2 top=[('pavan.harshit', 2.253)]"]
+2026-10-23 16:52:40,827 INFO waiting 30s: foreign_cpu 2.56 cores >= 2 top=[('pavan.harshit', 2.4859999999999998)]
+2026-10-23 16:53:13,074 INFO waiting 60s: foreign_cpu 3.51 cores >= 2 top=[('pavan.harshit', 3.4139999999999997)]
+2026-10-23 16:54:15,342 INFO waiting 120s: foreign_cpu 2.14 cores >= 2 top=[('pavan.harshit', 2.0309999999999997)]
+2026-10-23 16:56:17,652 INFO waiting 240s: foreign_cpu 2.14 cores >= 2 top=[('pavan.harshit', 2.045)]
+2026-10-23 17:00:19,960 INFO waiting 480s: foreign_cpu 2.20 cores >= 2 top=[('pavan.harshit', 2.121)]
+2026-10-23 17:08:22,268 INFO waiting 600s: foreign_cpu 2.15 cores >= 2 top=[('pavan.harshit', 2.042)]
+2026-10-23 17:18:24,480 INFO waiting 600s: foreign_cpu 2.16 cores >= 2 top=[('pavan.harshit', 2.027)]

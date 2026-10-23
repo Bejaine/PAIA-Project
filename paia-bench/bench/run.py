@@ -326,6 +326,10 @@ class Session:
         self.cells_dir.mkdir(parents=True, exist_ok=True)
         (self.dir / "logs").mkdir(exist_ok=True)
         self.gcfg, self.ccfg = config.gate_cfg(), config.canary_cfg()
+        # Seconds to wait before the post-cell canary (platform_notes; 0 = measure at once). On discrete GPUs the
+        # driver works on memory returned by empty_cache() for ~33 ms per GiB, slowing streaming ~7% (findings.md).
+        self.canary_settle_s = 0.0 if self.fake else float(
+            config.platform_notes(self.tag).get("canary_settle_after_cell_s", 0.0))
         self.ref = None
         self.cell_durations = []
 
@@ -514,6 +518,8 @@ def run(args):
                     res = {"status": "failed", "error": f"{type(e).__name__}: {e}", "traceback": traceback.format_exc()[-3000:]}
                 mon_res = mon.stop()
                 t1 = time.time()
+                if sess.canary_settle_s:
+                    time.sleep(sess.canary_settle_s)
                 canary_after = canary.measure()
                 reasons = list(gate_reasons) + list(mon_res.get("contamination_reasons", []))
                 ref = sess.ref["current"]["median_gbps"]

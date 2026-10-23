@@ -524,6 +524,40 @@ Raw evidence: `results/rtx6000ada/env_20261022/{env.json,selfcheck.json}`, prefl
    which only checks other users. Sessions should run when no such job is active.
 4. **No clock locking** (needs root). Persistence mode is off; SM and memory clocks are recorded per cell.
 
+## Platform `rtx6000ada`: first E1 session is a pilot; post-cell canary false positive and its fix (2026-10-23)
+
+Evidence: `results/rtx6000ada/{env_20261023,e1v2_s1_20261023,e2v2_s1_20261023,diag_20261023_node03}/`.
+
+- **Card.** SLURM job 47824 on node01, `GPU-93fd8580-...` (PCI 47:00.0), ECC off. Same stack as `env_20261022`
+  (venv lock id `ca97c3a32dcc3d75`); selfcheck dispatch identical on both cards. The memory clock sits at 9501 MHz
+  (pstate P2) under CUDA load on both cards, so the raw bandwidth at the running clock is 912 GB/s (spec 960).
+- **Monitor does not bias medians here** (`env_20261023/diag_monitor_perturbation.json`): 64 MiB fill and read medians
+  agree within 0.4% across no monitor, NVML polling, psutil scanning and both. Benchmark and monitor share the job's 10
+  CPUs (all cores report the same max frequency), so this check matters on this platform.
+- **E1 `e1v2_s1_20261023`: 320 clean, 40 `unclean_exhausted`, 5.4 h wall time.** 268 min of it were gate waits: other
+  users started CPU-heavy jobs on node01 (up to 9.5 cores); the gate held every cell until they stopped. The cells' own
+  time was 13 min.
+- **All 40 exhausted cells failed only `canary_after`, deterministically.** After every cell with a footprint >= 2 GiB the
+  post-cell canary read 778.5 to 779.4 GB/s against a reference of 825 (threshold 784); after smaller cells it read
+  826 to 828. The next cell's `canary_before` was back to 825. Temperature (53 to 73 C), power and clocks do not explain
+  it, and the cells themselves are unaffected: in every cell >= 256 MiB, allocation 0 and the median of allocations 1 to 4
+  (each measured right after a multi-GiB free) agree to 0.00% median, 0.36% max.
+- **Cause, measured directly** (`scripts/diag/canary_after_free.py`, node03, a different RTX 6000 Ada, torch 2.6
+  diagnostic venv): after `torch.cuda.empty_cache()` returns a freed buffer to the driver, streaming bandwidth drops to
+  0.93x for **about 33 ms per GiB freed** (0.5 GiB: 11 ms; 2 GiB: 68 ms; 8 GiB: 267 ms). Freeing without `empty_cache`
+  (memory kept cached) causes no drop. The driver works on returned memory in the background (scrubbing or unmapping);
+  the post-cell canary ran inside that window. Cells are protected by their warmup (>= 200 ms) and about 1 s of samples.
+- **Fix (approved by P2):** `bench/run.py` waits `canary_settle_after_cell_s` before the post-cell canary, read from
+  `platform_notes.yaml` (1.0 s for `rtx6000ada`, covering the 12 GiB cap; 0 elsewhere, so other platforms are unchanged).
+  Thresholds, canary procedure and cell timing are unchanged. Because this changes which cells count as clean,
+  **`e1v2_s1_20261023` and the 22-cell `e2v2_s1_20261023` (stopped by the 6 h job limit) are pilots, not results.**
+  Fresh sessions on one card follow.
+- **Preliminary E1 numbers from the pilot (single session; plateaus rest on 1 to 2 clean 1 GiB cells):** B0 891.2 GB/s
+  (92.8% of spec), Triton graph tau 1.31 us (1.6% residual), B_half 1.12 MiB, fill 1.00x and copy 0.91x read, hot peak
+  4277 GB/s at 64 MiB, SM clock stable at 2475 to 2685 MHz.
+- **Gate blind spot noted:** the idle gate ignores processes of our own uid. The SLURM job script logs node state every
+  60 s (`node_state_<job>.log`, kept on the host since it lists other users' processes) to cover it.
+
 ## Open questions
 
 1. Is `lts__t_sectors_aperture_sysmem_op_write` the right write-bytes counter? To be confirmed in E3 with a `fill_` kernel of known size.
