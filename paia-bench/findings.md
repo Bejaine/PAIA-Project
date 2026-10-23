@@ -558,6 +558,38 @@ Evidence: `results/rtx6000ada/{env_20261023,e1v2_s1_20261023,e2v2_s1_20261023,di
 - **Gate blind spot noted:** the idle gate ignores processes of our own uid. The SLURM job script logs node state every
   60 s (`node_state_<job>.log`, kept on the host since it lists other users' processes) to cover it.
 
+## Platform `rtx6000ada`: does foreign CPU load change our numbers? (2026-10-24, node03 diagnostics)
+
+Context: the fresh sessions `*_20261023b` (card `GPU-885eda7c`, node01, job 48244) measured **0 cells in 6 h**: one
+other user held a steady 2.0 to 3.5 cores (once 11) on node01, just above the frozen 2-core gate. Before asking P2 for
+a platform threshold, the effect of foreign CPU load was measured directly.
+
+- **Method** (`scripts/diag/host_idle_sensitivity.py`, harness ops and `timing.measure`, same stack as the sessions:
+  venv lock `ca97c3a32dcc3d75` rebuilt on node03; card `GPU-637da17a`, ECC on, so absolute values are not results).
+  The probe runs on one core with its SMT sibling idle (SLURM gives whole cores to a job, so foreign processes never
+  share our physical cores). Load: one spinning core on the other socket; 4 logical CPUs streaming memory (numpy copies
+  of 256 MiB) on other cores **sharing the probe's L3**; 4 streaming on the other socket. 5 shuffled rounds.
+- **Results** (`results/rtx6000ada/diag_20261024_node03/host_idle_sensitivity.json`), change of the median vs no load:
+
+| Cells | 1 spinning core, other socket | 4 streaming, same L3 | 4 streaming, other socket |
+|---|---|---|---|
+| graph mode (Triton read, torch ops, cuBLAS k/q) | within 0.6% | within 2.1% | within 1.1% |
+| eager, small (1 MiB torch ops, Triton 1 MiB) | within 0.5% | **+22 to +51%** | within 0.6%, except Triton 1 MiB **+572%** |
+| isolated (1 and 8 MiB ops, cuBLAS k_proj, q_proj) | within 0.7% | **+10 to +51%** | within 0.9% |
+| eager, larger (8 MiB ops, cuBLAS k/q eager) | within 0.4% | within 0.1% | within 0.1% |
+
+- **Conclusion: the 2-core gate is needed on this platform and stays unchanged.** Graph-mode numbers (B0, graph tau,
+  E2 graph %B0) are immune, but eager and isolated tau and the launch split change by tens of percent when a foreign
+  job streams memory on cores that share our L3, which SLURM can allocate to other users.
+- An idle-state hypothesis from an earlier quick test (`scripts/diag/foreign_cpu_sensitivity.py`, torch 2.6 venv, own
+  timing loop: small torch ops 30 to 50% *faster* when any other core was busy) **did not reproduce** with the harness
+  timing and stack (one spinning core: within 0.7% on every cell). It is kept as a record, not a finding.
+- A first run of the harness diagnostic placed one streamer on the probe core's SMT sibling (+100 to +1300% in eager
+  and isolated); that placement cannot happen with SLURM whole-core allocation. Kept as
+  `host_idle_sensitivity_smt_confounded.json`.
+- **Consequence for scheduling:** sessions need a node with no memory-heavy foreign jobs. The job script now requests
+  24 h (partition MaxTime is unlimited) so that gate waits cannot cut a session.
+
 ## Open questions
 
 1. Is `lts__t_sectors_aperture_sysmem_op_write` the right write-bytes counter? To be confirmed in E3 with a `fill_` kernel of known size.

@@ -11,7 +11,7 @@
 #SBATCH --constraint=rtx6000
 #SBATCH -c 10
 #SBATCH --mem=20G
-#SBATCH -t 06:00:00
+#SBATCH -t 24:00:00
 #SBATCH -o /home/bejaine.birju/paia/project/slurm-%j.out
 set -uo pipefail
 BENCH=/home/bejaine.birju/paia/project/PAIA-Project/paia-bench
