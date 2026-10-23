@@ -78,3 +78,20 @@ but v6's 16-lane rows keep half the bytes in flight per warp, so it stalls on me
 - **Waiting on P2:** names and roll numbers, the `github.com/paa-iiit/...` repo link, P1's confirmation of the slide-5
   approach, timeline / GPU-slot confirmation, whether to commit the deck.
 - Logs written: `docs/PROGRESS.md`, `docs/RESULTS.md`, `docs/PLAN.md`, `docs/P2_BRIEF.md`.
+
+## 2026-10-23: direction change; E4 harness (library FP8 / INT4)
+
+- **P2's direction:** set the Evaluation 1 deck, the course repo and P3's RTX work aside for now. Focus: baselines and
+  profiling on the DGX Spark, the gap and its root cause, then kernels that close it. P2 may now modify P1's kernels
+  (`src/paia_gemv/`) for GB10 or write new ones following P1's design (this lifts the brief's "no project kernels" rule).
+- P1's work is on `main` (PRs #9, #10): S1 BF16 (phase `s1` wired in), FP8 W8A16 and INT4 W4A16 kernels with their `Op`
+  adapters; nothing has run on the Spark yet. `src/patches/integration_quant.patch` (phases `s3`, `s4`) no longer applies
+  to `run.py` and will be merged by hand.
+- **E4 code:** `bench/ops/lib_quant.py` (torch `_scaled_mm` per-tensor FP8, vLLM CUTLASS row-wise FP8, both also with
+  vLLM dynamic activation quantization, tinygemm INT4, Marlin INT4), phase `e4` (1,146 cells), `bench/analyze_e4.py`
+  (per-shape speedups and %B0, identity check, per-kernel asymptotic rates and per-op / per-byte split, activation-quant
+  cost, per-token GEMV cost, M sweep), `analyze.py --bf16-sessions`.
+- All 172 correctness checks pass on GB10; dispatch recorded (FP8 per-tensor uses several `nvjet` tiles and an
+  `sm89_xmma` GEMM). A gate-bypassed debug run (`debug_e4a`, 220 graph cells) exercised the analysis; hints only (see
+  `findings.md`): quantized large ops run near B0, the loss concentrates on small ops (Qwen k/v).
+- Next: two gated E4 sessions (about 2 h each), then ncu on the library kernels.

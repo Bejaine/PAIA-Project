@@ -111,7 +111,43 @@ def s1_cells():
     return cells
 
 
-PHASES = {"e1": e1_cells, "e2": e2_cells, "s1": s1_cells, "selftest": selftest_cells}
+E4_GEMM_IMPLS = ["torch_scaled_mm_fp8_pt", "vllm_cutlass_fp8_rw", "tinygemm_int4_g128", "marlin_int4_g128"]
+E4_FULL_IMPLS = ["torch_scaled_mm_fp8_pt_full", "vllm_cutlass_fp8_rw_full"]
+
+
+def e4_cells():
+    """Library FP8 / INT4. The four library GEMM kernels get E2's full cell set (synthetic sweep for per-kernel fits, real
+    shapes at M=1 in all modes, M sweep in graph mode). The *_full variants (dynamic activation quantization + GEMM) run
+    on real shapes only. Shapes a library does not support are left out (listed by --list as absent, noted in findings)."""
+    from bench.ops.lib_quant import E4_OPS
+    cfg = config.shapes_cfg()
+    cells = []
+    for impl in E4_GEMM_IMPLS + E4_FULL_IMPLS:
+        cls = E4_OPS[impl]
+        base = {"phase": "e4", "op": cls.op, "impl": impl, "precision": cls.precision, "hot_or_cold": "cold"}
+        if impl in E4_GEMM_IMPLS:
+            for name, sw in cfg["synthetic"].items():
+                for n in sw["N"]:
+                    if not cls.supports(n, sw["K"]):
+                        continue
+                    for mode in ("isolated", "eager", "graph"):
+                        cells.append({**base, "shape": {"M": 1, "N": n, "K": sw["K"]}, "model": "synthetic",
+                                      "layer_name": f"{name}_N{n}", "timing_mode": mode})
+        for model, m in cfg["models"].items():
+            for layer, (n, k) in m["shapes"].items():
+                if not cls.supports(n, k):
+                    continue
+                for mode in ("isolated", "eager", "graph"):
+                    cells.append({**base, "shape": {"M": 1, "N": n, "K": k}, "model": model, "layer_name": layer,
+                                  "timing_mode": mode})
+                for M in cfg["batch_sweep"]["M"]:
+                    if M > 1:
+                        cells.append({**base, "shape": {"M": M, "N": n, "K": k}, "model": model, "layer_name": layer,
+                                      "timing_mode": "graph"})
+    return cells
+
+
+PHASES = {"e1": e1_cells, "e2": e2_cells, "s1": s1_cells, "e4": e4_cells, "selftest": selftest_cells}
 
 
 def ordered(cells, seed):
@@ -149,6 +185,10 @@ class GpuContext:
             from bench.ops.cublas_bf16 import CublasBF16Linear
             sh = spec["shape"]
             return CublasBF16Linear(M=sh["M"], N=sh["N"], K=sh["K"], model=spec["model"], layer_name=spec["layer_name"])
+        if spec["phase"] == "e4":
+            from bench.ops.lib_quant import E4_OPS
+            sh = spec["shape"]
+            return E4_OPS[spec["impl"]](M=sh["M"], N=sh["N"], K=sh["K"], model=spec["model"], layer_name=spec["layer_name"])
         if spec["phase"] == "s1" and spec["impl"] == "ours_bf16_gemv":
             from bench.ops.ours_bf16 import OursBF16Gemv
             sh = spec["shape"]

@@ -12,14 +12,11 @@ Evaluation 2 window: November 9 to 21, 2026.
   and the largest measured loss is cuBLAS streaming at about 70% of B0 on 13 of 20 shapes. E4 decides whether the library
   quantized kernels show the same pattern.
 
-## Step 0 (now): finish Evaluation 1
+## Step 0: Evaluation 1 deck (on hold)
 
-1. Get from P2: names and roll numbers, the `github.com/paa-iiit/...` link, P1's confirmation of slide 5, timeline and
-   GPU-slot confirmation, whether the deck is committed.
-2. Fill `~/.paia_deck_work/deck_info.json`, rebuild, render, QA, copy to the repo root (or `presentations/eval1/`).
-3. Rehearse to 10 minutes (speaker notes are in the deck).
+Set aside by P2 on 2026-10-23; the focus is the GB10 measurements and kernels. The draft stays in the repo root (untracked).
 
-## Step 1 (Oct 22 to 28): E4 library FP8 / INT4 on GB10 (P2), RTX parity (P3)
+## Step 1 (now): E4 library FP8 / INT4 on GB10 (code done 2026-10-23; sessions next), RTX parity (P3, on hold)
 
 - **Ops** (in `paia-bench/bench/ops/`, same interface as `cublas_bf16.py`, correctness check first):
   - `scaled_mm_fp8.py`: `torch._scaled_mm`, e4m3 weights `[N, K]` passed as `W.t()`, per-tensor fp32 scales, per-tensor
