@@ -1,0 +1,155 @@
+==========================================
+SLURM_JOB_ID = 47491
+SLURM_NODELIST = node01
+SLURM_JOB_GPUS = 1
+==========================================
+job 47491 node node01 CUDA_VISIBLE_DEVICES=0
+name, compute_cap, clocks.current.sm [MHz], clocks.max.sm [MHz], clocks.current.memory [MHz], utilization.gpu [%], memory.used [MiB]
+NVIDIA RTX 6000 Ada Generation, 8.9, 210 MHz, 3105 MHz, 405 MHz, 0 %, 2 MiB
+NVIDIA RTX 6000 Ada Generation  cc 8.9  SMs 142  L2 96 MiB  variants 96
+DEV BENCHMARK: no idle gate, not a result. Timing: CUDA graph.
+dev B0 (streaming read probe, best grid): 890.9 GB/s
+
+llama q/o      N=4096   K=4096      32.0 MiB  copies=12
+  ours    863.4 GB/s (96% of B0)     38.88 us   R=2 U=1 W=8 S=1 H=0
+  ours    863.4 GB/s (96% of B0)     38.88 us   R=4 U=1 W=4 S=1 H=1
+  ours    863.1 GB/s (96% of B0)     38.90 us   R=4 U=1 W=4 S=1 H=0
+  ours    862.9 GB/s (96% of B0)     38.90 us   R=4 U=1 W=8 S=1 H=0
+  cuBLAS  842.4 GB/s (94% of B0)     39.85 us   -> ours/cuBLAS speedup 1.02x
+
+llama k/v      N=1024   K=4096       8.0 MiB  copies=48
+  ours    802.5 GB/s (90% of B0)     10.47 us   R=1 U=8 W=4 S=1 H=0
+  ours    802.1 GB/s (90% of B0)     10.47 us   R=1 U=8 W=8 S=1 H=0
+  ours    800.3 GB/s (89% of B0)     10.49 us   R=1 U=2 W=4 S=1 H=1
+  ours    800.0 GB/s (89% of B0)     10.50 us   R=1 U=1 W=4 S=1 H=0
+  cuBLAS  711.3 GB/s (79% of B0)     11.81 us   -> ours/cuBLAS speedup 1.13x
+
+llama gate/up  N=14336  K=4096     112.0 MiB  copies=4
+  ours    882.2 GB/s (99% of B0)    133.16 us   R=1 U=4 W=8 S=0 H=1
+  ours    882.2 GB/s (99% of B0)    133.16 us   R=1 U=8 W=4 S=1 H=1
+  ours    882.2 GB/s (99% of B0)    133.17 us   R=1 U=8 W=4 S=0 H=1
+  ours    882.2 GB/s (99% of B0)    133.17 us   R=2 U=4 W=4 S=1 H=1
+  cuBLAS  877.1 GB/s (98% of B0)    133.94 us   -> ours/cuBLAS speedup 1.01x
+
+llama down     N=4096   K=14336    112.0 MiB  copies=4
+  ours    882.1 GB/s (99% of B0)    133.18 us   R=2 U=1 W=4 S=0 H=0
+  ours    881.7 GB/s (98% of B0)    133.24 us   R=2 U=8 W=8 S=0 H=1
+  ours    881.6 GB/s (98% of B0)    133.26 us   R=2 U=8 W=8 S=1 H=1
+  ours    881.4 GB/s (98% of B0)    133.29 us   R=4 U=4 W=8 S=1 H=1
+  cuBLAS  871.6 GB/s (97% of B0)    134.79 us   -> ours/cuBLAS speedup 1.01x
+
+qwen q/o       N=3584   K=3584      24.5 MiB  copies=16
+  ours    866.9 GB/s (97% of B0)     29.65 us   R=2 U=4 W=8 S=0 H=1
+  ours    864.9 GB/s (97% of B0)     29.72 us   R=1 U=2 W=4 S=1 H=0
+  ours    863.9 GB/s (96% of B0)     29.75 us   R=1 U=8 W=4 S=1 H=1
+  ours    863.6 GB/s (96% of B0)     29.76 us   R=1 U=4 W=4 S=1 H=1
+  cuBLAS  802.8 GB/s (90% of B0)     32.02 us   -> ours/cuBLAS speedup 1.08x
+
+qwen k/v       N=512    K=3584       3.5 MiB  copies=110
+  ours    693.3 GB/s (77% of B0)      5.31 us   R=1 U=8 W=4 S=1 H=1
+  ours    691.3 GB/s (77% of B0)      5.32 us   R=1 U=4 W=8 S=1 H=1
+  ours    690.5 GB/s (77% of B0)      5.33 us   R=1 U=8 W=4 S=0 H=1
+  ours    689.5 GB/s (77% of B0)      5.33 us   R=1 U=4 W=4 S=1 H=1
+  cuBLAS  620.8 GB/s (69% of B0)      5.93 us   -> ours/cuBLAS speedup 1.12x
+
+qwen gate/up   N=18944  K=3584     129.5 MiB  copies=3
+  ours    883.8 GB/s (99% of B0)    153.70 us   R=1 U=8 W=8 S=1 H=1
+  ours    883.8 GB/s (99% of B0)    153.70 us   R=1 U=8 W=8 S=0 H=1
+  ours    883.4 GB/s (99% of B0)    153.76 us   R=2 U=8 W=4 S=1 H=1
+  ours    883.4 GB/s (99% of B0)    153.77 us   R=1 U=8 W=4 S=1 H=1
+  cuBLAS  879.6 GB/s (98% of B0)    154.43 us   -> ours/cuBLAS speedup 1.00x
+
+qwen down      N=3584   K=18944    129.5 MiB  copies=3
+  ours    883.5 GB/s (99% of B0)    153.74 us   R=2 U=4 W=4 S=1 H=1
+  ours    883.5 GB/s (99% of B0)    153.75 us   R=2 U=4 W=8 S=1 H=1
+  ours    883.4 GB/s (99% of B0)    153.77 us   R=2 U=4 W=8 S=0 H=1
+  ours    883.2 GB/s (99% of B0)    153.80 us   R=4 U=4 W=4 S=1 H=1
+  cuBLAS  870.4 GB/s (97% of B0)    156.07 us   -> ours/cuBLAS speedup 1.02x
+
+llama qkv      N=6144   K=4096      48.0 MiB  copies=8
+  ours    871.6 GB/s (97% of B0)     57.77 us   R=1 U=4 W=4 S=0 H=1
+  ours    871.6 GB/s (97% of B0)     57.77 us   R=1 U=1 W=4 S=0 H=1
+  ours    871.4 GB/s (97% of B0)     57.78 us   R=1 U=4 W=4 S=1 H=1
+  ours    871.4 GB/s (97% of B0)     57.78 us   R=1 U=2 W=8 S=0 H=0
+  cuBLAS  858.6 GB/s (96% of B0)     58.64 us   -> ours/cuBLAS speedup 1.02x
+
+qwen qkv       N=4608   K=3584      31.5 MiB  copies=13
+  ours    862.1 GB/s (96% of B0)     38.33 us   R=1 U=8 W=4 S=1 H=1
+  ours    861.7 GB/s (96% of B0)     38.35 us   R=2 U=2 W=8 S=1 H=1
+  ours    861.5 GB/s (96% of B0)     38.36 us   R=1 U=8 W=4 S=0 H=1
+  ours    861.4 GB/s (96% of B0)     38.36 us   R=1 U=8 W=4 S=1 H=0
+  cuBLAS  822.8 GB/s (92% of B0)     40.16 us   -> ours/cuBLAS speedup 1.05x
+=== EAGER (for comparison with the earlier run) ===
+NVIDIA RTX 6000 Ada Generation  cc 8.9  SMs 142  L2 96 MiB  variants 96
+DEV BENCHMARK: no idle gate, not a result. Timing: eager loop.
+dev B0 (streaming read probe, best grid): 891.0 GB/s
+
+llama q/o      N=4096   K=4096      32.0 MiB  copies=12
+  ours    848.9 GB/s (95% of B0)     39.55 us   R=2 U=1 W=8 S=1 H=0
+  ours    848.7 GB/s (95% of B0)     39.55 us   R=4 U=1 W=4 S=1 H=0
+  ours    848.7 GB/s (95% of B0)     39.56 us   R=4 U=1 W=4 S=1 H=1
+  ours    847.7 GB/s (95% of B0)     39.60 us   R=1 U=8 W=4 S=1 H=0
+  cuBLAS  825.6 GB/s (92% of B0)     40.66 us   -> ours/cuBLAS speedup 1.03x
+
+llama k/v      N=1024   K=4096       8.0 MiB  copies=48
+  ours    745.5 GB/s (83% of B0)     11.27 us   R=1 U=1 W=4 S=1 H=0
+  ours    744.9 GB/s (83% of B0)     11.28 us   R=1 U=2 W=4 S=1 H=1
+  ours    744.9 GB/s (83% of B0)     11.28 us   R=1 U=2 W=4 S=1 H=0
+  ours    744.6 GB/s (83% of B0)     11.28 us   R=1 U=8 W=8 S=1 H=0
+  cuBLAS  666.1 GB/s (74% of B0)     12.61 us   -> ours/cuBLAS speedup 1.12x
+
+llama gate/up  N=14336  K=4096     112.0 MiB  copies=4
+  ours    877.9 GB/s (98% of B0)    133.82 us   R=1 U=4 W=4 S=1 H=1
+  ours    877.8 GB/s (98% of B0)    133.83 us   R=1 U=8 W=8 S=1 H=1
+  ours    877.7 GB/s (98% of B0)    133.85 us   R=1 U=8 W=4 S=1 H=1
+  ours    877.7 GB/s (98% of B0)    133.85 us   R=1 U=4 W=8 S=1 H=1
+  cuBLAS  872.5 GB/s (97% of B0)    134.64 us   -> ours/cuBLAS speedup 1.01x
+
+llama down     N=4096   K=14336    112.0 MiB  copies=4
+  ours    877.1 GB/s (98% of B0)    133.93 us   R=4 U=4 W=8 S=1 H=1
+  ours    877.1 GB/s (98% of B0)    133.94 us   R=4 U=8 W=4 S=1 H=1
+  ours    877.0 GB/s (98% of B0)    133.95 us   R=4 U=4 W=4 S=1 H=1
+  ours    876.7 GB/s (98% of B0)    134.00 us   R=2 U=1 W=4 S=0 H=0
+  cuBLAS  866.9 GB/s (97% of B0)    135.51 us   -> ours/cuBLAS speedup 1.01x
+
+qwen q/o       N=3584   K=3584      24.5 MiB  copies=16
+  ours    838.4 GB/s (94% of B0)     30.66 us   R=1 U=8 W=4 S=1 H=1
+  ours    838.0 GB/s (94% of B0)     30.67 us   R=1 U=8 W=4 S=0 H=1
+  ours    837.9 GB/s (94% of B0)     30.68 us   R=1 U=4 W=4 S=1 H=1
+  ours    837.7 GB/s (94% of B0)     30.69 us   R=1 U=8 W=8 S=1 H=1
+  cuBLAS  782.8 GB/s (87% of B0)     32.83 us   -> ours/cuBLAS speedup 1.07x
+
+qwen k/v       N=512    K=3584       3.5 MiB  copies=110
+  ours    615.3 GB/s (69% of B0)      5.98 us   R=1 U=8 W=4 S=1 H=1
+  ours    614.0 GB/s (68% of B0)      5.99 us   R=1 U=4 W=4 S=1 H=1
+  ours    614.0 GB/s (68% of B0)      5.99 us   R=1 U=8 W=8 S=1 H=1
+  ours    613.8 GB/s (68% of B0)      5.99 us   R=1 U=4 W=8 S=1 H=1
+  cuBLAS  556.3 GB/s (62% of B0)      6.61 us   -> ours/cuBLAS speedup 1.11x
+
+qwen gate/up   N=18944  K=3584     129.5 MiB  copies=3
+  ours    880.0 GB/s (98% of B0)    154.36 us   R=1 U=8 W=4 S=1 H=1
+  ours    879.8 GB/s (98% of B0)    154.39 us   R=1 U=8 W=8 S=1 H=1
+  ours    879.5 GB/s (98% of B0)    154.44 us   R=2 U=8 W=4 S=1 H=1
+  ours    879.2 GB/s (98% of B0)    154.49 us   R=1 U=4 W=8 S=1 H=0
+  cuBLAS  875.4 GB/s (98% of B0)    155.18 us   -> ours/cuBLAS speedup 1.01x
+
+qwen down      N=3584   K=18944    129.5 MiB  copies=3
+  ours    880.1 GB/s (98% of B0)    154.35 us   R=2 U=4 W=4 S=1 H=1
+  ours    879.7 GB/s (98% of B0)    154.41 us   R=4 U=4 W=4 S=1 H=1
+  ours    879.4 GB/s (98% of B0)    154.46 us   R=4 U=8 W=4 S=1 H=1
+  ours    879.4 GB/s (98% of B0)    154.46 us   R=2 U=4 W=8 S=1 H=1
+  cuBLAS  866.7 GB/s (97% of B0)    156.73 us   -> ours/cuBLAS speedup 1.02x
+
+llama qkv      N=6144   K=4096      48.0 MiB  copies=8
+  ours    862.2 GB/s (96% of B0)     58.40 us   R=1 U=2 W=4 S=1 H=0
+  ours    862.2 GB/s (96% of B0)     58.40 us   R=1 U=1 W=4 S=1 H=1
+  ours    862.0 GB/s (96% of B0)     58.41 us   R=1 U=4 W=4 S=1 H=1
+  ours    862.0 GB/s (96% of B0)     58.41 us   R=1 U=1 W=4 S=1 H=0
+  cuBLAS  849.3 GB/s (95% of B0)     59.29 us   -> ours/cuBLAS speedup 1.02x
+
+qwen qkv       N=4608   K=3584      31.5 MiB  copies=13
+  ours    847.3 GB/s (95% of B0)     39.00 us   R=1 U=8 W=4 S=1 H=1
+  ours    847.2 GB/s (95% of B0)     39.01 us   R=1 U=4 W=4 S=1 H=1
+  ours    847.1 GB/s (95% of B0)     39.01 us   R=1 U=8 W=4 S=0 H=1
+  ours    847.1 GB/s (95% of B0)     39.01 us   R=1 U=2 W=4 S=1 H=1
+  cuBLAS  809.0 GB/s (90% of B0)     40.85 us   -> ours/cuBLAS speedup 1.05x

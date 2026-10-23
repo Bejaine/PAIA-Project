@@ -303,6 +303,51 @@ machine). Raw CSVs: `results/dgxspark_gb10/e3_ncu_gemv_variants/`. ncu durations
 - This is the mechanism P1's kernel targets: more bytes in flight per warp (32-lane rows, wide vector loads, several rows per
   warp) and a smaller register budget for higher occupancy.
 
+## E4 harness: library FP8 / INT4 ops (GB10, 2026-10-23, functional checks only)
+
+Code: `bench/ops/lib_quant.py`, phase `e4` in `bench/run.py`, `bench/analyze_e4.py`.
+
+### Verified on GB10 (correctness before any timing)
+- All six ops are correct (max rel. error 1.9e-3 to 3.4e-3, gate 2e-2) and graph-capturable on all 20 real shapes at M = 1,
+  and on q_proj, k_proj and lm_head of both models at M = 16 (172 checks).
+- **Dispatch at M = 1:**
+  - `torch._scaled_mm` per-tensor FP8 does **not** use one kernel. cuBLASLt picks by shape: `nvjet_sm121` tiles
+    (64x64, 64x32, 32x32, 128x64, 128x72, 192x112, ...), and for gate/up (N = 14336 to 18944) and both lm_heads an
+    **`sm89_xmma_gemm_e4m3bf16`** kernel (an Ada GEMM, not a Blackwell one).
+  - vLLM `cutlass_scaled_mm` row-wise FP8: one CUTLASS `MainloopSm120TmaWarpSpecialized` GEMM on every shape.
+  - tinygemm: `tinygemm_m16n8k16_chunk_kernel` (innerKTiles 8). Marlin: `marlin::Marlin<bf16, ...>` (one template
+    instance at M = 1, another at M = 16).
+  - Dynamic activation quantization (vLLM `scaled_fp8_quant`): per-tensor = memset + `segmented_max_reduction_strided`
+    + `scaled_fp8_quant_kernel_strided_dynamic` (3 operations); per-token = one `dynamic_per_token_scaled_fp8_quant_kernel`.
+- **Marlin weights are built the way vLLM loads a GPTQ checkpoint:** GPTQ layout (`qweight [K/8, N]` int32) then
+  `ops.gptq_marlin_repack` on the GPU. vLLM's `marlin_quantize` test helper packs on the CPU and is too slow for lm_head.
+- **Shape support:** Marlin needs N % 64 == 0 (K % 128): synthetic N = 32 is left out of its cells. Every other op runs
+  every shape. `run.py --phase e4 --list` shows 1,146 cells (4 GEMM kernels x 218 E2-style cells, minus 6 for Marlin,
+  plus 2 full variants x 140 real-shape cells).
+- Only copy 0 of each rotation holds real quantized data; copies 1.. hold random codes (FP8 codes with NaN patterns
+  excluded). These kernels have no data-dependent control flow, so timing does not depend on the values.
+- Bytes are the stored format: FP8 1 B/weight + fp32 scales; tinygemm 0.5 B/weight + bf16 scale and zero per 128
+  (4.25 bits); Marlin 0.5 B/weight + bf16 scale per 128 (4.125 bits). For the `*_full` ops the fp8 copy of x is
+  intermediate traffic and is not counted.
+
+### Analysis decisions
+- **Efficiency against cuBLAS BF16 exceeds 100% on most shapes**, because cuBLAS BF16 itself runs at about 70% of B0 on
+  13 of 20 shapes (E2). The meaningful efficiency is %B0 (efficiency against an ideal kernel at B0); both are reported.
+  The identity efficiency == BW_q / BW_16 holds to 4e-16 (it is algebra; the check guards the code).
+- **One `t = tau + B / R` fit does not describe the tiled library kernels** (Marlin 22%, tinygemm 13%, CUTLASS 26% rms
+  residual over the synthetic sweep; Marlin's fit even reports R above B0). The per-op / per-byte split therefore uses
+  each dispatched kernel's asymptotic rate R_asym (Theil-Sen slope of t against B over ops >= 64 MiB):
+  per-byte = B (1/R_asym - 1/B0), per-op = (t - B/B0) - per-byte. Kernels with fewer than 3 large ops get no split.
+
+### Debug observations (session `debug_e4a`, gate bypassed, graph M = 1 only: hints, NOT results)
+- The quantized library kernels stream large ops at 92 to 98% of B0 (INT4 tinygemm and Marlin about 95 to 98%), better than
+  cuBLAS BF16's v6 shapes. FP8 per-tensor's `sm89_xmma` kernel looked slower (about 83% of B0 on gate/up/lm_head).
+- The loss concentrates on **small ops**: Qwen k/v (512 x 3584) at 24% (CUTLASS FP8), 28% (Marlin), 52% (tinygemm) and
+  65% (FP8 `_scaled_mm`) of B0, against 87% for cuBLAS BF16. CUTLASS FP8 and Marlin spend 24 us and 10 us there beyond
+  B/B0 (which is 8 us and 4 us). Per-tensor dynamic activation quantization added about 14 us per op.
+- Predictions: the 2026-10-16 E4 predictions (FP8 `_scaled_mm`, tinygemm, Marlin) were committed before any E4 number.
+  No prediction was added for row-wise CUTLASS FP8 or the `*_full` variants, because debug numbers for them had been seen.
+
 ## Platform `rtxpro5000bw`: environment and preliminary E1 (P3)
 
 Raw evidence: `paia-results/rtxpro5000bw/{env_20261016,s1_20261016}/`, preflight report on the host at

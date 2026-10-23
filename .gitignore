@@ -17,3 +17,6 @@ paia-bench/results/*/debug_*/
 
 # GitHub classic token (local only, never commit)
 .github_classic_token
+
+# Local agent handoff (never commit)
+handoff.md
