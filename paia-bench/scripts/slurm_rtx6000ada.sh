@@ -8,6 +8,7 @@
 #SBATCH -J paia-rtx6000ada
 #SBATCH -p u22
 #SBATCH --gres=gpu:1
+#SBATCH --constraint=rtx6000
 #SBATCH -c 10
 #SBATCH --mem=20G
 #SBATCH -t 06:00:00
@@ -43,9 +44,18 @@ trap 'kill $LOGGER 2>/dev/null' EXIT
 echo "job $SLURM_JOB_ID on $(hostname) GPU $PAIA_GPU cpus $(taskset -pc $$ | cut -d: -f2) steps: $STEPS"
 nvidia-smi --query-gpu=name,uuid,pci.bus_id,ecc.mode.current,ecc.mode.pending,persistence_mode,pstate --format=csv
 uptime
+if [[ "$(nvidia-smi --query-gpu=name --format=csv,noheader | head -1)" != "NVIDIA RTX 6000 Ada Generation" ]]; then
+  echo "ABORT: not an RTX 6000 Ada"; exit 2
+fi
+# Every session of this set must run on one card: record it on first use, refuse any other card later (resume after timeout).
+CARD=results/$TAG/card_${D}.txt
+if [[ -f $CARD && "$(cat $CARD)" != "$PAIA_GPU" ]]; then
+  echo "ABORT: sessions *_${D} were started on $(cat $CARD), this job got $PAIA_GPU"; exit 6
+fi
 if [[ "$(nvidia-smi --query-gpu=ecc.mode.current --format=csv,noheader | head -1)" != "Disabled" ]]; then
   echo "ABORT: ECC is enabled on this card; sessions of record use ECC off"; exit 3
 fi
+[[ -f $CARD ]] || echo "$PAIA_GPU" > $CARD
 
 run() { echo; echo "##### $(date -Is) $*"; "$@"; local rc=$?; echo "##### rc=$rc $(date -Is)"; return $rc; }
 for step in $STEPS; do
