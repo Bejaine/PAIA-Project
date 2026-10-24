@@ -590,6 +590,100 @@ a platform threshold, the effect of foreign CPU load was measured directly.
 - **Consequence for scheduling:** sessions need a node with no memory-heavy foreign jobs. The job script now requests
   24 h (partition MaxTime is unlimited) so that gate waits cannot cut a session.
 
+## Platform `rtx6000ada`: E1 and E2 results of record (2026-10-24)
+
+Sessions `e1v2_s1_20261024`, `e2v2_s1_20261024`, `e1v2_s2_20261024`, `e2v2_s2_20261024`: SLURM job 48514, node01,
+one card for all four (`GPU-93fd8580-...`, PCI 47:00.0, ECC off, persistence off), 03:20 to 05:54 on 2026-10-24
+(same-phase sessions about 1 h apart, as on GB10; not different days). Stack: torch 2.11.0+cu128, cuBLAS 12.8.4.1,
+Triton 3.6.0, venv lock `ca97c3a32dcc3d75`, code `b3d2b90`/`7d7935c` (clean tree), canary settle 1.0 s. **All 1,156 cells
+clean** (40 attempts retried). The gate waited 80 times in total for foreign CPU. **Every cross-platform comparison
+is stack-confounded** (GB10: cuBLAS 13.1.0, RTX PRO 5000: 13.1.1).
+
+### E1 (B0)
+
+| Quantity | s1 | s2 | Prediction | GB10 v2 | RTX PRO 5000 (pilot) |
+|---|---|---|---|---|---|
+| **R_inf_B0** (cold graph Triton read, >= 10x L2) | **891.73 GB/s** | **891.77 GB/s** | 875 | 239.5 | 1238.8 |
+| as % of the 960 GB/s spec | 92.9% | 92.9% | 91% | 88% | 92% |
+| as % of 912 GB/s raw at the running 9501 MHz memory clock | 97.8% | 97.8% | | | 96.6% |
+| **probe tau, graph** | **1.31 us** [1.21, 1.36] | **1.21 us** [1.19, 1.23] | 1.6 | 1.7 | 1.36 |
+| fit residual / fitted R | 1.6% / 895.6 | 0.5% / 893.0 | | | |
+| **B_half (graph)** | **1.12 MiB** | **1.03 MiB** | 1.3 | 0.39 | 1.61 |
+| eager floor (Triton, 0.25 to 4 MiB, host-bound) | 10.0 to 10.2 us | 10.1 to 10.3 us | 6.5 | 4.7 (tau) | 5.8 |
+| isolated floor | 19.5 to 19.9 us | 19.2 to 19.7 us | 12 | 11.4 | |
+| write (fill) / copy vs read (graph plateaus) | 1.00x / 0.91x | 1.00x / 0.91x | 0.97 / 0.90 | 0.81 / 1.00 | 1.00 / 0.89 |
+| hot L2 peak, Triton read graph | 5026 GB/s at 64 MiB | 4999 GB/s at 64 MiB | ~4 TB/s at 32 to 64 | 1525 at 16 | 4572 at 16 |
+| hot falloff | below cold by 128 MiB | same | 64 to 128 MiB | 16 to 32 | by 128 |
+| SM clock per cell (median) | 2460 to 2685 MHz | 2460 to 2685 MHz | | 2177 to 2190 | 180 to 2595 |
+| canary | 824.5 GB/s, CV 0.13% | 824.7, CV 0.07% | | 0.2 to 0.8% | 0.04% |
+
+- **Cross-session agreement:** 360 matched cells, median |diff| **0.09%** (GB10 v2: 0.38%); 5 cells above 3%, all sub-2 us
+  graph Triton cells at 256 to 512 KiB (largest: 1.50 vs 1.66 us). B0 agrees to 0.005%. The graph tau fits differ by
+  0.1 us because of those small cells; tau is 1.2 to 1.3 us.
+- **SM clock is stable** under load (2460 to 2685 MHz in every cell), unlike the RTX PRO 5000. `sw_power_cap` appears in
+  the largest cells (about 290 W of 300 W) without a clock change. No clock locking was needed.
+- Only the Triton graph fit is valid (0.5 to 1.6% residual); eager and isolated fits misfit because those modes are
+  host-bound below about 8 MiB, as on the RTX PRO 5000. torch `sum` misfits in every mode, as on GB10.
+
+### E2 (cuBLAS BF16, M=1, graph mode, %B0 with B0 = 891.73 GB/s)
+
+| model | layer | MiB | rtx6000ada kernel | %B0 s1 / s2 | GB10 kernel | GB10 %B0 | same variant |
+|---|---|---|---|---|---|---|---|
+| llama31 | k_proj | 8.0 | gemvx/v6 | 79.7 / 79.7 | gemvx/v6 | 71.9 | yes |
+| llama31 | v_proj | 8.0 | gemvx/v6 | 79.8 / 79.5 | gemvx/v6 | 68.3 | yes |
+| llama31 | q_proj | 32.0 | gemvx/v6 | 93.3 / 93.4 | gemvx/v6 | 70.7 | yes |
+| llama31 | o_proj | 32.0 | gemvx/v6 | 93.4 / 93.4 | gemvx/v6 | 69.2 | yes |
+| llama31 | qkv_fused | 48.0 | gemvx/v7 | 96.3 / 96.3 | gemvx/v6 | 70.2 | **no** |
+| llama31 | gate_proj | 112.0 | gemvx/v7 | 98.3 / 98.3 | gemvx/v7 | 97.3 | yes |
+| llama31 | up_proj | 112.0 | gemvx/v7 | 98.3 / 98.3 | gemvx/v7 | 97.7 | yes |
+| llama31 | down_proj | 112.0 | gemvx/v7 | 97.6 / 97.7 | gemvx/v7 | 96.4 | yes |
+| llama31 | gate_up_fused | 224.0 | gemvx/v7 | 99.2 / 99.1 | gemvx/v7 | 98.0 | yes |
+| llama31 | lm_head | 1002.0 | gemvx/v6 | 99.9 / 99.9 | gemvx/v7 | 72.9 | **no** |
+| qwen25 | v_proj | 3.5 | gemvx/v7 | 69.6 / 69.4 | gemvx/v7 | 86.7 | yes |
+| qwen25 | k_proj | 3.5 | gemvx/v7 | 69.6 / 69.4 | gemvx/v7 | 87.1 | yes |
+| qwen25 | q_proj | 24.5 | gemvx/v6 | 89.6 / 89.5 | gemvx/v6 | 68.6 | yes |
+| qwen25 | o_proj | 24.5 | gemvx/v6 | 89.7 / 89.6 | gemvx/v6 | 68.6 | yes |
+| qwen25 | qkv_fused | 31.5 | gemvx/v6 | 92.2 / 92.2 | gemvx/v6 | 69.3 | yes |
+| qwen25 | gate_proj | 129.5 | gemvx/v7 | 98.6 / 98.6 | gemvx/v6 | 71.0 | **no** |
+| qwen25 | up_proj | 129.5 | gemvx/v7 | 98.6 / 98.6 | gemvx/v6 | 70.7 | **no** |
+| qwen25 | down_proj | 129.5 | gemvx/v7 | 97.5 / 97.6 | gemvx/v7 | 96.9 | yes |
+| qwen25 | gate_up_fused | 259.0 | gemvx/v7 | 99.4 / 99.4 | gemvx/v6 | 71.4 | **no** |
+| qwen25 | lm_head | 1039.5 | gemvx/v6 | 99.9 / 99.9 | gemvx/v7 | 72.1 | **no** |
+
+- **The v6 per-byte loss does not reproduce on Ada.** Per-kernel graph fits (both sessions): `gemvx/v6` tau 2.50 us,
+  **R_inf 887.6 to 887.8 GB/s (99.5% of B0)**, 1.2 to 1.3% residual; `gemvx/v7` tau 2.38 us, R_inf 900.4 to 900.8 GB/s,
+  4.1 to 4.3% residual. On GB10, v6 streams at 168 GB/s (70% of B0) with v7 at 87 to 98%. Here the two variants stream
+  equally well; v6 even serves both lm_heads at 99.9% of B0.
+- **The BF16 loss here is per op.** cuBLAS's tau (2.4 to 2.5 us) is about 2x the probe's (1.2 to 1.3 us), so B_half is
+  about 2.1 MiB: Llama k/v_proj (8 MiB) reach 79.7% of B0 and Qwen k/v_proj (3.5 MiB) 69.4%, against 90% of the same-size
+  E1 read. Shapes of 100 MiB and more reach 97.5 to 99.9%.
+- **Dispatch differs from GB10 on 6 of 20 shapes** (Llama qkv_fused, Qwen gate/up/gate_up: v6 on GB10, v7 here; both
+  lm_heads: v7 on GB10, v6 here). No variant appears that GB10 never used. Stack-confounded (cuBLAS 12.8 vs 13.1).
+- **M sweep (Q3):** t(M=2..16)/t(1) is 0.98 to 0.99 on Qwen q/o/qkv (v6 at M=1), 1.00 to 1.03 on every shape of 24 MiB
+  and more, 1.05 to 1.09 on Llama k/v and **1.23 to 1.27 on Qwen k/v** (split-K GEMM). M >= 2 is no longer faster than
+  M=1 in any useful way, because the M=1 GEMV is already near B0 here. From M=2 cuBLAS uses `cutlass_80_wmma_tensorop_bf16`
+  (with `splitKreduce` on small N), as on GB10 and the RTX PRO 5000.
+- **Launch split** (pooled, M=1): exposed host launch (eager - graph) 4.7 to 6.0 us; isolated - graph 16.3 to 18.4 us
+  (GB10: about 2 to 3 and 9 to 11 us).
+- **Allocation variance (Q4):** per-allocation median spread **0.08% median, 0.72 to 0.82% p90** in E2 and 0.10 to 0.12% /
+  1.08 to 1.28% in E1 (GB10: 0.44% / 1.3 to 1.7% and 0.38% / 2.9 to 3.2%). E2 cross-session median |diff| 0.08%
+  (GB10 v2: 0.27%), max 2.91%. GDDR6 shows about 5x less allocation-to-allocation variance than LPDDR5x.
+- **`model eff` columns are not efficiencies:** they use only the per-kernel tau (relative to each kernel's own R_inf).
+  Read %B0. (On this platform the two agree better than on GB10, because R_inf of both variants is near B0.)
+
+### Kernel names lost by the profiler on this stack (analysis-side fix)
+
+- 95% of E1/E2 cells recorded `kernel_names = []` (GB10 and RTX PRO 5000: 0 of 2,410). Reproduced outside the runner
+  (`scripts/diag/profiler_idle_repro.py`, node01): on torch 2.11.0+cu128 with driver 575, `torch.profiler` returns no CUDA events once the process
+  has spent a few seconds idle between profiler sessions (12 s gaps: lost after 2 cells; 4 s: after 5; 2 s: never).
+  Keeping the GPU busy for 200 ms before profiling does not help, so it is not a GPU power state. The idle gate's settle
+  and window steps create these gaps. Timings are unaffected; only the recorded names are missing.
+- **Fix without touching frozen code:** `scripts/diag/dispatch_table.py` records the kernels for all 96 E2 shapes
+  (M = 1 to 16) back to back in a fresh process (`results/rtx6000ada/dispatch_20261024/dispatch_table.json`, node01, same
+  stack). `bench.analyze --dispatch-table` fills empty `kernel_names` in memory only (cell files unchanged) and aborts if
+  any recorded name disagrees. **All 29 cells that did record names matched the table exactly**; 407 were filled.
+  The E2 summaries above were produced this way and say so.
+
 ## Open questions
 
 1. Is `lts__t_sectors_aperture_sysmem_op_write` the right write-bytes counter? To be confirmed in E3 with a `fill_` kernel of known size.
