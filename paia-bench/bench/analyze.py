@@ -43,9 +43,10 @@ def fill_kernel_names(cells, table_path):
     t = json.loads(Path(table_path).read_text())["table"]
     filled = checked = 0
     for c in cells:
-        if c.get("phase") not in ("e2",) or not c.get("shape"):
+        if c.get("phase") not in ("e2", "e4") or not c.get("shape"):
             continue
-        names = t.get(f"{c['shape']['M']}x{c['shape']['N']}x{c['shape']['K']}")
+        shape = f"{c['shape']['M']}x{c['shape']['N']}x{c['shape']['K']}"
+        names = t.get(f"{c['impl']}|{shape}", t.get(shape) if c["impl"] == "cublas_f_linear" else None)
         if names is None:
             continue
         if c.get("kernel_names"):
@@ -480,6 +481,8 @@ def main():
     if any(c["phase"] == "e4" for c in cells):
         from bench import analyze_e4
         bf16_cells = [c for s in a.bf16_sessions for c in load_cells(root / a.platform_tag / s)]
+        if a.dispatch_table:
+            fill_kernel_names(bf16_cells, a.dispatch_table)
         e4, e4_md, p4 = analyze_e4.analyze(cells, bf16_cells, b0, out)
         plots.update(p4)
     fits = {"session": a.session, "valid": not a.use_contaminated, "e1": e1, "e2": e2, "e4": e4, "b0_gbps": b0,
