@@ -3,6 +3,13 @@
 # The BF16 reference (E2) and B0 (E1) are re-measured in the same job, venv and card, so every speedup and %B0 compares
 # like with like. Order: test, env+selfcheck, E1 s1, E2 s1, E4 s1, E2 s2, E4 s2, dispatch table, analysis.
 # Same guards as slurm_rtx6000ada.sh: GPU model, ECC off, one card per session set, venv lock id. Gate unchanged.
+# PAIA_ALLOW_ECC=1 runs on an ECC-enabled card instead; the ECC state is part of the card lock, so it cannot change within
+# a session set (name such sets so they cannot be mixed with ECC-off ones).
+# GPU-time protection (allocated time is billed even while the gate waits):
+#  - preflight: other users' CPU use is sampled for 60 s before anything is locked; above PAIA_PREFLIGHT_MAX_CORES (2, the
+#    gate threshold) the job resubmits itself 1 h later, until PAIA_RETRY_UNTIL (epoch seconds), and exits.
+#  - stall watchdog: if a bench.run session adds no cell for PAIA_STALL_MIN (30) minutes, the job is cancelled; the
+#    runner saves finished cells on SIGTERM and a later job resumes them (on the same card only).
 #SBATCH -J paia-e4
 #SBATCH -p u22
 #SBATCH --gres=gpu:1
@@ -30,11 +37,48 @@ echo "job $SLURM_JOB_ID on $(hostname) GPU $PAIA_GPU cpus $(taskset -pc $$ | cut
 nvidia-smi --query-gpu=name,uuid,pci.bus_id,ecc.mode.current,ecc.mode.pending,persistence_mode --format=csv,noheader; uptime
 [[ "$(nvidia-smi --query-gpu=name --format=csv,noheader | head -1)" == "NVIDIA RTX 6000 Ada Generation" ]] || { echo "ABORT: not an RTX 6000 Ada"; exit 2; }
 CARD=results/$TAG/card_${D}.txt
-[[ -f $CARD && "$(cat $CARD)" != "$PAIA_GPU" ]] && { echo "ABORT: sessions *_${D} use $(cat $CARD), got $PAIA_GPU"; exit 6; }
-[[ "$(nvidia-smi --query-gpu=ecc.mode.current --format=csv,noheader | head -1)" == "Disabled" ]] || { echo "ABORT: ECC enabled"; exit 3; }
+ECC="$(nvidia-smi --query-gpu=ecc.mode.current --format=csv,noheader | head -1)"
+[[ "$ECC" == "Disabled" || "${PAIA_ALLOW_ECC:-0}" == "1" ]] || { echo "ABORT: ECC enabled"; exit 3; }
+CARD_ID="$PAIA_GPU ecc=$ECC"
+[[ -f $CARD && "$(cat $CARD)" != "$CARD_ID" ]] && { echo "ABORT: sessions *_${D} use $(cat $CARD), got $CARD_ID"; exit 6; }
 [[ -x $PAIA_VENV/bin/python ]] || { echo "ABORT: no E4 venv on this node"; exit 4; }
 id=$(sha1sum $PAIA_VENV/requirements.lock.txt | cut -c1-16); [[ "$id" == "$LOCK_ID" ]] || { echo "ABORT: venv lock $id != $LOCK_ID"; exit 5; }
-[[ -f $CARD ]] || echo "$PAIA_GPU" > $CARD
+FOREIGN=$($PAIA_VENV/bin/python - <<'PY'
+import os, time, psutil
+me = os.getuid(); procs = []
+for p in psutil.process_iter(["uids"]):
+    try:
+        if p.info["uids"] and p.info["uids"].real != me:
+            p.cpu_percent(None); procs.append(p)
+    except psutil.Error: pass
+time.sleep(60)
+tot = 0.0
+for p in procs:
+    try: tot += p.cpu_percent(None) / 100
+    except psutil.Error: pass
+print(f"{tot:.2f}")
+PY
+)
+echo "preflight: other users' CPU over 60 s = $FOREIGN cores (max ${PAIA_PREFLIGHT_MAX_CORES:-2})"
+if awk "BEGIN{exit !($FOREIGN > ${PAIA_PREFLIGHT_MAX_CORES:-2})}"; then
+  if [[ -n "${PAIA_RETRY_UNTIL:-}" && $(date +%s) -lt ${PAIA_RETRY_UNTIL} ]]; then
+    sbatch -w "$SLURMD_NODENAME" --begin=now+3600 --export=ALL /home/bejaine.birju/paia/project/PAIA-Project/paia-bench/scripts/slurm_rtx6000ada_e4.sh
+    echo "PREFLIGHT_BUSY: resubmitted for 1 h later; exiting without measuring"; exit 0
+  fi
+  echo "PREFLIGHT_BUSY: past PAIA_RETRY_UNTIL; exiting without measuring"; exit 8
+fi
+[[ -f $CARD ]] || echo "$CARD_ID" > $CARD
+( last=$(date +%s); pid=""
+  while sleep 60; do
+    p=$(pgrep -u "$(id -u)" -f "bench.run --phase .* --session .*_${D}( |$)" | head -1)
+    [[ -z "$p" ]] && { pid=""; continue; }
+    [[ "$p" != "$pid" ]] && { pid=$p; last=$(date +%s); }
+    newest=$(find results/$TAG -path "*_${D}/cells/*.json" -newermt "@$last" 2>/dev/null | head -1)
+    [[ -n "$newest" ]] && last=$(date +%s)
+    if (( $(date +%s) - last > ${PAIA_STALL_MIN:-30} * 60 )); then
+      echo "STALL: no new cell for ${PAIA_STALL_MIN:-30} min; cancelling job $SLURM_JOB_ID (cells are saved)"; scancel $SLURM_JOB_ID; exit 0
+    fi
+  done ) &
 run() { echo; echo "##### $(date -Is) $*"; "$@"; local rc=$?; echo "##### rc=$rc $(date -Is)"; return $rc; }
 sess() { run $R python -m bench.run --phase $1 --session $2 --platform-tag $TAG --contact "$CONTACT" --no-tmux-check; }
 for step in $STEPS; do
