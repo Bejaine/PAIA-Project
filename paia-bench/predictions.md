@@ -117,3 +117,23 @@ Date committed: 2026-10-22.
 **Note added after drafting, before commit (2026-10-22):** the table above was written before `selfcheck.json` was read.
 Selfcheck then showed that at M=1 Qwen gate_proj (18944x3584) dispatches `gemvx` v7 here (v6 on GB10), while Llama q/k_proj
 are v6 as on GB10. The predictions were not changed; E2 will test them as written.
+
+### E4 (library FP8 / INT4), `rtx6000ada`
+
+Predicted by Claude before any E4 cell on this GPU (2026-10-25). Inputs: this platform's E1/E2 results of record
+(B0 891.7 GB/s, probe tau 1.2 to 1.3 us, cuBLAS BF16 tau 2.45 us, BF16 per token 17.17 ms Llama / 16.20 ms Qwen in graph
+mode with fused shapes) and GB10's gate-bypassed E4 debug hints (`findings.md`, not results). No Ada E4 number seen.
+Stack for E4: torch 2.11.0+cu129, vLLM 0.26.0+cu129 (a separate venv; BF16 reference re-measured in the same venv).
+
+| Quantity | Prediction | Reasoning |
+|---|---|---|
+| Large ops (gate/up/down, lm_head), %B0, graph M=1 | **FP8 per-tensor 80 to 90%, CUTLASS FP8 row-wise 85 to 95%, tinygemm 85 to 95%, Marlin 90 to 97%** | Tiled GEMMs stream well once there are many tiles; GB10 hints 83 to 98%. Ada's FP8 path is the native `sm89_xmma` kernel GB10 already used for large N. |
+| Small ops (Qwen k/v 512 x 3584; Llama k/v 1024 x 4096), %B0 | **20 to 45% (FP8), 15 to 40% (INT4)** | At 0.9 to 4 MiB the per-op cost dominates. Library GEMMs at M=1 carry 5 to 10 us of fixed cost (tile setup, split-K or stream-K reduction, scale epilogue), against B/B0 of 1 to 4.5 us. GB10 hints: 24 to 65%. |
+| Fitted per-op cost of the library kernels (graph) | **4 to 10 us**, i.e. 2 to 4x cuBLAS BF16 (2.45 us) and 3 to 8x the probe (1.25 us) | As above. This is the per-op gap a fused low-precision GEMV would close. |
+| Measured speedup vs cuBLAS BF16, large ops | **FP8 1.7 to 1.9x (theory 2.0x); INT4 Marlin 3.2 to 3.6x (theory 3.88x); tinygemm 2.8 to 3.4x (theory 3.76x)** | Near the byte ratio when streaming dominates. |
+| Measured speedup vs cuBLAS BF16, small ops | **0.6 to 1.3x for every library kernel** | The 4x byte saving is eaten by the larger fixed cost; some small shapes get slower than BF16. |
+| Per-token GEMV time, best library kernel, graph, fused shapes | **FP8 about 9.5 ms Llama (1.8x, theory 2.0x); INT4 about 5.5 ms Llama (3.1x, theory 3.9x)** | Large ops dominate the bytes, so per-token efficiency is set by them, minus a per-op tax of 129 ops x (library tau - B0 time saving). |
+| Gap to the 4-bit bandwidth limit per token (ideal 4.21 ms Llama) | **20 to 35%** | 129 GEMV ops x 5 to 10 us of fixed cost is 0.6 to 1.3 ms against 4.2 ms. If this holds, a fused low-precision GEMV with probe-like tau (4.37 ms) is worth 1.2 to 1.35x per token at 4-bit. |
+| Dynamic activation quantization (`*_full`) | **per-tensor +8 to 14 us per op (3 extra kernels); per-token +3 to 6 us (1 kernel)** | GB10 hint +14 us per-tensor; Ada launches are cheaper in graph mode. |
+| M sweep (graph), t(16)/t(1) | **1.0 to 1.15** | Tensor-core tiles at M = 1 already compute 16 or more rows; extra rows cost little until compute matters. |
+| Conclusion to test | **A per-op gap exists for low precision on Ada even though BF16 has none** | If the small-op %B0 and the per-token gap come out near the BF16 numbers instead, there is no gap on this GPU and that will be reported. |
