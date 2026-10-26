@@ -1,0 +1,360 @@
+{
+ "platform_tag": "rtx6000ada",
+ "session_id": "env_e4_20261025",
+ "provenance": {
+  "git_commit": "7de1a49cd85d3e7b3e0d9e2dbbaaf1b656d797a6",
+  "git_dirty": false,
+  "image": "host-venv:.venv-e4",
+  "image_id": "9014db2581becb83"
+ },
+ "device": "NVIDIA RTX 6000 Ada Generation",
+ "capability": [
+  8,
+  9
+ ],
+ "checks": {
+  "bf16_vs_cpu": {
+   "ok": true,
+   "value": {
+    "rel_err": 0.004440446849912405,
+    "correct": true
+   }
+  },
+  "e1_torch_ops": {
+   "ok": true,
+   "value": {
+    "read_sum": {
+     "kernels": [
+      "Memset (Device)",
+      "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::func_wrapper_t<float, at::native::sum_functor<float, float, float>::operator()(at::TensorIterator&)::{lambda(float, float)#1}>, unsigned int, float, 4, 4> >(at::native::ReduceOp<float, at::native::func_wrapper_t<float, at::native::sum_functor<float, float, float>::operator()(at::TensorIterator&)::{lambda(float, float)#1}>, unsigned int, float, 4, 4>)"
+     ],
+     "graph": true
+    },
+    "copy": {
+     "kernels": [
+      "Memcpy DtoD (Device -> Device)"
+     ],
+     "graph": true
+    },
+    "write_fill": {
+     "kernels": [
+      "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul> >(int, at::native::FillFunctor<unsigned char>, std::array<char*, 1ul>)"
+     ],
+     "graph": true
+    }
+   }
+  },
+  "triton_read_probe": {
+   "ok": true,
+   "value": {
+    "triton": "3.6.0",
+    "target": "GPUTarget(backend='cuda', arch=89, warp_size=32)",
+    "correct": true,
+    "graph": true
+   }
+  },
+  "cublas_bf16": {
+   "ok": true,
+   "value": {
+    "1024x4096_M1": {
+     "rel_err": 0.0024384059943258762,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "1024x4096_M16": {
+     "rel_err": 0.0038781084585934877,
+     "correct": true,
+     "kernels": [
+      "void cublasLt::splitKreduce_kernel<32, 16, int, __nv_bfloat16, __nv_bfloat16, float, __nv_bfloat16, false, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, true, false, false, false>(cublasLt::cublasSplitKParams<float>, __nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, __nv_bfloat16*, float const*, float const*, __nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, void*, long, float*, int*, float*, float*, float const*, float const*, float const*, float const*, float const*)",
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "4096x4096_M1": {
+     "rel_err": 0.0029155199881643057,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "4096x4096_M16": {
+     "rel_err": 0.0027059572748839855,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "14336x4096_M1": {
+     "rel_err": 0.0029499921947717667,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "14336x4096_M16": {
+     "rel_err": 0.002494123997166753,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "4096x14336_M1": {
+     "rel_err": 0.0016962846275418997,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "4096x14336_M16": {
+     "rel_err": 0.003043638775125146,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "512x3584_M1": {
+     "rel_err": 0.00198233500123024,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "512x3584_M16": {
+     "rel_err": 0.003698869375512004,
+     "correct": true,
+     "kernels": [
+      "void cublasLt::splitKreduce_kernel<32, 16, int, __nv_bfloat16, __nv_bfloat16, float, __nv_bfloat16, false, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, true, false, false, false>(cublasLt::cublasSplitKParams<float>, __nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, __nv_bfloat16*, float const*, float const*, __nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, void*, long, float*, int*, float*, float*, float const*, float const*, float const*, float const*, float const*)",
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    },
+    "18944x3584_M1": {
+     "rel_err": 0.0027154486160725355,
+     "correct": true,
+     "kernels": [
+      "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)"
+     ],
+     "graph": true
+    },
+    "18944x3584_M16": {
+     "rel_err": 0.002818875014781952,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)"
+     ],
+     "graph": true
+    }
+   }
+  },
+  "scaled_mm_fp8": {
+   "ok": true,
+   "value": {
+    "schema": "aten::_scaled_mm(Tensor self, Tensor mat2, Tensor scale_a, Tensor scale_b, Tensor? bias=None, Tensor? scale_result=None, ScalarType? out_dtype=None, bool use_fast_accum=False) -> Tensor",
+    "tensorwise_M1": {
+     "rel_err": 0.002428172854706645,
+     "correct": true,
+     "kernels": [
+      "sm89_xmma_gemm_e4m3bf16_e4m3f32_f32_tn_n_tilesize32x64x64_stage5_warpsize2x2x1_tensor16x8x32_algo2_execute_kernel__5x_cublas"
+     ],
+     "graph": true
+    },
+    "tensorwise_M2": {
+     "rel_err": 0.0026728275697678328,
+     "correct": true,
+     "kernels": [
+      "sm89_xmma_gemm_e4m3bf16_e4m3f32_f32_tn_n_tilesize32x64x64_stage5_warpsize2x2x1_tensor16x8x32_algo2_execute_kernel__5x_cublas"
+     ],
+     "graph": true
+    },
+    "tensorwise_M4": {
+     "rel_err": 0.0029731816612184048,
+     "correct": true,
+     "kernels": [
+      "sm89_xmma_gemm_e4m3bf16_e4m3f32_f32_tn_n_tilesize32x64x64_stage5_warpsize2x2x1_tensor16x8x32_algo2_execute_kernel__5x_cublas"
+     ],
+     "graph": true
+    },
+    "tensorwise_M8": {
+     "rel_err": 0.0027748001739382744,
+     "correct": true,
+     "kernels": [
+      "sm89_xmma_gemm_e4m3bf16_e4m3f32_f32_tn_n_tilesize32x64x64_stage5_warpsize2x2x1_tensor16x8x32_algo2_execute_kernel__5x_cublas"
+     ],
+     "graph": true
+    },
+    "tensorwise_M16": {
+     "rel_err": 0.0027854356449097395,
+     "correct": true,
+     "kernels": [
+      "sm89_xmma_gemm_e4m3bf16_e4m3f32_f32_tn_n_tilesize32x64x64_stage5_warpsize2x2x1_tensor16x8x32_algo2_execute_kernel__5x_cublas"
+     ],
+     "graph": true
+    },
+    "rowwise_M1": {
+     "rel_err": 0.002995455404743552,
+     "correct": true,
+     "kernels": [
+      "Memset (Device)",
+      "void cutlass::Kernel2<at::cuda::detail::enable_2x_kernel_for_sm89<cutlass::gemm::kernel::DefaultGemmWithVisitor<cutlass::float_e4m3_t, cutlass::layout::RowMajor, (cutlass::ComplexTransform)0, 16, cutlass::float_e4m3_t, cutlass::layout::ColumnMajor, (cutlass::ComplexTransform)0, 16, cutlass::bfloat16_t, cutlass::layout::RowMajor, 8, float, float, cutlass::arch::OpClassTensorOp, cutlass::arch::Sm89, cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::gemm::GemmShape<16, 8, 32>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorAuxStore<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, cutlass::bfloat16_t, (cutlass::FloatRoundStyle)2, cute::tuple<long, cute::C<1>, long> >, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::plus, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::VisitorAccFetch, cutlass::epilogue::threadblock::VisitorColBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, float, cute::tuple<cute::C<1>, cute::C<0>, long>, true> >, cutlass::epilogue::threadblock::VisitorRowBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, float, cute::tuple<cute::C<0>, cute::C<1>, long>, true> >, cutlass::epilogue::threadblock::VisitorRowBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, float, cute::tuple<cute::C<0>, cute::C<1>, long>, true> > >, cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, 5, cutlass::arch::OpMultiplyAdd, 1>::SelectBase<cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, void> > >(at::cuda::detail::enable_2x_kernel_for_sm89<cutlass::gemm::kernel::DefaultGemmWithVisitor<cutlass::float_e4m3_t, cutlass::layout::RowMajor, (cutlass::ComplexTransform)0, 16, cutlass::float_e4m3_t, cutlass::layout::ColumnMajor, (cutlass::ComplexTransform)0, 16, cutlass::bfloat16_t, cutlass::layout::RowMajor, 8, float, float, cutlass::arch::OpClassTensorOp, cutlass::arch::Sm89, cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::gemm::GemmShape<16, 8, 32>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorAuxStore<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, cutlass::bfloat16_t, (cutlass::FloatRoundStyle)2, cute::tuple<long, cute::C<1>, long> >, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::plus, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::VisitorAccFetch, cutlass::epilogue::threadblock::VisitorColBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, float, cute::tuple<cute::C<1>, cute::C<0>, long>, true> >, cutlass::epilogue::threadblock::VisitorRowBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, float, cute::tuple<cute::C<0>, cute::C<1>, long>, true> >, cutlass::epilogue::threadblock::VisitorRowBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, float, cute::tuple<cute::C<0>, cute::C<1>, long>, true> > >, cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, 5, cutlass::arch::OpMultiplyAdd, 1>::SelectBase<cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, void> >::Params)"
+     ],
+     "graph": true
+    },
+    "rowwise_M16": {
+     "rel_err": 0.0028246028814464808,
+     "correct": true,
+     "kernels": [
+      "Memset (Device)",
+      "void cutlass::Kernel2<at::cuda::detail::enable_2x_kernel_for_sm89<cutlass::gemm::kernel::DefaultGemmWithVisitor<cutlass::float_e4m3_t, cutlass::layout::RowMajor, (cutlass::ComplexTransform)0, 16, cutlass::float_e4m3_t, cutlass::layout::ColumnMajor, (cutlass::ComplexTransform)0, 16, cutlass::bfloat16_t, cutlass::layout::RowMajor, 8, float, float, cutlass::arch::OpClassTensorOp, cutlass::arch::Sm89, cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::gemm::GemmShape<16, 8, 32>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorAuxStore<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, cutlass::bfloat16_t, (cutlass::FloatRoundStyle)2, cute::tuple<long, cute::C<1>, long> >, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::plus, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::VisitorAccFetch, cutlass::epilogue::threadblock::VisitorColBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, float, cute::tuple<cute::C<1>, cute::C<0>, long>, true> >, cutlass::epilogue::threadblock::VisitorRowBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, float, cute::tuple<cute::C<0>, cute::C<1>, long>, true> >, cutlass::epilogue::threadblock::VisitorRowBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, float, cute::tuple<cute::C<0>, cute::C<1>, long>, true> > >, cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, 5, cutlass::arch::OpMultiplyAdd, 1>::SelectBase<cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, void> > >(at::cuda::detail::enable_2x_kernel_for_sm89<cutlass::gemm::kernel::DefaultGemmWithVisitor<cutlass::float_e4m3_t, cutlass::layout::RowMajor, (cutlass::ComplexTransform)0, 16, cutlass::float_e4m3_t, cutlass::layout::ColumnMajor, (cutlass::ComplexTransform)0, 16, cutlass::bfloat16_t, cutlass::layout::RowMajor, 8, float, float, cutlass::arch::OpClassTensorOp, cutlass::arch::Sm89, cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::gemm::GemmShape<16, 8, 32>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorAuxStore<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, cutlass::bfloat16_t, (cutlass::FloatRoundStyle)2, cute::tuple<long, cute::C<1>, long> >, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::plus, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::VisitorAccFetch, cutlass::epilogue::threadblock::VisitorColBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, float, cute::tuple<cute::C<1>, cute::C<0>, long>, true> >, cutlass::epilogue::threadblock::VisitorRowBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, float, cute::tuple<cute::C<0>, cute::C<1>, long>, true> >, cutlass::epilogue::threadblock::VisitorRowBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::bfloat16_t, 8, 1>, float, cute::tuple<cute::C<0>, cute::C<1>, long>, true> > >, cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, 5, cutlass::arch::OpMultiplyAdd, 1>::SelectBase<cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, void> >::Params)"
+     ],
+     "graph": true
+    }
+   }
+  },
+  "vllm_cutlass_fp8": {
+   "ok": true,
+   "value": {
+    "supports_fp8": true,
+    "rowwise_M1": {
+     "rel_err": 0.0033259622287005186,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<enable_sm89_to_sm90<cutlass::gemm::kernel::DefaultGemmWithVisitor<cutlass::float_e4m3_t, cutlass::layout::RowMajor, (cutlass::ComplexTransform)0, 16, cutlass::float_e4m3_t, cutlass::layout::ColumnMajor, (cutlass::ComplexTransform)0, 16, float, cutlass::layout::RowMajor, 4, float, float, cutlass::arch::OpClassTensorOp, cutlass::arch::Sm89, cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::gemm::GemmShape<16, 8, 32>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorAuxStore<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, float, 4, 1>, cutlass::bfloat16_t, (cutlass::FloatRoundStyle)2, cute::tuple<long, cute::C<1>, cute::C<0> > >, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, cutlass::bfloat16_t, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::VisitorColOrScalarBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, float, 4, 1>, float, cute::tuple<cute::C<1>, cute::C<0>, cute::C<0> > >, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::VisitorRowOrScalarBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, float, 4, 1>, float, cute::tuple<cute::C<0>, cute::C<1>, cute::C<0> > >, cutlass::epilogue::threadblock::VisitorAccFetch> > >, cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, 5, cutlass::arch::OpMultiplyAddFastAccum, 1>::SelectBase<cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, void> > >(enable_sm89_to_sm90<cutlass::gemm::kernel::DefaultGemmWithVisitor<cutlass::float_e4m3_t, cutlass::layout::RowMajor, (cutlass::ComplexTransform)0, 16, cutlass::float_e4m3_t, cutlass::layout::ColumnMajor, (cutlass::ComplexTransform)0, 16, float, cutlass::layout::RowMajor, 4, float, float, cutlass::arch::OpClassTensorOp, cutlass::arch::Sm89, cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::gemm::GemmShape<16, 8, 32>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorAuxStore<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, float, 4, 1>, cutlass::bfloat16_t, (cutlass::FloatRoundStyle)2, cute::tuple<long, cute::C<1>, cute::C<0> > >, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, cutlass::bfloat16_t, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::VisitorColOrScalarBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, float, 4, 1>, float, cute::tuple<cute::C<1>, cute::C<0>, cute::C<0> > >, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::VisitorRowOrScalarBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, float, 4, 1>, float, cute::tuple<cute::C<0>, cute::C<1>, cute::C<0> > >, cutlass::epilogue::threadblock::VisitorAccFetch> > >, cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, 5, cutlass::arch::OpMultiplyAddFastAccum, 1>::SelectBase<cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, void> >::Params)"
+     ],
+     "graph": true
+    },
+    "rowwise_M16": {
+     "rel_err": 0.003501651342958212,
+     "correct": true,
+     "kernels": [
+      "void cutlass::Kernel2<enable_sm89_to_sm90<cutlass::gemm::kernel::DefaultGemmWithVisitor<cutlass::float_e4m3_t, cutlass::layout::RowMajor, (cutlass::ComplexTransform)0, 16, cutlass::float_e4m3_t, cutlass::layout::ColumnMajor, (cutlass::ComplexTransform)0, 16, float, cutlass::layout::RowMajor, 4, float, float, cutlass::arch::OpClassTensorOp, cutlass::arch::Sm89, cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::gemm::GemmShape<16, 8, 32>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorAuxStore<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, float, 4, 1>, cutlass::bfloat16_t, (cutlass::FloatRoundStyle)2, cute::tuple<long, cute::C<1>, cute::C<0> > >, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, cutlass::bfloat16_t, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::VisitorColOrScalarBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, float, 4, 1>, float, cute::tuple<cute::C<1>, cute::C<0>, cute::C<0> > >, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::VisitorRowOrScalarBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, float, 4, 1>, float, cute::tuple<cute::C<0>, cute::C<1>, cute::C<0> > >, cutlass::epilogue::threadblock::VisitorAccFetch> > >, cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, 5, cutlass::arch::OpMultiplyAddFastAccum, 1>::SelectBase<cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, void> > >(enable_sm89_to_sm90<cutlass::gemm::kernel::DefaultGemmWithVisitor<cutlass::float_e4m3_t, cutlass::layout::RowMajor, (cutlass::ComplexTransform)0, 16, cutlass::float_e4m3_t, cutlass::layout::ColumnMajor, (cutlass::ComplexTransform)0, 16, float, cutlass::layout::RowMajor, 4, float, float, cutlass::arch::OpClassTensorOp, cutlass::arch::Sm89, cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, cutlass::gemm::GemmShape<16, 8, 32>, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorAuxStore<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, float, 4, 1>, cutlass::bfloat16_t, (cutlass::FloatRoundStyle)2, cute::tuple<long, cute::C<1>, cute::C<0> > >, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, cutlass::bfloat16_t, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::VisitorColOrScalarBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, float, 4, 1>, float, cute::tuple<cute::C<1>, cute::C<0>, cute::C<0> > >, cutlass::epilogue::threadblock::TreeVisitor2x<cutlass::epilogue::threadblock::VisitorCompute<cutlass::multiplies, float, float, (cutlass::FloatRoundStyle)2, void>, cutlass::epilogue::threadblock::VisitorRowOrScalarBroadcast<cutlass::epilogue::threadblock::OutputTileThreadLayout<cutlass::gemm::GemmShape<16, 64, 128>, cutlass::gemm::GemmShape<16, 64, 64>, float, 4, 1>, float, cute::tuple<cute::C<0>, cute::C<1>, cute::C<0> > >, cutlass::epilogue::threadblock::VisitorAccFetch> > >, cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, 5, cutlass::arch::OpMultiplyAddFastAccum, 1>::SelectBase<cutlass::gemm::threadblock::ThreadblockSwizzleStreamK, void> >::Params)"
+     ],
+     "graph": true
+    }
+   }
+  },
+  "tinygemm_int4": {
+   "ok": true,
+   "value": {
+    "convert_schema": [
+     "aten::_convert_weight_to_int4pack(Tensor self, int innerKTiles) -> Tensor"
+    ],
+    "mm_schema": [
+     "aten::_weight_int4pack_mm(Tensor self, Tensor mat2, int qGroupSize, Tensor qScaleAndZeros) -> Tensor"
+    ],
+    "packed": [
+     [
+      512,
+      32,
+      32,
+      4
+     ],
+     "torch.int32"
+    ],
+    "scales_zeros": [
+     [
+      32,
+      4096,
+      2
+     ],
+     "torch.bfloat16"
+    ],
+    "M1": {
+     "rel_err": 0.0031391531229019165,
+     "correct": true,
+     "kernels": [
+      "void at::native::tinygemm_m16n8k16_chunk_kernel<at::native::ALayout_RM<(at::native::KReductionType)0>, at::native::BLayout_TC_int4<8, 128>, at::native::ALayout_RM<(at::native::KReductionType)0>, 8, 8>(void const*, void const*, void const*, void*, int, int, int, int, int, int)"
+     ],
+     "graph": true
+    },
+    "M16": {
+     "rel_err": 0.002902626059949398,
+     "correct": true,
+     "kernels": [
+      "void at::native::tinygemm_m16n8k16_chunk_kernel<at::native::ALayout_RM<(at::native::KReductionType)0>, at::native::BLayout_TC_int4<8, 128>, at::native::ALayout_RM<(at::native::KReductionType)0>, 8, 8>(void const*, void const*, void const*, void*, int, int, int, int, int, int)"
+     ],
+     "graph": true
+    }
+   }
+  },
+  "marlin_int4": {
+   "ok": true,
+   "value": {
+    "supported": true,
+    "4096x4096_M1": {
+     "rel_err": 0.0027757182251662016,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<1125899906909960l, 1125899907892224l, 1125899906909960l, 1125899906909960l, 128, 1, 4, 8, true, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, float const*, int4 const*, float const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    },
+    "4096x4096_M16": {
+     "rel_err": 0.0027050571516156197,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<1125899906909960l, 1125899907892224l, 1125899906909960l, 1125899906909960l, 128, 1, 4, 8, false, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, float const*, int4 const*, float const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    },
+    "1024x4096_M1": {
+     "rel_err": 0.001674356870353222,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<1125899906909960l, 1125899907892224l, 1125899906909960l, 1125899906909960l, 128, 1, 4, 8, true, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, float const*, int4 const*, float const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    },
+    "1024x4096_M16": {
+     "rel_err": 0.00301202479749918,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<1125899906909960l, 1125899907892224l, 1125899906909960l, 1125899906909960l, 128, 1, 4, 8, false, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, float const*, int4 const*, float const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    },
+    "4096x14336_M1": {
+     "rel_err": 0.002920184750109911,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<1125899906909960l, 1125899907892224l, 1125899906909960l, 1125899906909960l, 128, 1, 4, 8, true, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, float const*, int4 const*, float const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    },
+    "4096x14336_M16": {
+     "rel_err": 0.0030096161644905806,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<1125899906909960l, 1125899907892224l, 1125899906909960l, 1125899906909960l, 128, 1, 4, 8, false, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, float const*, int4 const*, float const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    },
+    "512x3584_M1": {
+     "rel_err": 0.0014671416720375419,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<1125899906909960l, 1125899907892224l, 1125899906909960l, 1125899906909960l, 128, 1, 4, 8, true, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, float const*, int4 const*, float const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    },
+    "512x3584_M16": {
+     "rel_err": 0.0032251880038529634,
+     "correct": true,
+     "kernels": [
+      "void marlin::Marlin<1125899906909960l, 1125899907892224l, 1125899906909960l, 1125899906909960l, 128, 1, 4, 8, false, 4, 8, false>(int4 const*, int4 const*, int4*, int4*, int4 const*, float const*, int4 const*, float const*, int4 const*, int const*, int, int, int, int, int, int*, bool, bool, bool, int)"
+     ],
+     "graph": true
+    }
+   }
+  }
+ }
+}

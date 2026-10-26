@@ -39,9 +39,10 @@ def load_cells(sess_dir):
 
 def fill_kernel_names(cells, table_path):
     """Fill cells whose kernel_names is empty from a dispatch table (same GPU model and stack), in memory only.
-    Cells that did record names must match the table exactly; a mismatch aborts, since then the table is not valid."""
+    Every name a cell did record must be in the table entry; otherwise the dispatch differs and analysis aborts. A cell
+    that recorded a strict subset (the profiler on torch 2.11 also drops some events of a call) gets the full entry."""
     t = json.loads(Path(table_path).read_text())["table"]
-    filled = checked = 0
+    filled = checked = partial = 0
     for c in cells:
         if c.get("phase") not in ("e2", "e4") or not c.get("shape"):
             continue
@@ -50,15 +51,21 @@ def fill_kernel_names(cells, table_path):
         if names is None:
             continue
         if c.get("kernel_names"):
-            if sorted(c["kernel_names"]) != sorted(names):
+            if not set(c["kernel_names"]) <= set(names):
                 raise SystemExit(f"dispatch table disagrees with recorded kernel names for cell {c['cell_id']}")
-            checked += 1
+            if set(c["kernel_names"]) == set(names):
+                checked += 1
+            else:
+                c["kernel_names"] = names
+                c["kernel_names_source"] = "dispatch_table (recorded list was a subset)"
+                partial += 1
         else:
             c["kernel_names"] = names
             c["kernel_names_source"] = "dispatch_table"
             filled += 1
-    print(f"dispatch table {table_path}: filled {filled} cells, matched {checked} recorded cells exactly")
-    return {"table": str(table_path), "filled": filled, "matched": checked}
+    print(f"dispatch table {table_path}: filled {filled} cells, matched {checked} recorded cells exactly, "
+          f"completed {partial} partial recordings")
+    return {"table": str(table_path), "filled": filled, "matched": checked, "partial": partial}
 
 
 def key(c):
@@ -495,7 +502,7 @@ def main():
     if dispatch:
         text = text.replace("\n## Canary", f"\nKernel names: {dispatch['filled']} cells filled from `{Path(dispatch['table']).name}` "
                             f"(profiler capture lost on this stack, findings.md); {dispatch['matched']} recorded cells matched it "
-                            "exactly.\n\n## Canary", 1)
+                            f"exactly, {dispatch.get('partial', 0)} partial recordings were a subset of it and were completed.\n\n## Canary", 1)
     (out / "summary.md").write_text(text)
     print(f"wrote {out}/summary.md")
 

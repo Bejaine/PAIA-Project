@@ -1,0 +1,1001 @@
+2026-10-26 04:20:08,685 INFO session e4_s1_20261026 phase e4: 1146 cells, 1146 to run (resume skips clean cells)
+2026-10-26 04:20:13,998 INFO canary reference 824.83 GB/s (cv 0.0002)
+2026-10-26 04:20:20,332 INFO [1/1146] 6c560502ca5e32ad linear vllm_cutlass_fp8_rw_full graph N=152064 cold -> clean median 651.16 us 841.7 GB/s
+2026-10-26 04:20:26,073 INFO [2/1146] 8ee0de229ea8d596 linear vllm_cutlass_fp8_rw graph N=4096 cold -> clean median 73.34 us 801.5 GB/s
+2026-10-26 04:20:31,667 INFO [3/1146] 9a4c479137b901a3 linear torch_scaled_mm_fp8_pt_full graph N=3584 cold -> clean median 108.82 us 625.6 GB/s
+2026-10-26 04:20:37,141 INFO [4/1146] a22426bf1356b2b7 linear vllm_cutlass_fp8_rw eager N=2944 cold -> clean median 51.23 us 824.5 GB/s
+2026-10-26 04:20:39,333 INFO waiting 30s: gpu_util max 10% >= 5%
+2026-10-26 04:21:15,166 INFO [5/1146] b6ff6304a31d8c50 linear tinygemm_int4_g128 eager N=10368 cold -> clean median 94.45 us 836.6 GB/s
+2026-10-26 04:21:20,697 INFO [6/1146] 2f10a6f67dc61742 linear vllm_cutlass_fp8_rw graph N=14336 cold -> clean median 77.71 us 757.2 GB/s
+2026-10-26 04:21:27,944 INFO [7/1146] 5212d1bca78de9a4 linear marlin_int4_g128 graph N=6144 cold -> clean median 17.89 us 727.5 GB/s
+2026-10-26 04:21:33,730 INFO [8/1146] 62355828544b473f linear tinygemm_int4_g128 graph N=1536 cold -> clean median 6.13 us 547.3 GB/s
+2026-10-26 04:21:39,548 INFO [9/1146] f1582bf8d1679f64 linear torch_scaled_mm_fp8_pt_full graph N=152064 cold -> clean median 636.83 us 857.8 GB/s
+2026-10-26 04:21:44,152 INFO [10/1146] e394cf31dcd4ebb7 linear torch_scaled_mm_fp8_pt isolated N=128 cold -> clean median 41.54 us 44.5 GB/s
+2026-10-26 04:21:49,922 INFO [11/1146] 8943a020ae2060d4 linear vllm_cutlass_fp8_rw_full graph N=1024 cold -> clean median 9.59 us 440.1 GB/s
+2026-10-26 04:21:55,573 INFO [12/1146] c75cc3965ea2a139 linear marlin_int4_g128 graph N=37888 cold -> clean median 82.26 us 859.3 GB/s
+2026-10-26 04:22:00,119 INFO [13/1146] e727e1ec3aa910e6 linear marlin_int4_g128 isolated N=18944 cold -> clean median 74.43 us 470.9 GB/s
+2026-10-26 04:22:05,648 INFO [14/1146] 8746ebc8f7891f61 linear torch_scaled_mm_fp8_pt eager N=2816 cold -> clean median 21.67 us 532.6 GB/s
+2026-10-26 04:22:11,248 INFO [15/1146] 48605d6a70150964 linear marlin_int4_g128 eager N=5504 cold -> clean median 50.15 us 812.0 GB/s
+2026-10-26 04:22:13,437 INFO waiting 30s: gpu_util max 16% >= 5%
+2026-10-26 04:22:48,061 INFO [16/1146] 4857dc9b0d5c77f0 linear marlin_int4_g128 isolated N=768 cold -> clean median 59.23 us 96.4 GB/s
+2026-10-26 04:22:52,612 INFO [17/1146] 49ecf1f9668cf860 linear vllm_cutlass_fp8_rw isolated N=4608 cold -> clean median 43.38 us 381.5 GB/s
+2026-10-26 04:22:58,375 INFO [18/1146] ab36e117aa5e99c1 linear marlin_int4_g128 graph N=4608 cold -> clean median 13.69 us 631.6 GB/s
+2026-10-26 04:23:03,933 INFO [19/1146] 7e9338c72c8878da linear vllm_cutlass_fp8_rw eager N=1536 cold -> clean median 20.49 us 307.7 GB/s
+2026-10-26 04:23:09,446 INFO [20/1146] 61bc086c5c4dd250 linear vllm_cutlass_fp8_rw eager N=18944 cold -> clean median 92.47 us 735.5 GB/s
+2026-10-26 04:23:15,136 INFO [21/1146] 26ad7fb12da68573 linear torch_scaled_mm_fp8_pt_full isolated N=128256 cold -> clean median 677.34 us 776.0 GB/s
+2026-10-26 04:23:20,908 INFO [22/1146] 2eb622556ba9e50f linear torch_scaled_mm_fp8_pt graph N=10112 cold -> clean median 48.31 us 857.8 GB/s
+2026-10-26 04:23:26,484 INFO [23/1146] 2e38988b18844d6e linear tinygemm_int4_g128 eager N=37888 cold -> clean median 83.90 us 860.8 GB/s
+2026-10-26 04:23:32,044 INFO [24/1146] a3251cca96b92bcc linear vllm_cutlass_fp8_rw graph N=14336 cold -> clean median 77.90 us 761.3 GB/s
+2026-10-26 04:23:36,821 INFO [25/1146] 95efeb28ac96966f linear torch_scaled_mm_fp8_pt_full isolated N=37888 cold -> clean median 218.53 us 621.8 GB/s
+2026-10-26 04:23:42,745 INFO [26/1146] d2d9d7b0c78b8ae7 linear vllm_cutlass_fp8_rw_full graph N=152064 cold -> clean median 657.47 us 837.4 GB/s
+2026-10-26 04:23:48,591 INFO [27/1146] 12cba104ff86da76 linear tinygemm_int4_g128 eager N=19712 cold -> clean median 176.05 us 853.1 GB/s
+2026-10-26 04:23:54,207 INFO [28/1146] c564664dca4ef0ca linear tinygemm_int4_g128 graph N=4608 cold -> clean median 28.25 us 319.8 GB/s
+2026-10-26 04:23:59,942 INFO [29/1146] e6664cef19daf7a3 linear torch_scaled_mm_fp8_pt graph N=6144 cold -> clean median 30.07 us 841.4 GB/s
+2026-10-26 04:24:04,533 INFO [30/1146] 2d2fd49d25c9ffa6 linear vllm_cutlass_fp8_rw isolated N=128 cold -> clean median 38.43 us 48.1 GB/s
+2026-10-26 04:24:10,007 INFO [31/1146] 779f9efa65dde07b linear vllm_cutlass_fp8_rw eager N=3584 cold -> clean median 84.86 us 800.5 GB/s
+2026-10-26 04:24:15,564 INFO [32/1146] fdedd4f1174103d0 linear torch_scaled_mm_fp8_pt_full graph N=18944 cold -> clean median 87.97 us 772.3 GB/s
+2026-10-26 04:24:21,328 INFO [33/1146] 392ffb9ca87114d2 linear marlin_int4_g128 graph N=14336 cold -> clean median 37.13 us 817.5 GB/s
+2026-10-26 04:24:23,516 INFO waiting 30s: gpu_util max 34% >= 5%
+2026-10-26 04:24:59,163 INFO [34/1146] 7b552c352d52fc2d linear marlin_int4_g128 eager N=1024 cold -> clean median 37.27 us 58.3 GB/s
+2026-10-26 04:25:04,762 INFO [35/1146] 261cfd095eecc370 linear tinygemm_int4_g128 eager N=768 cold -> clean median 9.16 us 183.5 GB/s
+2026-10-26 04:25:10,532 INFO [36/1146] e70fba4653a8ab1d linear vllm_cutlass_fp8_rw graph N=3584 cold -> clean median 17.15 us 755.0 GB/s
+2026-10-26 04:25:16,309 INFO [37/1146] 0f7f8c817f8137a4 linear marlin_int4_g128 graph N=3584 cold -> clean median 10.66 us 632.3 GB/s
+2026-10-26 04:25:23,322 INFO [38/1146] b42d9c0242d33fd4 linear torch_scaled_mm_fp8_pt_full graph N=512 cold -> clean median 16.91 us 109.5 GB/s
+2026-10-26 04:25:30,121 INFO [39/1146] b77d84d75b7b8219 linear marlin_int4_g128 eager N=4096 cold -> clean median 30.44 us 284.8 GB/s
+2026-10-26 04:25:35,972 INFO [40/1146] ed2b987d4acbbe8f linear torch_scaled_mm_fp8_pt_full graph N=512 cold -> clean median 16.91 us 109.5 GB/s
+2026-10-26 04:25:41,743 INFO [41/1146] c567b23886b577ba linear vllm_cutlass_fp8_rw graph N=152064 cold -> clean median 642.87 us 849.2 GB/s
+2026-10-26 04:25:47,392 INFO [42/1146] f08ce11508808501 linear marlin_int4_g128 graph N=36480 cold -> clean median 89.57 us 861.1 GB/s
+2026-10-26 04:25:53,072 INFO [43/1146] a0c908ee99615f3a linear torch_scaled_mm_fp8_pt isolated N=131072 cold -> clean median 657.23 us 817.3 GB/s
+2026-10-26 04:25:58,555 INFO [44/1146] d1843ccb9438e5a2 linear vllm_cutlass_fp8_rw_full eager N=14336 cold -> clean median 80.60 us 729.7 GB/s
+2026-10-26 04:26:04,396 INFO [45/1146] fd6a43cbbe03b64a linear vllm_cutlass_fp8_rw graph N=512 cold -> clean median 6.20 us 299.1 GB/s
+2026-10-26 04:26:10,014 INFO [46/1146] e046916405c50582 linear vllm_cutlass_fp8_rw graph N=6144 cold -> clean median 31.19 us 815.9 GB/s
+2026-10-26 04:26:15,789 INFO [47/1146] 75c04f724309baba linear marlin_int4_g128 eager N=69120 cold -> clean median 169.84 us 860.4 GB/s
+2026-10-26 04:26:21,307 INFO [48/1146] f909adf9e1d95357 linear marlin_int4_g128 eager N=1536 cold -> clean median 37.53 us 303.4 GB/s
+2026-10-26 04:26:27,015 INFO [49/1146] bd8dc1006d5eb237 linear torch_scaled_mm_fp8_pt graph N=6144 cold -> clean median 30.22 us 833.9 GB/s
+2026-10-26 04:26:32,771 INFO [50/1146] 215c0a98571a72a6 linear torch_scaled_mm_fp8_pt graph N=384 cold -> clean median 8.98 us 175.7 GB/s
+2026-10-26 04:26:38,434 INFO [51/1146] b72a9b6fd391277f linear tinygemm_int4_g128 graph N=18944 cold -> clean median 45.93 us 789.3 GB/s
+2026-10-26 04:26:44,204 INFO [52/1146] dcba6602143f236c linear vllm_cutlass_fp8_rw_full graph N=6144 cold -> clean median 33.09 us 766.3 GB/s
+2026-10-26 04:26:49,875 INFO [53/1146] f4674e729edfc5f3 linear tinygemm_int4_g128 graph N=18944 cold -> clean median 48.21 us 752.0 GB/s
+2026-10-26 04:26:55,437 INFO [54/1146] b79c9de5ace66e39 linear torch_scaled_mm_fp8_pt_full eager N=1024 cold -> clean median 51.54 us 81.6 GB/s
+2026-10-26 04:26:59,981 INFO [55/1146] 8bc6e788170384e2 linear torch_scaled_mm_fp8_pt_full isolated N=3584 cold -> clean median 76.14 us 168.9 GB/s
+2026-10-26 04:27:05,516 INFO [56/1146] 854926857a1b38a5 linear torch_scaled_mm_fp8_pt_full graph N=14336 cold -> clean median 79.64 us 737.7 GB/s
+2026-10-26 04:27:11,620 INFO [57/1146] 01c6b9176d86ac76 linear marlin_int4_g128 graph N=128256 cold -> clean median 315.91 us 864.2 GB/s
+2026-10-26 04:27:16,359 INFO [58/1146] d05fe58d06b30c0c linear vllm_cutlass_fp8_rw isolated N=37888 cold -> clean median 192.11 us 708.0 GB/s
+2026-10-26 04:27:22,149 INFO [59/1146] d9893883d148bdf4 linear tinygemm_int4_g128 isolated N=768 cold -> clean median 18.62 us 315.7 GB/s
+2026-10-26 04:27:27,782 INFO [60/1146] aec9f050d287c41f linear tinygemm_int4_g128 graph N=3584 cold -> clean median 49.05 us 739.0 GB/s
+2026-10-26 04:27:33,438 INFO [61/1146] df347076fe277280 linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> clean median 30.34 us 557.2 GB/s
+2026-10-26 04:27:39,026 INFO [62/1146] bd5df1fdbd130d0d linear vllm_cutlass_fp8_rw_full graph N=37888 cold -> clean median 173.31 us 786.3 GB/s
+2026-10-26 04:27:44,785 INFO [63/1146] 757d0b6788c16dbc linear vllm_cutlass_fp8_rw graph N=256 cold -> clean median 16.75 us 220.0 GB/s
+2026-10-26 04:27:50,328 INFO [64/1146] 85bebf88246341ac linear tinygemm_int4_g128 eager N=256 cold -> clean median 10.40 us 190.2 GB/s
+2026-10-26 04:27:52,520 INFO waiting 30s: gpu_util max 12% >= 5%
+2026-10-26 04:28:27,169 INFO [65/1146] 9c09f58fae644cd5 linear marlin_int4_g128 isolated N=256 cold -> clean median 61.82 us 31.1 GB/s
+2026-10-26 04:28:32,954 INFO [66/1146] e12f27e447211613 linear vllm_cutlass_fp8_rw eager N=37504 cold -> clean median 737.97 us 728.9 GB/s
+2026-10-26 04:28:38,694 INFO [67/1146] d3604f68c03b9341 linear vllm_cutlass_fp8_rw_full graph N=18944 cold -> clean median 95.68 us 717.9 GB/s
+2026-10-26 04:28:43,192 INFO [68/1146] e95a9aa525c53193 linear marlin_int4_g128 isolated N=3584 cold -> clean median 49.18 us 135.0 GB/s
+2026-10-26 04:28:48,677 INFO [69/1146] 0d0c1257a290b9f4 linear vllm_cutlass_fp8_rw eager N=14336 cold -> clean median 78.28 us 751.3 GB/s
+2026-10-26 04:28:54,328 INFO [70/1146] 7747373033cc72f3 linear torch_scaled_mm_fp8_pt_full graph N=14336 cold -> clean median 80.42 us 737.5 GB/s
+2026-10-26 04:28:56,513 INFO waiting 30s: gpu_util max 17% >= 5%
+2026-10-26 04:29:32,118 INFO [71/1146] 94d1c09a99e1c9ee linear vllm_cutlass_fp8_rw graph N=14336 cold -> clean median 77.48 us 760.3 GB/s
+2026-10-26 04:29:37,679 INFO [72/1146] c6495bcb394a4c94 linear marlin_int4_g128 graph N=3584 cold -> clean median 42.88 us 817.5 GB/s
+2026-10-26 04:29:43,274 INFO [73/1146] 56d90d1387f23d1e linear tinygemm_int4_g128 eager N=4096 cold -> clean median 12.77 us 699.0 GB/s
+2026-10-26 04:29:45,464 INFO waiting 30s: gpu_util max 9% >= 5%
+2026-10-26 04:30:20,114 INFO [74/1146] 683cce41ab88d00f linear vllm_cutlass_fp8_rw isolated N=3584 cold -> clean median 106.59 us 637.3 GB/s
+2026-10-26 04:30:25,706 INFO [75/1146] fda815d102ee2620 linear tinygemm_int4_g128 graph N=2816 cold -> clean median 8.80 us 697.6 GB/s
+2026-10-26 04:30:33,894 INFO [76/1146] 318b34666a37b42a linear tinygemm_int4_g128 graph N=32 cold -> contaminated median 2.90 us 26.8 GB/s reasons=["foreign_cpu 2.10 cores > 2 top=[('hanvithasaraswathi.m', 1.012), ('prometheus', 1.012)]"]
+2026-10-26 04:30:41,827 INFO [76/1146] 318b34666a37b42a linear tinygemm_int4_g128 graph N=32 cold -> clean median 2.90 us 26.8 GB/s
+2026-10-26 04:30:47,356 INFO [77/1146] 2d54364ee7f19021 linear vllm_cutlass_fp8_rw_full eager N=18944 cold -> contaminated median 94.77 us 717.7 GB/s reasons=["foreign_cpu 2.04 cores > 2 top=[('root', 1.004), ('hanvithasaraswathi.m', 0.986)]"]
+2026-10-26 04:30:49,550 INFO waiting 30s: gpu_util max 10% >= 5%
+2026-10-26 04:31:21,798 INFO waiting 60s: foreign_cpu 3.31 cores >= 2 top=[('hanvithasaraswathi.m', 3.2350000000000003)]
+2026-10-26 04:32:27,388 INFO [77/1146] 2d54364ee7f19021 linear vllm_cutlass_fp8_rw_full eager N=18944 cold -> clean median 94.62 us 718.8 GB/s
+2026-10-26 04:32:34,432 INFO [78/1146] 9ea58fd3bdf3d73d linear vllm_cutlass_fp8_rw graph N=4096 cold -> clean median 21.67 us 779.3 GB/s
+2026-10-26 04:32:40,648 INFO [79/1146] b1bbc2f6d1fe49d4 linear marlin_int4_g128 eager N=64 cold -> clean median 37.13 us 3.9 GB/s
+2026-10-26 04:32:46,499 INFO [80/1146] e64f7fdea85aaa47 linear vllm_cutlass_fp8_rw_full graph N=512 cold -> clean median 8.04 us 232.6 GB/s
+2026-10-26 04:32:52,292 INFO [81/1146] 67089dc23ae64625 linear torch_scaled_mm_fp8_pt_full graph N=128256 cold -> clean median 623.79 us 843.0 GB/s
+2026-10-26 04:32:54,489 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 04:33:26,734 INFO waiting 60s: foreign_cpu 2.13 cores >= 2 top=[('hanvithasaraswathi.m', 2.0749999999999997)]
+2026-10-26 04:34:32,604 INFO [82/1146] 89c67337be78c041 linear tinygemm_int4_g128 graph N=1024 cold -> contaminated median 5.81 us 390.3 GB/s reasons=["foreign_cpu 2.06 cores > 2 top=[('hanvithasaraswathi.m', 1.997)]", "foreign_cpu 2.48 cores > 2 top=[('prometheus', 1.345), ('hanvithasaraswathi.m', 1.0), ('messagebus', 0.052000000000000005)]"]
+2026-10-26 04:34:38,345 INFO [82/1146] 89c67337be78c041 linear tinygemm_int4_g128 graph N=1024 cold -> contaminated median 5.81 us 390.9 GB/s reasons=["foreign_cpu 3.64 cores > 2 top=[('hanvithasaraswathi.m', 3.584)]", "foreign_cpu 3.06 cores > 2 top=[('hanvithasaraswathi.m', 3.008)]"]
+2026-10-26 04:34:40,541 INFO waiting 30s: gpu_util max 55% >= 5%
+2026-10-26 04:35:16,395 INFO [82/1146] 89c67337be78c041 linear tinygemm_int4_g128 graph N=1024 cold -> contaminated median 5.80 us 390.9 GB/s reasons=["foreign_cpu 2.27 cores > 2 top=[('hanvithasaraswathi.m', 2.1900000000000004)]", "foreign_cpu 3.83 cores > 2 top=[('hanvithasaraswathi.m', 3.763)]", "foreign_cpu 3.18 cores > 2 top=[('hanvithasaraswathi.m', 3.099), ('root', 0.084)]"]
+2026-10-26 04:35:23,410 INFO [82/1146] 89c67337be78c041 linear tinygemm_int4_g128 graph N=1024 cold -> clean median 5.81 us 390.6 GB/s
+2026-10-26 04:35:25,810 INFO waiting 30s: foreign_cpu 2.74 cores >= 2 top=[('hanvithasaraswathi.m', 2.625)]
+2026-10-26 04:36:01,477 INFO [83/1146] cbe33b6c80a6bd51 linear marlin_int4_g128 graph N=14336 cold -> contaminated median 37.15 us 822.9 GB/s reasons=["foreign_cpu 2.89 cores > 2 top=[('prometheus', 1.676), ('hanvithasaraswathi.m', 1.023), ('messagebus', 0.065)]"]
+2026-10-26 04:36:03,674 INFO waiting 30s: foreign_cpu 2.54 cores >= 2 top=[('hanvithasaraswathi.m', 2.468)]
+2026-10-26 04:36:39,364 INFO [83/1146] cbe33b6c80a6bd51 linear marlin_int4_g128 graph N=14336 cold -> contaminated median 37.16 us 822.8 GB/s reasons=["foreign_cpu 2.30 cores > 2 top=[('hanvithasaraswathi.m', 2.249)]", "foreign_cpu 2.06 cores > 2 top=[('hanvithasaraswathi.m', 2.016)]"]
+2026-10-26 04:36:41,561 INFO waiting 30s: gpu_util max 12% >= 5%
+2026-10-26 04:37:13,806 INFO waiting 60s: foreign_cpu 2.48 cores >= 2 top=[('hanvithasaraswathi.m', 2.432)]
+2026-10-26 04:38:19,485 INFO [83/1146] cbe33b6c80a6bd51 linear marlin_int4_g128 graph N=14336 cold -> contaminated median 37.15 us 822.8 GB/s reasons=["foreign_cpu 2.44 cores > 2 top=[('hanvithasaraswathi.m', 2.379)]", "foreign_cpu 2.38 cores > 2 top=[('hanvithasaraswathi.m', 2.283)]"]
+2026-10-26 04:38:21,681 INFO waiting 30s: foreign_cpu 2.29 cores >= 2 top=[('hanvithasaraswathi.m', 2.191)]
+2026-10-26 04:38:57,317 INFO [83/1146] cbe33b6c80a6bd51 linear marlin_int4_g128 graph N=14336 cold -> clean median 37.15 us 822.9 GB/s
+2026-10-26 04:38:59,512 INFO waiting 30s: gpu_util max 11% >= 5%
+2026-10-26 04:39:34,099 INFO [84/1146] 6be936f260e888f1 linear tinygemm_int4_g128 isolated N=19200 cold -> clean median 56.67 us 738.0 GB/s
+2026-10-26 04:39:39,642 INFO [85/1146] e06175e8b8023ee8 linear torch_scaled_mm_fp8_pt eager N=256 cold -> clean median 20.96 us 175.8 GB/s
+2026-10-26 04:39:44,191 INFO [86/1146] 6d9fe5d11fbaa5e5 linear torch_scaled_mm_fp8_pt isolated N=14336 cold -> clean median 97.87 us 600.3 GB/s
+2026-10-26 04:39:49,677 INFO [87/1146] ef608de2bcde90ab linear vllm_cutlass_fp8_rw eager N=4096 cold -> clean median 22.34 us 752.2 GB/s
+2026-10-26 04:39:55,264 INFO [88/1146] 805e3ba9fd9909bb linear tinygemm_int4_g128 graph N=6144 cold -> clean median 16.84 us 795.2 GB/s
+2026-10-26 04:40:01,030 INFO [89/1146] b6757cd948f59287 linear vllm_cutlass_fp8_rw graph N=1024 cold -> clean median 7.90 us 532.0 GB/s
+2026-10-26 04:40:06,807 INFO [90/1146] 5db7b225588edbc3 linear torch_scaled_mm_fp8_pt_full graph N=3584 cold -> clean median 105.77 us 642.4 GB/s
+2026-10-26 04:40:12,366 INFO [91/1146] 70e29a5d2b2bfc4d linear torch_scaled_mm_fp8_pt_full eager N=4096 cold -> clean median 49.06 us 342.3 GB/s
+2026-10-26 04:40:14,557 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 04:40:50,143 INFO [92/1146] b916308e05cec16d linear marlin_int4_g128 eager N=3584 cold -> clean median 43.48 us 806.2 GB/s
+2026-10-26 04:40:55,827 INFO [93/1146] ffe002611b437578 linear torch_scaled_mm_fp8_pt graph N=1024 cold -> clean median 10.82 us 388.8 GB/s
+2026-10-26 04:41:01,861 INFO [94/1146] 6a0009cd7ba527d4 linear tinygemm_int4_g128 graph N=512 cold -> clean median 4.89 us 202.8 GB/s
+2026-10-26 04:41:07,759 INFO [95/1146] 4998252083699fc6 linear torch_scaled_mm_fp8_pt_full graph N=512 cold -> clean median 18.04 us 105.3 GB/s
+2026-10-26 04:41:13,478 INFO [96/1146] 457a0a587d644d61 linear torch_scaled_mm_fp8_pt_full graph N=4608 cold -> clean median 29.60 us 566.7 GB/s
+2026-10-26 04:41:19,238 INFO [97/1146] 5a188b6676a74d4a linear vllm_cutlass_fp8_rw graph N=28672 cold -> clean median 151.13 us 781.1 GB/s
+2026-10-26 04:41:24,784 INFO [98/1146] abc2783953f5b6e3 linear marlin_int4_g128 eager N=5376 cold -> clean median 29.90 us 380.4 GB/s
+2026-10-26 04:41:30,560 INFO [99/1146] 070a7f195ca94d4a linear marlin_int4_g128 graph N=3584 cold -> clean median 10.60 us 627.8 GB/s
+2026-10-26 04:41:36,158 INFO [100/1146] 29f1e9cf165fcb34 linear vllm_cutlass_fp8_rw_full graph N=14336 cold -> clean median 79.32 us 744.7 GB/s
+2026-10-26 04:41:41,921 INFO [101/1146] 2bc1304ee48fcc79 linear torch_scaled_mm_fp8_pt graph N=14336 cold -> clean median 69.86 us 848.1 GB/s
+2026-10-26 04:41:47,641 INFO [102/1146] febf19add65ae250 linear vllm_cutlass_fp8_rw graph N=1536 cold -> contaminated median 28.10 us 784.3 GB/s reasons=["foreign_cpu 2.12 cores > 2 top=[('root', 1.5640000000000003), ('hanvithasaraswathi.m', 0.552)]"]
+2026-10-26 04:41:53,198 INFO [102/1146] febf19add65ae250 linear vllm_cutlass_fp8_rw graph N=1536 cold -> clean median 28.15 us 783.2 GB/s
+2026-10-26 04:41:58,783 INFO [103/1146] 588acfc053f31656 linear vllm_cutlass_fp8_rw eager N=28672 cold -> clean median 150.27 us 782.7 GB/s
+2026-10-26 04:42:00,974 INFO waiting 30s: foreign_cpu 2.16 cores >= 2 top=[('hanvithasaraswathi.m', 1.725), ('prometheus', 0.349)]
+2026-10-26 04:42:33,219 INFO waiting 60s: foreign_cpu 2.49 cores >= 2 top=[('hanvithasaraswathi.m', 2.442)]
+2026-10-26 04:43:37,842 INFO [104/1146] 487c656817bad7b2 linear torch_scaled_mm_fp8_pt_full isolated N=4608 cold -> clean median 79.94 us 206.8 GB/s
+2026-10-26 04:43:43,620 INFO [105/1146] 5be5888ba07044c1 linear vllm_cutlass_fp8_rw_full graph N=6144 cold -> clean median 33.27 us 767.1 GB/s
+2026-10-26 04:43:49,701 INFO [106/1146] 8061d2335e7568e0 linear marlin_int4_g128 graph N=128256 cold -> clean median 310.97 us 872.8 GB/s
+2026-10-26 04:43:55,238 INFO [107/1146] 61d03db7e6938c26 linear tinygemm_int4_g128 eager N=5376 cold -> clean median 16.49 us 710.6 GB/s
+2026-10-26 04:44:00,769 INFO [108/1146] 2ad3e41b07716c1b linear vllm_cutlass_fp8_rw graph N=14336 cold -> clean median 77.19 us 761.9 GB/s
+2026-10-26 04:44:05,700 INFO [109/1146] 94759142a1f5a67f linear marlin_int4_g128 isolated N=128 cold -> clean median 63.12 us 4.4 GB/s
+2026-10-26 04:44:11,565 INFO [110/1146] 1de6d5bc7217a800 linear marlin_int4_g128 graph N=1024 cold -> clean median 8.70 us 253.2 GB/s
+2026-10-26 04:44:17,133 INFO [111/1146] e2935fef15dbaf87 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> clean median 77.51 us 761.6 GB/s
+2026-10-26 04:44:22,954 INFO [112/1146] bced6b7a039257c9 linear vllm_cutlass_fp8_rw_full graph N=512 cold -> clean median 7.99 us 230.9 GB/s
+2026-10-26 04:44:28,653 INFO [113/1146] 7830dddfb26f7222 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> clean median 23.59 us 717.3 GB/s
+2026-10-26 04:44:34,203 INFO [114/1146] 1112b886b61e2295 linear torch_scaled_mm_fp8_pt graph N=3584 cold -> clean median 80.94 us 839.4 GB/s
+2026-10-26 04:44:40,022 INFO [115/1146] f3d0391e48f6924c linear vllm_cutlass_fp8_rw graph N=128256 cold -> clean median 632.19 us 838.4 GB/s
+2026-10-26 04:44:45,767 INFO [116/1146] ede08adab8877d29 linear vllm_cutlass_fp8_rw graph N=19712 cold -> contaminated median 388.74 us 727.3 GB/s reasons=["foreign_cpu 2.04 cores > 2 top=[('hanvithasaraswathi.m', 1.952)]"]
+2026-10-26 04:44:51,574 INFO [116/1146] ede08adab8877d29 linear vllm_cutlass_fp8_rw graph N=19712 cold -> clean median 388.78 us 727.2 GB/s
+2026-10-26 04:44:57,123 INFO [117/1146] bf1f0108e477d1f3 linear torch_scaled_mm_fp8_pt graph N=3584 cold -> clean median 80.93 us 839.3 GB/s
+2026-10-26 04:45:02,719 INFO [118/1146] 80131125fe3c7d1a linear marlin_int4_g128 graph N=28672 cold -> clean median 70.45 us 863.3 GB/s
+2026-10-26 04:45:08,935 INFO [119/1146] 4a4fc2c7153d787a linear tinygemm_int4_g128 eager N=128 cold -> clean median 9.41 us 30.5 GB/s
+2026-10-26 04:45:14,503 INFO [120/1146] 0ce0d6f9e529f706 linear tinygemm_int4_g128 graph N=3584 cold -> clean median 9.64 us 709.1 GB/s
+2026-10-26 04:45:19,007 INFO [121/1146] d48ed994df7d7ee4 linear tinygemm_int4_g128 isolated N=2944 cold -> clean median 35.04 us 640.9 GB/s
+2026-10-26 04:45:24,610 INFO [122/1146] d112bcf5f16de9d3 linear torch_scaled_mm_fp8_pt_full graph N=28672 cold -> clean median 154.73 us 759.9 GB/s
+2026-10-26 04:45:30,371 INFO [123/1146] 8841b08d1d98c30d linear torch_scaled_mm_fp8_pt eager N=37504 cold -> clean median 628.58 us 855.5 GB/s
+2026-10-26 04:45:37,401 INFO [124/1146] 3b6bcd06d8442582 linear vllm_cutlass_fp8_rw_full graph N=14336 cold -> clean median 79.09 us 744.1 GB/s
+2026-10-26 04:45:39,597 INFO waiting 30s: gpu_util max 12% >= 5%
+2026-10-26 04:46:15,754 INFO [125/1146] 2a3c7ee42201c9ae linear marlin_int4_g128 graph N=152064 cold -> clean median 327.84 us 864.8 GB/s
+2026-10-26 04:46:21,281 INFO [126/1146] c10dd1c19011c780 linear vllm_cutlass_fp8_rw_full eager N=1024 cold -> clean median 35.54 us 118.4 GB/s
+2026-10-26 04:46:27,017 INFO [127/1146] ef23dc069eb6ef20 linear vllm_cutlass_fp8_rw_full graph N=18944 cold -> clean median 93.69 us 726.0 GB/s
+2026-10-26 04:46:31,567 INFO [128/1146] 7ef924f4fb448054 linear tinygemm_int4_g128 isolated N=3584 cold -> clean median 18.59 us 367.8 GB/s
+2026-10-26 04:46:37,386 INFO [129/1146] e5db15de2cdb6ec4 linear marlin_int4_g128 graph N=1024 cold -> clean median 9.40 us 247.4 GB/s
+2026-10-26 04:46:39,544 INFO waiting 30s: gpu_util max 14% >= 5%
+2026-10-26 04:47:15,284 INFO [130/1146] 0e4e19f9b549f8ae linear torch_scaled_mm_fp8_pt isolated N=152064 cold -> clean median 651.52 us 837.0 GB/s
+2026-10-26 04:47:20,846 INFO [131/1146] beb1ebb4bb87a1bb linear vllm_cutlass_fp8_rw eager N=1536 cold -> clean median 28.93 us 762.0 GB/s
+2026-10-26 04:47:26,588 INFO [132/1146] 3d8086832af03e01 linear marlin_int4_g128 graph N=4608 cold -> clean median 13.66 us 625.8 GB/s
+2026-10-26 04:47:32,448 INFO [133/1146] ee5ad20ae893aaed linear vllm_cutlass_fp8_rw graph N=512 cold -> contaminated median 6.18 us 298.1 GB/s reasons=["foreign_cpu 2.30 cores > 2 top=[('prometheus', 1.264), ('hanvithasaraswathi.m', 0.723)]"]
+2026-10-26 04:47:38,562 INFO [133/1146] ee5ad20ae893aaed linear vllm_cutlass_fp8_rw graph N=512 cold -> clean median 6.18 us 298.1 GB/s
+2026-10-26 04:47:46,378 INFO [134/1146] 150b1232644449b9 linear tinygemm_int4_g128 eager N=32 cold -> clean median 9.75 us 8.0 GB/s
+2026-10-26 04:47:48,573 INFO waiting 30s: gpu_util max 17% >= 5%
+2026-10-26 04:48:23,724 INFO [135/1146] 6d72a6b272855c3d linear vllm_cutlass_fp8_rw isolated N=128 cold -> contaminated median 35.65 us 14.8 GB/s reasons=["foreign_cpu 2.11 cores > 2 top=[('hanvithasaraswathi.m', 1.995)]", "foreign_cpu 3.08 cores > 2 top=[('hanvithasaraswathi.m', 2.9909999999999997)]"]
+2026-10-26 04:48:25,921 INFO waiting 30s: foreign_cpu 3.94 cores >= 2 top=[('hanvithasaraswathi.m', 3.86)]
+2026-10-26 04:48:58,165 INFO waiting 60s: foreign_cpu 2.02 cores >= 2 top=[('hanvithasaraswathi.m', 1.992)]
+2026-10-26 04:50:03,325 INFO [135/1146] 6d72a6b272855c3d linear vllm_cutlass_fp8_rw isolated N=128 cold -> contaminated median 35.84 us 14.8 GB/s reasons=["foreign_cpu 2.07 cores > 2 top=[('hanvithasaraswathi.m', 1.9880000000000002)]"]
+2026-10-26 04:50:08,405 INFO [135/1146] 6d72a6b272855c3d linear vllm_cutlass_fp8_rw isolated N=128 cold -> clean median 35.74 us 14.8 GB/s
+2026-10-26 04:50:10,601 INFO waiting 30s: gpu_util max 10% >= 5%
+2026-10-26 04:50:46,223 INFO [136/1146] 3029b5696adb56cc linear marlin_int4_g128 eager N=4608 cold -> contaminated median 29.78 us 286.5 GB/s reasons=["foreign_cpu 3.15 cores > 2 top=[('hanvithasaraswathi.m', 3.059)]"]
+2026-10-26 04:50:51,755 INFO [136/1146] 3029b5696adb56cc linear marlin_int4_g128 eager N=4608 cold -> contaminated median 29.78 us 286.5 GB/s reasons=["foreign_cpu 2.48 cores > 2 top=[('hanvithasaraswathi.m', 2.3529999999999998)]", "foreign_cpu 2.07 cores > 2 top=[('hanvithasaraswathi.m', 1.994)]", "foreign_cpu 2.55 cores > 2 top=[('hanvithasaraswathi.m', 1.462), ('root', 0.975)]"]
+2026-10-26 04:50:57,277 INFO [136/1146] 3029b5696adb56cc linear marlin_int4_g128 eager N=4608 cold -> contaminated median 29.95 us 284.8 GB/s reasons=["foreign_cpu 2.09 cores > 2 top=[('hanvithasaraswathi.m', 2.022)]"]
+2026-10-26 04:51:02,812 INFO [136/1146] 3029b5696adb56cc linear marlin_int4_g128 eager N=4608 cold -> contaminated median 29.95 us 284.8 GB/s reasons=["foreign_cpu 2.27 cores > 2 top=[('prometheus', 1.128), ('hanvithasaraswathi.m', 1.014)]", "foreign_cpu 3.08 cores > 2 top=[('hanvithasaraswathi.m', 3.034)]"]
+2026-10-26 04:51:08,340 INFO [136/1146] 3029b5696adb56cc linear marlin_int4_g128 eager N=4608 cold -> contaminated median 29.91 us 285.2 GB/s reasons=["foreign_cpu 2.27 cores > 2 top=[('hanvithasaraswathi.m', 2.239)]", "foreign_cpu 2.00 cores > 2 top=[('hanvithasaraswathi.m', 1.952)]"]
+2026-10-26 04:51:13,856 INFO [136/1146] 3029b5696adb56cc linear marlin_int4_g128 eager N=4608 cold -> clean median 29.81 us 286.2 GB/s
+2026-10-26 04:51:18,387 INFO [137/1146] 436ebeb2c3c76ef3 linear vllm_cutlass_fp8_rw isolated N=6144 cold -> clean median 53.25 us 473.4 GB/s
+2026-10-26 04:51:20,586 INFO waiting 30s: gpu_util max 12% >= 5%
+2026-10-26 04:51:56,171 INFO [138/1146] a38ddde0d45686fd linear torch_scaled_mm_fp8_pt graph N=18944 cold -> contaminated median 79.53 us 857.9 GB/s reasons=["foreign_cpu 2.35 cores > 2 top=[('hanvithasaraswathi.m', 2.303)]", "foreign_cpu 2.09 cores > 2 top=[('hanvithasaraswathi.m', 2.013)]"]
+2026-10-26 04:52:01,697 INFO [138/1146] a38ddde0d45686fd linear torch_scaled_mm_fp8_pt graph N=18944 cold -> contaminated median 79.54 us 857.8 GB/s reasons=["foreign_cpu 3.20 cores > 2 top=[('prometheus', 1.9669999999999999), ('hanvithasaraswathi.m', 1.0090000000000001), ('messagebus', 0.10099999999999999)]"]
+2026-10-26 04:52:07,225 INFO [138/1146] a38ddde0d45686fd linear torch_scaled_mm_fp8_pt graph N=18944 cold -> contaminated median 79.55 us 857.6 GB/s reasons=["foreign_cpu 2.88 cores > 2 top=[('hanvithasaraswathi.m', 2.69)]", "foreign_cpu 2.14 cores > 2 top=[('hanvithasaraswathi.m', 2.04)]"]
+2026-10-26 04:52:12,756 INFO [138/1146] a38ddde0d45686fd linear torch_scaled_mm_fp8_pt graph N=18944 cold -> contaminated median 79.55 us 857.7 GB/s reasons=["foreign_cpu 2.48 cores > 2 top=[('hanvithasaraswathi.m', 2.412)]", "foreign_cpu 2.07 cores > 2 top=[('hanvithasaraswathi.m', 2.004)]"]
+2026-10-26 04:52:14,950 INFO waiting 30s: foreign_cpu 2.04 cores >= 2 top=[('hanvithasaraswathi.m', 1.92)]
+2026-10-26 04:52:50,531 INFO [138/1146] a38ddde0d45686fd linear torch_scaled_mm_fp8_pt graph N=18944 cold -> contaminated median 79.54 us 857.8 GB/s reasons=["foreign_cpu 2.20 cores > 2 top=[('hanvithasaraswathi.m', 2.17)]"]
+2026-10-26 04:52:56,032 INFO [138/1146] a38ddde0d45686fd linear torch_scaled_mm_fp8_pt graph N=18944 cold -> clean median 79.54 us 857.8 GB/s
+2026-10-26 04:53:01,607 INFO [139/1146] e4653fce83f00076 linear marlin_int4_g128 graph N=14336 cold -> contaminated median 37.18 us 822.4 GB/s reasons=["foreign_cpu 2.62 cores > 2 top=[('hanvithasaraswathi.m', 2.574)]", "foreign_cpu 3.78 cores > 2 top=[('hanvithasaraswathi.m', 2.0810000000000004), ('prometheus', 1.535), ('messagebus', 0.063)]"]
+2026-10-26 04:53:07,199 INFO [139/1146] e4653fce83f00076 linear marlin_int4_g128 graph N=14336 cold -> contaminated median 37.19 us 822.0 GB/s reasons=["foreign_cpu 2.21 cores > 2 top=[('hanvithasaraswathi.m', 2.089)]"]
+2026-10-26 04:53:12,792 INFO [139/1146] e4653fce83f00076 linear marlin_int4_g128 graph N=14336 cold -> clean median 37.19 us 822.1 GB/s
+2026-10-26 04:53:18,747 INFO [140/1146] b990af82ce1458b4 linear tinygemm_int4_g128 graph N=131072 cold -> contaminated median 323.42 us 882.7 GB/s reasons=["foreign_cpu 2.76 cores > 2 top=[('hanvithasaraswathi.m', 2.708)]", "foreign_cpu 2.13 cores > 2 top=[('hanvithasaraswathi.m', 2.069)]"]
+2026-10-26 04:53:24,699 INFO [140/1146] b990af82ce1458b4 linear tinygemm_int4_g128 graph N=131072 cold -> contaminated median 323.48 us 882.5 GB/s reasons=["foreign_cpu 2.16 cores > 2 top=[('hanvithasaraswathi.m', 2.1630000000000003)]"]
+2026-10-26 04:53:30,653 INFO [140/1146] b990af82ce1458b4 linear tinygemm_int4_g128 graph N=131072 cold -> contaminated median 323.54 us 882.4 GB/s reasons=["foreign_cpu 2.63 cores > 2 top=[('hanvithasaraswathi.m', 2.568)]"]
+2026-10-26 04:53:36,607 INFO [140/1146] b990af82ce1458b4 linear tinygemm_int4_g128 graph N=131072 cold -> contaminated median 323.55 us 882.3 GB/s reasons=["foreign_cpu 2.21 cores > 2 top=[('hanvithasaraswathi.m', 2.061)]", "foreign_cpu 2.05 cores > 2 top=[('hanvithasaraswathi.m', 2.009)]"]
+2026-10-26 04:53:42,562 INFO [140/1146] b990af82ce1458b4 linear tinygemm_int4_g128 graph N=131072 cold -> contaminated median 323.51 us 882.5 GB/s reasons=["foreign_cpu 2.65 cores > 2 top=[('hanvithasaraswathi.m', 2.585)]", "foreign_cpu 2.12 cores > 2 top=[('hanvithasaraswathi.m', 1.99)]"]
+2026-10-26 04:53:48,518 INFO [140/1146] b990af82ce1458b4 linear tinygemm_int4_g128 graph N=131072 cold -> unclean_exhausted median 323.57 us 882.3 GB/s reasons=["foreign_cpu 2.69 cores > 2 top=[('hanvithasaraswathi.m', 2.642)]"]
+2026-10-26 04:53:54,295 INFO [141/1146] 8365906d6f7b8df2 linear marlin_int4_g128 graph N=6144 cold -> contaminated median 17.95 us 727.3 GB/s reasons=["foreign_cpu 3.32 cores > 2 top=[('hanvithasaraswathi.m', 3.268)]", "foreign_cpu 2.13 cores > 2 top=[('hanvithasaraswathi.m', 2.032)]"]
+2026-10-26 04:54:00,077 INFO [141/1146] 8365906d6f7b8df2 linear marlin_int4_g128 graph N=6144 cold -> clean median 17.96 us 727.1 GB/s
+2026-10-26 04:54:05,650 INFO [142/1146] 9b85e8d8d1bc5887 linear torch_scaled_mm_fp8_pt graph N=6144 cold -> contaminated median 30.68 us 822.3 GB/s reasons=["foreign_cpu 2.45 cores > 2 top=[('hanvithasaraswathi.m', 2.386)]", "foreign_cpu 2.12 cores > 2 top=[('hanvithasaraswathi.m', 1.979)]"]
+2026-10-26 04:54:11,359 INFO [142/1146] 9b85e8d8d1bc5887 linear torch_scaled_mm_fp8_pt graph N=6144 cold -> contaminated median 30.28 us 833.3 GB/s reasons=["foreign_cpu 2.11 cores > 2 top=[('hanvithasaraswathi.m', 1.988)]"]
+2026-10-26 04:54:17,123 INFO [142/1146] 9b85e8d8d1bc5887 linear torch_scaled_mm_fp8_pt graph N=6144 cold -> contaminated median 30.28 us 833.3 GB/s reasons=["foreign_cpu 2.81 cores > 2 top=[('hanvithasaraswathi.m', 2.713)]", "foreign_cpu 3.24 cores > 2 top=[('hanvithasaraswathi.m', 3.241)]"]
+2026-10-26 04:54:22,887 INFO [142/1146] 9b85e8d8d1bc5887 linear torch_scaled_mm_fp8_pt graph N=6144 cold -> contaminated median 30.29 us 833.0 GB/s reasons=["foreign_cpu 2.48 cores > 2 top=[('hanvithasaraswathi.m', 2.4290000000000003)]", "foreign_cpu 2.11 cores > 2 top=[('hanvithasaraswathi.m', 2.018)]", "foreign_cpu 2.05 cores > 2 top=[('hanvithasaraswathi.m', 1.9980000000000002)]"]
+2026-10-26 04:54:25,080 INFO waiting 30s: foreign_cpu 2.00 cores >= 2 top=[('hanvithasaraswathi.m', 1.925)]
+2026-10-26 04:55:00,930 INFO [142/1146] 9b85e8d8d1bc5887 linear torch_scaled_mm_fp8_pt graph N=6144 cold -> contaminated median 30.27 us 833.5 GB/s reasons=["foreign_cpu 2.40 cores > 2 top=[('hanvithasaraswathi.m', 2.333)]", "foreign_cpu 2.45 cores > 2 top=[('hanvithasaraswathi.m', 2.398)]"]
+2026-10-26 04:55:06,708 INFO [142/1146] 9b85e8d8d1bc5887 linear torch_scaled_mm_fp8_pt graph N=6144 cold -> unclean_exhausted median 30.27 us 833.4 GB/s reasons=["foreign_cpu 2.25 cores > 2 top=[('hanvithasaraswathi.m', 2.247)]"]
+2026-10-26 04:55:11,231 INFO [143/1146] b710898dad65e14f linear torch_scaled_mm_fp8_pt isolated N=256 cold -> contaminated median 42.14 us 87.4 GB/s reasons=["foreign_cpu 2.59 cores > 2 top=[('hanvithasaraswathi.m', 2.5300000000000002)]", "foreign_cpu 2.09 cores > 2 top=[('hanvithasaraswathi.m', 1.9409999999999998), ('root', 0.15)]"]
+2026-10-26 04:55:15,773 INFO [143/1146] b710898dad65e14f linear torch_scaled_mm_fp8_pt isolated N=256 cold -> contaminated median 42.18 us 87.4 GB/s reasons=["foreign_cpu 3.06 cores > 2 top=[('hanvithasaraswathi.m', 2.955)]", "foreign_cpu 2.08 cores > 2 top=[('hanvithasaraswathi.m', 2.0140000000000002)]", "foreign_cpu 2.03 cores > 2 top=[('hanvithasaraswathi.m', 1.9140000000000001), ('root', 0.12)]"]
+2026-10-26 04:55:20,315 INFO [143/1146] b710898dad65e14f linear torch_scaled_mm_fp8_pt isolated N=256 cold -> contaminated median 42.27 us 87.2 GB/s reasons=["foreign_cpu 2.62 cores > 2 top=[('hanvithasaraswathi.m', 2.58)]", "foreign_cpu 2.05 cores > 2 top=[('hanvithasaraswathi.m', 1.984)]", "foreign_cpu 2.14 cores > 2 top=[('hanvithasaraswathi.m', 2.14)]"]
+2026-10-26 04:55:24,870 INFO [143/1146] b710898dad65e14f linear torch_scaled_mm_fp8_pt isolated N=256 cold -> contaminated median 41.95 us 87.8 GB/s reasons=["foreign_cpu 2.09 cores > 2 top=[('hanvithasaraswathi.m', 1.984)]"]
+2026-10-26 04:55:29,423 INFO [143/1146] b710898dad65e14f linear torch_scaled_mm_fp8_pt isolated N=256 cold -> clean median 42.11 us 87.5 GB/s
+2026-10-26 04:55:31,618 INFO waiting 30s: gpu_util max 13% >= 5%; foreign_cpu 2.42 cores >= 2 top=[('hanvithasaraswathi.m', 1.925), ('prometheus', 0.325), ('root', 0.052000000000000005)]
+2026-10-26 04:56:07,387 INFO [144/1146] c16733cde8b28aff linear vllm_cutlass_fp8_rw_full graph N=3584 cold -> contaminated median 19.06 us 680.6 GB/s reasons=["foreign_cpu 2.30 cores > 2 top=[('hanvithasaraswathi.m', 2.269)]"]
+2026-10-26 04:56:09,581 INFO waiting 30s: gpu_util max 9% >= 5%
+2026-10-26 04:56:45,253 INFO [144/1146] c16733cde8b28aff linear vllm_cutlass_fp8_rw_full graph N=3584 cold -> contaminated median 19.08 us 680.0 GB/s reasons=["foreign_cpu 2.99 cores > 2 top=[('hanvithasaraswathi.m', 2.86)]", "foreign_cpu 2.34 cores > 2 top=[('hanvithasaraswathi.m', 2.0140000000000002), ('root', 0.247)]"]
+2026-10-26 04:56:50,887 INFO [144/1146] c16733cde8b28aff linear vllm_cutlass_fp8_rw_full graph N=3584 cold -> contaminated median 19.07 us 680.2 GB/s reasons=["foreign_cpu 2.04 cores > 2 top=[('hanvithasaraswathi.m', 2.006)]"]
+2026-10-26 04:56:53,081 INFO waiting 30s: foreign_cpu 2.03 cores >= 2 top=[('hanvithasaraswathi.m', 1.921)]
+2026-10-26 04:57:28,823 INFO [144/1146] c16733cde8b28aff linear vllm_cutlass_fp8_rw_full graph N=3584 cold -> contaminated median 19.06 us 680.8 GB/s reasons=["foreign_cpu 2.03 cores > 2 top=[('hanvithasaraswathi.m', 1.983)]"]
+2026-10-26 04:57:31,016 INFO waiting 30s: foreign_cpu 2.17 cores >= 2 top=[('hanvithasaraswathi.m', 1.737), ('prometheus', 0.358)]
+2026-10-26 04:58:06,733 INFO [144/1146] c16733cde8b28aff linear vllm_cutlass_fp8_rw_full graph N=3584 cold -> contaminated median 19.08 us 680.1 GB/s reasons=["foreign_cpu 2.47 cores > 2 top=[('hanvithasaraswathi.m', 2.419)]"]
+2026-10-26 04:58:12,371 INFO [144/1146] c16733cde8b28aff linear vllm_cutlass_fp8_rw_full graph N=3584 cold -> unclean_exhausted median 19.08 us 680.1 GB/s reasons=["foreign_cpu 2.06 cores > 2 top=[('hanvithasaraswathi.m', 2.012)]"]
+2026-10-26 04:58:18,113 INFO [145/1146] 4f2b58682b7ccee4 linear vllm_cutlass_fp8_rw graph N=18944 cold -> contaminated median 91.93 us 740.2 GB/s reasons=["foreign_cpu 2.60 cores > 2 top=[('hanvithasaraswathi.m', 2.5)]"]
+2026-10-26 04:58:23,882 INFO [145/1146] 4f2b58682b7ccee4 linear vllm_cutlass_fp8_rw graph N=18944 cold -> contaminated median 91.99 us 739.8 GB/s reasons=["foreign_cpu 3.16 cores > 2 top=[('hanvithasaraswathi.m', 3.08)]"]
+2026-10-26 04:58:26,076 INFO waiting 30s: foreign_cpu 2.01 cores >= 2 top=[('hanvithasaraswathi.m', 1.944)]
+2026-10-26 04:59:01,853 INFO [145/1146] 4f2b58682b7ccee4 linear vllm_cutlass_fp8_rw graph N=18944 cold -> contaminated median 91.95 us 740.1 GB/s reasons=["foreign_cpu 2.08 cores > 2 top=[('hanvithasaraswathi.m', 1.994)]", "foreign_cpu 2.39 cores > 2 top=[('prometheus', 1.276), ('hanvithasaraswathi.m', 0.998)]"]
+2026-10-26 04:59:04,046 INFO waiting 30s: foreign_cpu 2.02 cores >= 2 top=[('hanvithasaraswathi.m', 1.9409999999999998)]
+2026-10-26 04:59:39,910 INFO [145/1146] 4f2b58682b7ccee4 linear vllm_cutlass_fp8_rw graph N=18944 cold -> clean median 91.81 us 741.2 GB/s
+2026-10-26 04:59:44,430 INFO [146/1146] c9a7ad369fce10f2 linear vllm_cutlass_fp8_rw isolated N=5376 cold -> contaminated median 49.86 us 442.4 GB/s reasons=["foreign_cpu 2.13 cores > 2 top=[('hanvithasaraswathi.m', 2.129)]"]
+2026-10-26 04:59:46,621 INFO waiting 30s: gpu_util max 12% >= 5%
+2026-10-26 05:00:21,250 INFO [146/1146] c9a7ad369fce10f2 linear vllm_cutlass_fp8_rw isolated N=5376 cold -> contaminated median 49.86 us 442.4 GB/s reasons=["foreign_cpu 2.33 cores > 2 top=[('hanvithasaraswathi.m', 2.2520000000000002)]"]
+2026-10-26 05:00:25,807 INFO [146/1146] c9a7ad369fce10f2 linear vllm_cutlass_fp8_rw isolated N=5376 cold -> contaminated median 49.82 us 442.7 GB/s reasons=["foreign_cpu 2.85 cores > 2 top=[('hanvithasaraswathi.m', 2.7800000000000002)]", "foreign_cpu 2.07 cores > 2 top=[('hanvithasaraswathi.m', 1.9780000000000002)]"]
+2026-10-26 05:00:30,333 INFO [146/1146] c9a7ad369fce10f2 linear vllm_cutlass_fp8_rw isolated N=5376 cold -> contaminated median 50.02 us 441.0 GB/s reasons=["foreign_cpu 2.08 cores > 2 top=[('hanvithasaraswathi.m', 2.012)]"]
+2026-10-26 05:00:34,863 INFO [146/1146] c9a7ad369fce10f2 linear vllm_cutlass_fp8_rw isolated N=5376 cold -> contaminated median 50.00 us 441.1 GB/s reasons=["foreign_cpu 2.02 cores > 2 top=[('hanvithasaraswathi.m', 1.6460000000000001), ('root', 0.265)]"]
+2026-10-26 05:00:39,423 INFO [146/1146] c9a7ad369fce10f2 linear vllm_cutlass_fp8_rw isolated N=5376 cold -> unclean_exhausted median 49.89 us 442.1 GB/s reasons=["foreign_cpu 2.13 cores > 2 top=[('hanvithasaraswathi.m', 1.878), ('root', 0.11699999999999999)]"]
+2026-10-26 05:00:41,614 INFO waiting 30s: gpu_util max 13% >= 5%; foreign_cpu 2.01 cores >= 2 top=[('hanvithasaraswathi.m', 1.9289999999999998)]
+2026-10-26 05:01:17,433 INFO [147/1146] e7b2c61d2d2ab6ae linear torch_scaled_mm_fp8_pt graph N=4096 cold -> contaminated median 21.01 us 801.0 GB/s reasons=["foreign_cpu 2.38 cores > 2 top=[('hanvithasaraswathi.m', 2.279)]"]
+2026-10-26 05:01:19,626 INFO waiting 30s: gpu_util max 26% >= 5%
+2026-10-26 05:01:55,451 INFO [147/1146] e7b2c61d2d2ab6ae linear torch_scaled_mm_fp8_pt graph N=4096 cold -> contaminated median 21.01 us 800.9 GB/s reasons=["foreign_cpu 3.89 cores > 2 top=[('hanvithasaraswathi.m', 3.7630000000000003), ('root', 0.129)]"]
+2026-10-26 05:02:01,237 INFO [147/1146] e7b2c61d2d2ab6ae linear torch_scaled_mm_fp8_pt graph N=4096 cold -> contaminated median 21.01 us 800.9 GB/s reasons=["foreign_cpu 2.30 cores > 2 top=[('hanvithasaraswathi.m', 2.252)]"]
+2026-10-26 05:02:06,946 INFO [147/1146] e7b2c61d2d2ab6ae linear torch_scaled_mm_fp8_pt graph N=4096 cold -> clean median 21.02 us 800.5 GB/s
+2026-10-26 05:02:13,007 INFO [148/1146] 49c1de5d0ea0e61c linear marlin_int4_g128 graph N=152064 cold -> contaminated median 324.35 us 870.2 GB/s reasons=["foreign_cpu 2.46 cores > 2 top=[('hanvithasaraswathi.m', 2.3790000000000004)]", "foreign_cpu 2.69 cores > 2 top=[('hanvithasaraswathi.m', 2.174), ('root', 0.449)]"]
+2026-10-26 05:02:19,068 INFO [148/1146] 49c1de5d0ea0e61c linear marlin_int4_g128 graph N=152064 cold -> clean median 324.35 us 870.2 GB/s
+2026-10-26 05:02:23,684 INFO [149/1146] fbe4a1036ed3841e linear marlin_int4_g128 isolated N=28672 cold -> clean median 103.71 us 584.5 GB/s
+2026-10-26 05:02:29,296 INFO [150/1146] b8148831d94552c9 linear torch_scaled_mm_fp8_pt_full eager N=512 cold -> contaminated median 51.08 us 36.1 GB/s reasons=["foreign_cpu 2.83 cores > 2 top=[('hanvithasaraswathi.m', 2.745)]"]
+2026-10-26 05:02:34,872 INFO [150/1146] b8148831d94552c9 linear torch_scaled_mm_fp8_pt_full eager N=512 cold -> contaminated median 51.16 us 36.0 GB/s reasons=["foreign_cpu 2.07 cores > 2 top=[('hanvithasaraswathi.m', 1.996)]"]
+2026-10-26 05:02:40,449 INFO [150/1146] b8148831d94552c9 linear torch_scaled_mm_fp8_pt_full eager N=512 cold -> contaminated median 50.72 us 36.3 GB/s reasons=["foreign_cpu 2.45 cores > 2 top=[('hanvithasaraswathi.m', 2.3890000000000002)]"]
+2026-10-26 05:02:46,251 INFO [150/1146] b8148831d94552c9 linear torch_scaled_mm_fp8_pt_full eager N=512 cold -> contaminated median 50.79 us 36.3 GB/s reasons=["foreign_cpu 2.38 cores > 2 top=[('hanvithasaraswathi.m', 2.328)]", "foreign_cpu 2.05 cores > 2 top=[('hanvithasaraswathi.m', 1.7120000000000002), ('root', 0.302)]"]
+2026-10-26 05:02:51,926 INFO [150/1146] b8148831d94552c9 linear torch_scaled_mm_fp8_pt_full eager N=512 cold -> clean median 50.97 us 36.2 GB/s
+2026-10-26 05:02:57,684 INFO [151/1146] 223e3776d2b5c48a linear marlin_int4_g128 eager N=256 cold -> contaminated median 37.47 us 14.7 GB/s reasons=["foreign_cpu 2.52 cores > 2 top=[('hanvithasaraswathi.m', 2.4530000000000003)]", "foreign_cpu 2.01 cores > 2 top=[('hanvithasaraswathi.m', 2.011)]"]
+2026-10-26 05:03:03,439 INFO [151/1146] 223e3776d2b5c48a linear marlin_int4_g128 eager N=256 cold -> contaminated median 37.41 us 14.7 GB/s reasons=["foreign_cpu 3.79 cores > 2 top=[('hanvithasaraswathi.m', 2.559), ('prometheus', 1.128)]", "foreign_cpu 2.56 cores > 2 top=[('hanvithasaraswathi.m', 2.511)]", "foreign_cpu 2.03 cores > 2 top=[('hanvithasaraswathi.m', 1.9440000000000002)]"]
+2026-10-26 05:03:05,629 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 05:03:41,441 INFO [151/1146] 223e3776d2b5c48a linear marlin_int4_g128 eager N=256 cold -> contaminated median 37.42 us 14.7 GB/s reasons=["foreign_cpu 2.03 cores > 2 top=[('hanvithasaraswathi.m', 1.9980000000000002)]"]
+2026-10-26 05:03:43,636 INFO waiting 30s: gpu_util max 9% >= 5%
+2026-10-26 05:04:19,441 INFO [151/1146] 223e3776d2b5c48a linear marlin_int4_g128 eager N=256 cold -> contaminated median 37.45 us 14.7 GB/s reasons=["foreign_cpu 2.83 cores > 2 top=[('hanvithasaraswathi.m', 2.8299999999999996)]"]
+2026-10-26 05:04:21,633 INFO waiting 30s: gpu_util max 11% >= 5%
+2026-10-26 05:04:57,445 INFO [151/1146] 223e3776d2b5c48a linear marlin_int4_g128 eager N=256 cold -> contaminated median 37.48 us 14.7 GB/s reasons=["foreign_cpu 3.42 cores > 2 top=[('hanvithasaraswathi.m', 2.997), ('root', 0.345)]", "foreign_cpu 2.15 cores > 2 top=[('hanvithasaraswathi.m', 1.988), ('root', 0.115)]"]
+2026-10-26 05:04:59,635 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 05:05:35,450 INFO [151/1146] 223e3776d2b5c48a linear marlin_int4_g128 eager N=256 cold -> unclean_exhausted median 37.52 us 14.6 GB/s reasons=["foreign_cpu 2.39 cores > 2 top=[('hanvithasaraswathi.m', 2.3760000000000003)]", "foreign_cpu 2.06 cores > 2 top=[('hanvithasaraswathi.m', 1.958)]"]
+2026-10-26 05:05:40,353 INFO [152/1146] 0a5df3866a330ed2 linear torch_scaled_mm_fp8_pt isolated N=64 cold -> clean median 42.19 us 22.1 GB/s
+2026-10-26 05:05:45,974 INFO [153/1146] d96a1bde9d9883f3 linear vllm_cutlass_fp8_rw_full graph N=14336 cold -> clean median 79.21 us 744.0 GB/s
+2026-10-26 05:05:50,697 INFO [154/1146] 077fe8ed3e7c9578 linear vllm_cutlass_fp8_rw_full isolated N=28672 cold -> contaminated median 186.98 us 629.1 GB/s reasons=["foreign_cpu 2.37 cores > 2 top=[('hanvithasaraswathi.m', 2.374)]"]
+2026-10-26 05:05:52,890 INFO waiting 30s: foreign_cpu 2.05 cores >= 2 top=[('hanvithasaraswathi.m', 1.008), ('root', 0.9940000000000001)]
+2026-10-26 05:06:27,651 INFO [154/1146] 077fe8ed3e7c9578 linear vllm_cutlass_fp8_rw_full isolated N=28672 cold -> contaminated median 187.02 us 628.9 GB/s reasons=["foreign_cpu 2.45 cores > 2 top=[('hanvithasaraswathi.m', 2.419)]", "foreign_cpu 2.97 cores > 2 top=[('hanvithasaraswathi.m', 2.922)]"]
+2026-10-26 05:06:32,370 INFO [154/1146] 077fe8ed3e7c9578 linear vllm_cutlass_fp8_rw_full isolated N=28672 cold -> contaminated median 187.30 us 628.0 GB/s reasons=["foreign_cpu 3.06 cores > 2 top=[('hanvithasaraswathi.m', 1.806), ('prometheus', 1.137)]", "foreign_cpu 2.27 cores > 2 top=[('hanvithasaraswathi.m', 2.207)]", "foreign_cpu 2.10 cores > 2 top=[('hanvithasaraswathi.m', 2.0580000000000003)]"]
+2026-10-26 05:06:37,086 INFO [154/1146] 077fe8ed3e7c9578 linear vllm_cutlass_fp8_rw_full isolated N=28672 cold -> contaminated median 187.10 us 628.6 GB/s reasons=["foreign_cpu 2.11 cores > 2 top=[('hanvithasaraswathi.m', 2.065)]"]
+2026-10-26 05:06:41,803 INFO [154/1146] 077fe8ed3e7c9578 linear vllm_cutlass_fp8_rw_full isolated N=28672 cold -> clean median 186.82 us 629.6 GB/s
+2026-10-26 05:06:43,996 INFO waiting 30s: foreign_cpu 2.10 cores >= 2 top=[('hanvithasaraswathi.m', 1.9300000000000002)]
+2026-10-26 05:07:19,627 INFO [155/1146] 1f65d702a00b69e5 linear torch_scaled_mm_fp8_pt graph N=4096 cold -> contaminated median 72.16 us 816.2 GB/s reasons=["foreign_cpu 2.68 cores > 2 top=[('hanvithasaraswathi.m', 2.6270000000000002)]", "foreign_cpu 2.32 cores > 2 top=[('hanvithasaraswathi.m', 2.21)]"]
+2026-10-26 05:07:25,169 INFO [155/1146] 1f65d702a00b69e5 linear torch_scaled_mm_fp8_pt graph N=4096 cold -> clean median 72.22 us 815.5 GB/s
+2026-10-26 05:07:30,934 INFO [156/1146] c657b839fdb7bb86 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> contaminated median 23.54 us 714.7 GB/s reasons=["foreign_cpu 2.58 cores > 2 top=[('hanvithasaraswathi.m', 2.502)]", "foreign_cpu 2.04 cores > 2 top=[('hanvithasaraswathi.m', 2.026)]", "foreign_cpu 2.16 cores > 2 top=[('hanvithasaraswathi.m', 2.156)]"]
+2026-10-26 05:07:36,657 INFO [156/1146] c657b839fdb7bb86 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> contaminated median 23.53 us 715.0 GB/s reasons=["foreign_cpu 2.09 cores > 2 top=[('hanvithasaraswathi.m', 2.0210000000000004)]"]
+2026-10-26 05:07:42,456 INFO [156/1146] c657b839fdb7bb86 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> contaminated median 23.54 us 714.9 GB/s reasons=["foreign_cpu 2.59 cores > 2 top=[('hanvithasaraswathi.m', 2.496)]", "foreign_cpu 3.26 cores > 2 top=[('hanvithasaraswathi.m', 3.2600000000000002)]"]
+2026-10-26 05:07:44,649 INFO waiting 30s: gpu_util max 9% >= 5%
+2026-10-26 05:08:20,449 INFO [156/1146] c657b839fdb7bb86 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> contaminated median 23.54 us 714.9 GB/s reasons=["foreign_cpu 2.51 cores > 2 top=[('hanvithasaraswathi.m', 2.463)]", "foreign_cpu 2.04 cores > 2 top=[('hanvithasaraswathi.m', 1.994)]"]
+2026-10-26 05:08:22,641 INFO waiting 30s: gpu_util max 9% >= 5%
+2026-10-26 05:08:58,432 INFO [156/1146] c657b839fdb7bb86 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> contaminated median 23.52 us 715.4 GB/s reasons=["foreign_cpu 2.03 cores > 2 top=[('hanvithasaraswathi.m', 2.0)]"]
+2026-10-26 05:09:00,625 INFO waiting 30s: gpu_util max 9% >= 5%; foreign_cpu 2.41 cores >= 2 top=[('hanvithasaraswathi.m', 1.983), ('prometheus', 0.33899999999999997)]
+2026-10-26 05:09:36,443 INFO [156/1146] c657b839fdb7bb86 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> unclean_exhausted median 23.52 us 715.3 GB/s reasons=["foreign_cpu 2.07 cores > 2 top=[('hanvithasaraswathi.m', 2.0020000000000002)]"]
+2026-10-26 05:09:38,636 INFO waiting 30s: foreign_cpu 2.08 cores >= 2 top=[('hanvithasaraswathi.m', 1.992)]
+2026-10-26 05:10:14,374 INFO [157/1146] e974028d13ad4d00 linear torch_scaled_mm_fp8_pt graph N=1024 cold -> clean median 10.81 us 390.3 GB/s
+2026-10-26 05:10:19,912 INFO [158/1146] b05b9874e5593485 linear torch_scaled_mm_fp8_pt_full eager N=14336 cold -> contaminated median 80.97 us 725.7 GB/s reasons=["foreign_cpu 2.75 cores > 2 top=[('hanvithasaraswathi.m', 2.647)]", "foreign_cpu 3.02 cores > 2 top=[('hanvithasaraswathi.m', 2.1180000000000003), ('root', 0.7879999999999999)]"]
+2026-10-26 05:10:25,428 INFO [158/1146] b05b9874e5593485 linear torch_scaled_mm_fp8_pt_full eager N=14336 cold -> contaminated median 80.98 us 725.6 GB/s reasons=["foreign_cpu 2.44 cores > 2 top=[('hanvithasaraswathi.m', 2.12), ('root', 0.251)]"]
+2026-10-26 05:10:30,948 INFO [158/1146] b05b9874e5593485 linear torch_scaled_mm_fp8_pt_full eager N=14336 cold -> clean median 80.98 us 725.6 GB/s
+2026-10-26 05:10:36,817 INFO [159/1146] 8a6db1c61df5a253 linear tinygemm_int4_g128 graph N=14336 cold -> contaminated median 55.94 us 562.9 GB/s reasons=["foreign_cpu 2.94 cores > 2 top=[('hanvithasaraswathi.m', 2.839)]", "foreign_cpu 2.13 cores > 2 top=[('hanvithasaraswathi.m', 1.999)]"]
+2026-10-26 05:10:42,635 INFO [159/1146] 8a6db1c61df5a253 linear tinygemm_int4_g128 graph N=14336 cold -> clean median 54.21 us 580.8 GB/s
+2026-10-26 05:10:48,432 INFO [160/1146] b7a31aa6135116a4 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> contaminated median 23.55 us 714.6 GB/s reasons=["foreign_cpu 2.45 cores > 2 top=[('hanvithasaraswathi.m', 2.351)]", "foreign_cpu 2.19 cores > 2 top=[('hanvithasaraswathi.m', 1.984)]", "foreign_cpu 2.18 cores > 2 top=[('hanvithasaraswathi.m', 2.1830000000000003)]"]
+2026-10-26 05:10:54,213 INFO [160/1146] b7a31aa6135116a4 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> contaminated median 23.53 us 715.0 GB/s reasons=["foreign_cpu 2.06 cores > 2 top=[('hanvithasaraswathi.m', 1.996)]"]
+2026-10-26 05:10:59,991 INFO [160/1146] b7a31aa6135116a4 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> contaminated median 23.55 us 714.6 GB/s reasons=["foreign_cpu 2.89 cores > 2 top=[('hanvithasaraswathi.m', 2.8289999999999997)]", "foreign_cpu 2.15 cores > 2 top=[('hanvithasaraswathi.m', 2.154)]"]
+2026-10-26 05:11:05,740 INFO [160/1146] b7a31aa6135116a4 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> contaminated median 23.54 us 714.8 GB/s reasons=["foreign_cpu 2.18 cores > 2 top=[('hanvithasaraswathi.m', 2.079)]", "foreign_cpu 2.18 cores > 2 top=[('hanvithasaraswathi.m', 2.149)]", "foreign_cpu 2.08 cores > 2 top=[('hanvithasaraswathi.m', 1.997)]"]
+2026-10-26 05:11:11,476 INFO [160/1146] b7a31aa6135116a4 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> contaminated median 23.54 us 714.9 GB/s reasons=["foreign_cpu 2.20 cores > 2 top=[('hanvithasaraswathi.m', 2.1350000000000002)]"]
+2026-10-26 05:11:13,669 INFO waiting 30s: gpu_util max 7% >= 5%
+2026-10-26 05:11:49,467 INFO [160/1146] b7a31aa6135116a4 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> unclean_exhausted median 23.54 us 714.7 GB/s reasons=["foreign_cpu 2.03 cores > 2 top=[('hanvithasaraswathi.m', 1.9259999999999997)]"]
+2026-10-26 05:11:51,660 INFO waiting 30s: gpu_util max 7% >= 5%
+2026-10-26 05:12:27,253 INFO [161/1146] 0870589a7c630f9d linear torch_scaled_mm_fp8_pt_full eager N=14336 cold -> contaminated median 80.98 us 725.6 GB/s reasons=["foreign_cpu 2.31 cores > 2 top=[('hanvithasaraswathi.m', 2.1710000000000003)]"]
+2026-10-26 05:12:32,799 INFO [161/1146] 0870589a7c630f9d linear torch_scaled_mm_fp8_pt_full eager N=14336 cold -> contaminated median 80.98 us 725.6 GB/s reasons=["foreign_cpu 3.67 cores > 2 top=[('hanvithasaraswathi.m', 2.378), ('prometheus', 1.196)]", "foreign_cpu 2.04 cores > 2 top=[('hanvithasaraswathi.m', 1.977)]"]
+2026-10-26 05:12:38,349 INFO [161/1146] 0870589a7c630f9d linear torch_scaled_mm_fp8_pt_full eager N=14336 cold -> contaminated median 80.99 us 725.5 GB/s reasons=["foreign_cpu 2.08 cores > 2 top=[('hanvithasaraswathi.m', 2.012)]"]
+2026-10-26 05:12:43,864 INFO [161/1146] 0870589a7c630f9d linear torch_scaled_mm_fp8_pt_full eager N=14336 cold -> contaminated median 80.99 us 725.5 GB/s reasons=["foreign_cpu 2.27 cores > 2 top=[('hanvithasaraswathi.m', 2.178)]"]
+2026-10-26 05:12:49,400 INFO [161/1146] 0870589a7c630f9d linear torch_scaled_mm_fp8_pt_full eager N=14336 cold -> contaminated median 81.04 us 725.1 GB/s reasons=["foreign_cpu 2.81 cores > 2 top=[('hanvithasaraswathi.m', 2.7590000000000003)]"]
+2026-10-26 05:12:51,592 INFO waiting 30s: foreign_cpu 2.08 cores >= 2 top=[('hanvithasaraswathi.m', 1.963)]
+2026-10-26 05:13:27,182 INFO [161/1146] 0870589a7c630f9d linear torch_scaled_mm_fp8_pt_full eager N=14336 cold -> unclean_exhausted median 80.99 us 725.5 GB/s reasons=["foreign_cpu 2.47 cores > 2 top=[('hanvithasaraswathi.m', 2.438)]", "foreign_cpu 2.09 cores > 2 top=[('hanvithasaraswathi.m', 2.025)]"]
+2026-10-26 05:13:31,740 INFO [162/1146] 6030b5e7a077d24e linear marlin_int4_g128 isolated N=14336 cold -> contaminated median 68.90 us 440.0 GB/s reasons=["foreign_cpu 2.35 cores > 2 top=[('prometheus', 1.242), ('hanvithasaraswathi.m', 1.03)]"]
+2026-10-26 05:13:36,286 INFO [162/1146] 6030b5e7a077d24e linear marlin_int4_g128 isolated N=14336 cold -> clean median 68.96 us 439.6 GB/s
+2026-10-26 05:13:41,836 INFO [163/1146] 817073c252393ab4 linear vllm_cutlass_fp8_rw_full eager N=37888 cold -> clean median 173.41 us 784.4 GB/s
+2026-10-26 05:13:47,638 INFO [164/1146] 86cbcef91a02c570 linear torch_scaled_mm_fp8_pt graph N=14336 cold -> contaminated median 69.87 us 842.4 GB/s reasons=["foreign_cpu 2.96 cores > 2 top=[('hanvithasaraswathi.m', 2.898)]", "foreign_cpu 2.10 cores > 2 top=[('hanvithasaraswathi.m', 1.9860000000000002)]"]
+2026-10-26 05:13:53,402 INFO [164/1146] 86cbcef91a02c570 linear torch_scaled_mm_fp8_pt graph N=14336 cold -> contaminated median 69.86 us 842.4 GB/s reasons=["foreign_cpu 2.07 cores > 2 top=[('hanvithasaraswathi.m', 2.015)]"]
+2026-10-26 05:13:59,149 INFO [164/1146] 86cbcef91a02c570 linear torch_scaled_mm_fp8_pt graph N=14336 cold -> contaminated median 69.79 us 843.3 GB/s reasons=["foreign_cpu 2.30 cores > 2 top=[('hanvithasaraswathi.m', 2.249)]", "foreign_cpu 2.64 cores > 2 top=[('hanvithasaraswathi.m', 2.643)]"]
+2026-10-26 05:14:04,911 INFO [164/1146] 86cbcef91a02c570 linear torch_scaled_mm_fp8_pt graph N=14336 cold -> contaminated median 69.80 us 843.2 GB/s reasons=["foreign_cpu 2.28 cores > 2 top=[('hanvithasaraswathi.m', 2.246)]", "foreign_cpu 2.43 cores > 2 top=[('hanvithasaraswathi.m', 2.35)]"]
+2026-10-26 05:14:10,657 INFO [164/1146] 86cbcef91a02c570 linear torch_scaled_mm_fp8_pt graph N=14336 cold -> contaminated median 69.79 us 843.2 GB/s reasons=["foreign_cpu 3.91 cores > 2 top=[('hanvithasaraswathi.m', 3.911)]"]
+2026-10-26 05:14:16,412 INFO [164/1146] 86cbcef91a02c570 linear torch_scaled_mm_fp8_pt graph N=14336 cold -> unclean_exhausted median 69.79 us 843.2 GB/s reasons=["foreign_cpu 2.59 cores > 2 top=[('hanvithasaraswathi.m', 2.522)]", "foreign_cpu 2.22 cores > 2 top=[('hanvithasaraswathi.m', 2.141)]"]
+2026-10-26 05:14:21,956 INFO [165/1146] 11ccf099f117ca9f linear torch_scaled_mm_fp8_pt_full graph N=18944 cold -> clean median 88.27 us 770.2 GB/s
+2026-10-26 05:14:27,598 INFO [166/1146] fa0053014199e345 linear torch_scaled_mm_fp8_pt graph N=4096 cold -> contaminated median 21.05 us 801.5 GB/s reasons=["foreign_cpu 2.10 cores > 2 top=[('hanvithasaraswathi.m', 2.0690000000000004)]", "foreign_cpu 2.36 cores > 2 top=[('hanvithasaraswathi.m', 2.27)]"]
+2026-10-26 05:14:29,789 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 05:15:05,631 INFO [166/1146] fa0053014199e345 linear torch_scaled_mm_fp8_pt graph N=4096 cold -> contaminated median 21.04 us 801.9 GB/s reasons=["foreign_cpu 2.30 cores > 2 top=[('hanvithasaraswathi.m', 2.2110000000000003)]", "foreign_cpu 2.25 cores > 2 top=[('hanvithasaraswathi.m', 2.191)]"]
+2026-10-26 05:15:07,833 INFO waiting 30s: foreign_cpu 2.01 cores >= 2 top=[('hanvithasaraswathi.m', 1.936)]
+2026-10-26 05:15:43,673 INFO [166/1146] fa0053014199e345 linear torch_scaled_mm_fp8_pt graph N=4096 cold -> contaminated median 21.03 us 802.3 GB/s reasons=["foreign_cpu 2.08 cores > 2 top=[('hanvithasaraswathi.m', 2.015)]"]
+2026-10-26 05:15:49,438 INFO [166/1146] fa0053014199e345 linear torch_scaled_mm_fp8_pt graph N=4096 cold -> contaminated median 21.04 us 802.1 GB/s reasons=["foreign_cpu 2.56 cores > 2 top=[('hanvithasaraswathi.m', 2.4050000000000002), ('root', 0.15)]"]
+2026-10-26 05:15:55,212 INFO [166/1146] fa0053014199e345 linear torch_scaled_mm_fp8_pt graph N=4096 cold -> contaminated median 21.04 us 802.1 GB/s reasons=["foreign_cpu 2.64 cores > 2 top=[('hanvithasaraswathi.m', 2.591)]", "foreign_cpu 2.09 cores > 2 top=[('hanvithasaraswathi.m', 2.012)]"]
+2026-10-26 05:16:00,846 INFO [166/1146] fa0053014199e345 linear torch_scaled_mm_fp8_pt graph N=4096 cold -> clean median 21.04 us 802.0 GB/s
+2026-10-26 05:16:05,355 INFO [167/1146] bd2b81fb15e2fa45 linear marlin_int4_g128 isolated N=3584 cold -> clean median 49.70 us 133.6 GB/s
+2026-10-26 05:16:11,081 INFO [168/1146] 797d1e62859600f8 linear vllm_cutlass_fp8_rw_full graph N=6144 cold -> contaminated median 32.99 us 764.8 GB/s reasons=["foreign_cpu 2.23 cores > 2 top=[('hanvithasaraswathi.m', 2.209)]", "foreign_cpu 2.12 cores > 2 top=[('hanvithasaraswathi.m', 2.055)]"]
+2026-10-26 05:16:16,873 INFO [168/1146] 797d1e62859600f8 linear vllm_cutlass_fp8_rw_full graph N=6144 cold -> clean median 32.97 us 765.2 GB/s
+2026-10-26 05:16:22,660 INFO [169/1146] bd62246f07e0826a linear marlin_int4_g128 eager N=19712 cold -> contaminated median 170.37 us 855.7 GB/s reasons=["foreign_cpu 2.18 cores > 2 top=[('hanvithasaraswathi.m', 2.113)]", "foreign_cpu 2.50 cores > 2 top=[('hanvithasaraswathi.m', 2.402)]", "foreign_cpu 2.42 cores > 2 top=[('hanvithasaraswathi.m', 2.2729999999999997), ('root', 0.152)]"]
+2026-10-26 05:16:28,460 INFO [169/1146] bd62246f07e0826a linear marlin_int4_g128 eager N=19712 cold -> contaminated median 170.43 us 855.4 GB/s reasons=["foreign_cpu 2.58 cores > 2 top=[('hanvithasaraswathi.m', 2.547)]", "foreign_cpu 2.06 cores > 2 top=[('hanvithasaraswathi.m', 2.0)]"]
+2026-10-26 05:16:30,653 INFO waiting 30s: foreign_cpu 2.48 cores >= 2 top=[('hanvithasaraswathi.m', 2.043), ('prometheus', 0.301)]
+2026-10-26 05:17:06,537 INFO [169/1146] bd62246f07e0826a linear marlin_int4_g128 eager N=19712 cold -> contaminated median 170.36 us 855.7 GB/s reasons=["foreign_cpu 3.30 cores > 2 top=[('hanvithasaraswathi.m', 3.141), ('root', 0.157)]"]
+2026-10-26 05:17:08,733 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 05:17:44,566 INFO [169/1146] bd62246f07e0826a linear marlin_int4_g128 eager N=19712 cold -> contaminated median 170.31 us 856.0 GB/s reasons=["foreign_cpu 2.60 cores > 2 top=[('hanvithasaraswathi.m', 2.442), ('root', 0.153)]"]
+2026-10-26 05:17:50,528 INFO [169/1146] bd62246f07e0826a linear marlin_int4_g128 eager N=19712 cold -> contaminated median 170.33 us 855.9 GB/s reasons=["foreign_cpu 2.37 cores > 2 top=[('hanvithasaraswathi.m', 2.309)]", "foreign_cpu 2.04 cores > 2 top=[('hanvithasaraswathi.m', 2.011)]"]
+2026-10-26 05:17:56,312 INFO [169/1146] bd62246f07e0826a linear marlin_int4_g128 eager N=19712 cold -> clean median 170.35 us 855.8 GB/s
+2026-10-26 05:18:01,888 INFO [170/1146] 0cb5a6f080503ece linear vllm_cutlass_fp8_rw_full graph N=28672 cold -> contaminated median 151.85 us 775.9 GB/s reasons=["foreign_cpu 3.67 cores > 2 top=[('hanvithasaraswathi.m', 2.448), ('prometheus', 1.0090000000000001), ('root', 0.11199999999999999)]", "foreign_cpu 2.49 cores > 2 top=[('hanvithasaraswathi.m', 2.008), ('prometheus', 0.23), ('root', 0.063)]"]
+2026-10-26 05:18:07,461 INFO [170/1146] 0cb5a6f080503ece linear vllm_cutlass_fp8_rw_full graph N=28672 cold -> contaminated median 151.92 us 775.5 GB/s reasons=["foreign_cpu 2.07 cores > 2 top=[('hanvithasaraswathi.m', 1.99)]"]
+2026-10-26 05:18:13,030 INFO [170/1146] 0cb5a6f080503ece linear vllm_cutlass_fp8_rw_full graph N=28672 cold -> clean median 151.98 us 775.2 GB/s
+2026-10-26 05:18:18,671 INFO [171/1146] a8976bd3fd62aa0a linear vllm_cutlass_fp8_rw_full graph N=28672 cold -> contaminated median 155.18 us 764.3 GB/s reasons=["foreign_cpu 2.85 cores > 2 top=[('hanvithasaraswathi.m', 2.799)]"]
+2026-10-26 05:18:24,267 INFO [171/1146] a8976bd3fd62aa0a linear vllm_cutlass_fp8_rw_full graph N=28672 cold -> contaminated median 154.91 us 765.6 GB/s reasons=["foreign_cpu 2.09 cores > 2 top=[('hanvithasaraswathi.m', 1.984)]"]
+2026-10-26 05:18:29,940 INFO [171/1146] a8976bd3fd62aa0a linear vllm_cutlass_fp8_rw_full graph N=28672 cold -> contaminated median 155.13 us 764.5 GB/s reasons=["foreign_cpu 2.17 cores > 2 top=[('hanvithasaraswathi.m', 2.0949999999999998)]", "foreign_cpu 2.18 cores > 2 top=[('hanvithasaraswathi.m', 2.1239999999999997)]"]
+2026-10-26 05:18:35,557 INFO [171/1146] a8976bd3fd62aa0a linear vllm_cutlass_fp8_rw_full graph N=28672 cold -> contaminated median 155.13 us 764.6 GB/s reasons=["foreign_cpu 2.36 cores > 2 top=[('hanvithasaraswathi.m', 2.273)]", "foreign_cpu 2.39 cores > 2 top=[('hanvithasaraswathi.m', 2.346)]"]
+2026-10-26 05:18:37,750 INFO waiting 30s: gpu_util max 9% >= 5%
+2026-10-26 05:19:13,430 INFO [171/1146] a8976bd3fd62aa0a linear vllm_cutlass_fp8_rw_full graph N=28672 cold -> contaminated median 154.63 us 767.0 GB/s reasons=["foreign_cpu 2.30 cores > 2 top=[('hanvithasaraswathi.m', 2.2380000000000004)]"]
+2026-10-26 05:19:19,035 INFO [171/1146] a8976bd3fd62aa0a linear vllm_cutlass_fp8_rw_full graph N=28672 cold -> unclean_exhausted median 154.72 us 766.6 GB/s reasons=["foreign_cpu 2.53 cores > 2 top=[('hanvithasaraswathi.m', 2.451)]", "foreign_cpu 2.04 cores > 2 top=[('hanvithasaraswathi.m', 2.0)]"]
+2026-10-26 05:19:24,766 INFO [172/1146] c7fbf5b0c8adc68b linear torch_scaled_mm_fp8_pt_full graph N=1024 cold -> contaminated median 19.87 us 212.1 GB/s reasons=["foreign_cpu 2.38 cores > 2 top=[('hanvithasaraswathi.m', 2.01), ('root', 0.285)]"]
+2026-10-26 05:19:30,420 INFO [172/1146] c7fbf5b0c8adc68b linear torch_scaled_mm_fp8_pt_full graph N=1024 cold -> clean median 19.87 us 212.1 GB/s
+2026-10-26 05:19:36,215 INFO [173/1146] 46d7a1d7760cd978 linear vllm_cutlass_fp8_rw_full graph N=128256 cold -> contaminated median 623.57 us 844.1 GB/s reasons=["foreign_cpu 2.13 cores > 2 top=[('hanvithasaraswathi.m', 2.07)]", "foreign_cpu 2.07 cores > 2 top=[('hanvithasaraswathi.m', 1.9939999999999998)]"]
+2026-10-26 05:19:41,999 INFO [173/1146] 46d7a1d7760cd978 linear vllm_cutlass_fp8_rw_full graph N=128256 cold -> contaminated median 623.47 us 844.3 GB/s reasons=["foreign_cpu 2.11 cores > 2 top=[('hanvithasaraswathi.m', 2.024)]"]
+2026-10-26 05:19:47,775 INFO [173/1146] 46d7a1d7760cd978 linear vllm_cutlass_fp8_rw_full graph N=128256 cold -> contaminated median 623.48 us 844.3 GB/s reasons=["foreign_cpu 2.64 cores > 2 top=[('hanvithasaraswathi.m', 2.6109999999999998)]", "foreign_cpu 2.24 cores > 2 top=[('hanvithasaraswathi.m', 2.161)]"]
+2026-10-26 05:19:53,550 INFO [173/1146] 46d7a1d7760cd978 linear vllm_cutlass_fp8_rw_full graph N=128256 cold -> contaminated median 623.54 us 844.2 GB/s reasons=["foreign_cpu 2.66 cores > 2 top=[('hanvithasaraswathi.m', 2.629)]", "foreign_cpu 2.00 cores > 2 top=[('hanvithasaraswathi.m', 1.984)]"]
+2026-10-26 05:20:00,574 INFO [173/1146] 46d7a1d7760cd978 linear vllm_cutlass_fp8_rw_full graph N=128256 cold -> contaminated median 623.74 us 843.9 GB/s reasons=["foreign_cpu 2.12 cores > 2 top=[('hanvithasaraswathi.m', 2.061)]", "foreign_cpu 2.09 cores > 2 top=[('hanvithasaraswathi.m', 2.0380000000000003)]", "foreign_cpu 2.15 cores > 2 top=[('hanvithasaraswathi.m', 2.146)]"]
+2026-10-26 05:20:07,598 INFO [173/1146] 46d7a1d7760cd978 linear vllm_cutlass_fp8_rw_full graph N=128256 cold -> clean median 623.58 us 844.1 GB/s
+2026-10-26 05:20:13,398 INFO [174/1146] 25df3253b658f0f5 linear tinygemm_int4_g128 isolated N=3584 cold -> clean median 18.53 us 369.1 GB/s
+2026-10-26 05:20:19,196 INFO [175/1146] b7c73f155c677150 linear vllm_cutlass_fp8_rw graph N=1024 cold -> clean median 8.03 us 535.4 GB/s
+2026-10-26 05:20:23,743 INFO canary ref drift vs previous: -0.09%
+2026-10-26 05:20:23,746 INFO canary reference 824.11 GB/s (cv 0.0002)
+2026-10-26 05:20:29,409 INFO [176/1146] 25ac4b06412bc399 linear tinygemm_int4_g128 isolated N=37888 cold -> contaminated median 90.85 us 795.0 GB/s reasons=["foreign_cpu 2.08 cores > 2 top=[('hanvithasaraswathi.m', 2.012)]"]
+2026-10-26 05:20:31,603 INFO waiting 30s: foreign_cpu 2.05 cores >= 2 top=[('hanvithasaraswathi.m', 1.6709999999999998), ('prometheus', 0.311)]
+2026-10-26 05:21:06,300 INFO [176/1146] 25ac4b06412bc399 linear tinygemm_int4_g128 isolated N=37888 cold -> contaminated median 90.75 us 795.8 GB/s reasons=["foreign_cpu 2.10 cores > 2 top=[('hanvithasaraswathi.m', 2.011)]"]
+2026-10-26 05:21:08,493 INFO waiting 30s: foreign_cpu 2.03 cores >= 2 top=[('hanvithasaraswathi.m', 1.949)]
+2026-10-26 05:21:43,192 INFO [176/1146] 25ac4b06412bc399 linear tinygemm_int4_g128 isolated N=37888 cold -> contaminated median 90.78 us 795.5 GB/s reasons=["foreign_cpu 2.96 cores > 2 top=[('hanvithasaraswathi.m', 2.923)]", "foreign_cpu 2.11 cores > 2 top=[('hanvithasaraswathi.m', 2.112)]"]
+2026-10-26 05:21:47,811 INFO [176/1146] 25ac4b06412bc399 linear tinygemm_int4_g128 isolated N=37888 cold -> contaminated median 90.75 us 795.8 GB/s reasons=["foreign_cpu 2.50 cores > 2 top=[('hanvithasaraswathi.m', 2.452)]", "foreign_cpu 2.03 cores > 2 top=[('hanvithasaraswathi.m', 2.0)]"]
+2026-10-26 05:21:52,428 INFO [176/1146] 25ac4b06412bc399 linear tinygemm_int4_g128 isolated N=37888 cold -> contaminated median 90.85 us 795.0 GB/s reasons=["foreign_cpu 2.35 cores > 2 top=[('hanvithasaraswathi.m', 2.286)]"]
+2026-10-26 05:21:57,046 INFO [176/1146] 25ac4b06412bc399 linear tinygemm_int4_g128 isolated N=37888 cold -> clean median 90.85 us 795.0 GB/s
+2026-10-26 05:22:02,648 INFO [177/1146] 0cd7c1ac9847d90e linear marlin_int4_g128 graph N=4096 cold -> contaminated median 37.41 us 813.2 GB/s reasons=["foreign_cpu 2.18 cores > 2 top=[('prometheus', 1.055), ('hanvithasaraswathi.m', 1.006)]"]
+2026-10-26 05:22:04,841 INFO waiting 30s: gpu_util max 31% >= 5%
+2026-10-26 05:22:40,494 INFO [177/1146] 0cd7c1ac9847d90e linear marlin_int4_g128 graph N=4096 cold -> contaminated median 37.39 us 813.7 GB/s reasons=["foreign_cpu 2.06 cores > 2 top=[('hanvithasaraswathi.m', 1.953)]", "foreign_cpu 2.68 cores > 2 top=[('hanvithasaraswathi.m', 2.638)]"]
+2026-10-26 05:22:46,060 INFO [177/1146] 0cd7c1ac9847d90e linear marlin_int4_g128 graph N=4096 cold -> contaminated median 37.40 us 813.5 GB/s reasons=["foreign_cpu 2.65 cores > 2 top=[('hanvithasaraswathi.m', 2.5970000000000004)]", "foreign_cpu 2.03 cores > 2 top=[('hanvithasaraswathi.m', 1.994)]"]
+2026-10-26 05:22:48,254 INFO waiting 30s: foreign_cpu 2.03 cores >= 2 top=[('hanvithasaraswathi.m', 1.8690000000000002), ('root', 0.066)]
+2026-10-26 05:23:23,907 INFO [177/1146] 0cd7c1ac9847d90e linear marlin_int4_g128 graph N=4096 cold -> contaminated median 37.39 us 813.7 GB/s reasons=["foreign_cpu 2.01 cores > 2 top=[('hanvithasaraswathi.m', 1.6709999999999998), ('root', 0.267)]"]
+2026-10-26 05:23:29,490 INFO [177/1146] 0cd7c1ac9847d90e linear marlin_int4_g128 graph N=4096 cold -> contaminated median 37.40 us 813.6 GB/s reasons=["foreign_cpu 2.64 cores > 2 top=[('hanvithasaraswathi.m', 2.594)]"]
+2026-10-26 05:23:35,054 INFO [177/1146] 0cd7c1ac9847d90e linear marlin_int4_g128 graph N=4096 cold -> unclean_exhausted median 37.40 us 813.6 GB/s reasons=["foreign_cpu 2.31 cores > 2 top=[('hanvithasaraswathi.m', 2.229)]", "foreign_cpu 2.09 cores > 2 top=[('hanvithasaraswathi.m', 2.007)]"]
+2026-10-26 05:23:40,652 INFO [178/1146] 3181268d65076be4 linear tinygemm_int4_g128 graph N=4096 cold -> contaminated median 12.01 us 745.2 GB/s reasons=["foreign_cpu 2.14 cores > 2 top=[('hanvithasaraswathi.m', 2.0140000000000002)]", "foreign_cpu 2.03 cores > 2 top=[('hanvithasaraswathi.m', 2.01)]"]
+2026-10-26 05:23:46,431 INFO [178/1146] 3181268d65076be4 linear tinygemm_int4_g128 graph N=4096 cold -> contaminated median 12.02 us 744.5 GB/s reasons=["foreign_cpu 3.10 cores > 2 top=[('hanvithasaraswathi.m', 3.008)]", "foreign_cpu 2.13 cores > 2 top=[('hanvithasaraswathi.m', 2.004)]"]
+2026-10-26 05:23:51,994 INFO [178/1146] 3181268d65076be4 linear tinygemm_int4_g128 graph N=4096 cold -> contaminated median 12.03 us 743.3 GB/s reasons=["foreign_cpu 2.74 cores > 2 top=[('hanvithasaraswathi.m', 2.7)]", "foreign_cpu 2.05 cores > 2 top=[('hanvithasaraswathi.m', 2.003)]"]
+2026-10-26 05:23:54,186 INFO waiting 30s: foreign_cpu 2.06 cores >= 2 top=[('hanvithasaraswathi.m', 1.818), ('root', 0.13699999999999998)]
+2026-10-26 05:24:29,849 INFO [178/1146] 3181268d65076be4 linear tinygemm_int4_g128 graph N=4096 cold -> contaminated median 12.00 us 745.3 GB/s reasons=["foreign_cpu 2.52 cores > 2 top=[('hanvithasaraswathi.m', 2.146), ('root', 0.337)]"]
+2026-10-26 05:24:32,040 INFO waiting 30s: foreign_cpu 2.16 cores >= 2 top=[('hanvithasaraswathi.m', 1.6629999999999998), ('prometheus', 0.405)]
+2026-10-26 05:25:07,679 INFO [178/1146] 3181268d65076be4 linear tinygemm_int4_g128 graph N=4096 cold -> contaminated median 12.00 us 745.7 GB/s reasons=["foreign_cpu 2.76 cores > 2 top=[('hanvithasaraswathi.m', 2.721)]"]
+2026-10-26 05:25:13,247 INFO [178/1146] 3181268d65076be4 linear tinygemm_int4_g128 graph N=4096 cold -> unclean_exhausted median 12.00 us 745.5 GB/s reasons=["foreign_cpu 2.49 cores > 2 top=[('hanvithasaraswathi.m', 2.46)]", "foreign_cpu 2.10 cores > 2 top=[('hanvithasaraswathi.m', 2.024)]", "foreign_cpu 2.03 cores > 2 top=[('hanvithasaraswathi.m', 1.899)]"]
+2026-10-26 05:25:15,440 INFO waiting 30s: foreign_cpu 2.02 cores >= 2 top=[('hanvithasaraswathi.m', 1.939)]
+2026-10-26 05:25:51,312 INFO [179/1146] fd6bed979f797c0f linear torch_scaled_mm_fp8_pt graph N=69120 cold -> contaminated median 330.59 us 856.8 GB/s reasons=["foreign_cpu 2.55 cores > 2 top=[('hanvithasaraswathi.m', 2.48)]", "foreign_cpu 2.39 cores > 2 top=[('hanvithasaraswathi.m', 2.309)]"]
+2026-10-26 05:25:56,964 INFO [179/1146] fd6bed979f797c0f linear torch_scaled_mm_fp8_pt graph N=69120 cold -> clean median 330.58 us 856.8 GB/s
+2026-10-26 05:26:02,777 INFO [180/1146] 407499eeafda292a linear vllm_cutlass_fp8_rw graph N=4096 cold -> contaminated median 73.32 us 801.4 GB/s reasons=["foreign_cpu 2.64 cores > 2 top=[('hanvithasaraswathi.m', 1.387), ('prometheus', 1.145)]", "foreign_cpu 2.54 cores > 2 top=[('hanvithasaraswathi.m', 2.3680000000000003), ('root', 0.11199999999999999)]", "foreign_cpu 2.09 cores > 2 top=[('hanvithasaraswathi.m', 1.9980000000000002)]"]
+2026-10-26 05:26:08,527 INFO [180/1146] 407499eeafda292a linear vllm_cutlass_fp8_rw graph N=4096 cold -> clean median 73.35 us 801.0 GB/s
+2026-10-26 05:26:13,223 INFO [181/1146] 270770861552d310 linear torch_scaled_mm_fp8_pt isolated N=28672 cold -> clean median 173.20 us 678.4 GB/s
+2026-10-26 05:26:19,282 INFO [182/1146] 29bd24d41beb35b1 linear tinygemm_int4_g128 graph N=512 cold -> contaminated median 4.59 us 213.9 GB/s reasons=["foreign_cpu 2.32 cores > 2 top=[('hanvithasaraswathi.m', 2.222)]", "foreign_cpu 2.08 cores > 2 top=[('hanvithasaraswathi.m', 2.05)]", "foreign_cpu 2.03 cores > 2 top=[('hanvithasaraswathi.m', 2.004)]"]
+2026-10-26 05:26:25,348 INFO [182/1146] 29bd24d41beb35b1 linear tinygemm_int4_g128 graph N=512 cold -> contaminated median 4.60 us 213.9 GB/s reasons=["foreign_cpu 2.10 cores > 2 top=[('hanvithasaraswathi.m', 2.009)]"]
+2026-10-26 05:26:31,374 INFO [182/1146] 29bd24d41beb35b1 linear tinygemm_int4_g128 graph N=512 cold -> contaminated median 4.59 us 213.9 GB/s reasons=["foreign_cpu 2.60 cores > 2 top=[('hanvithasaraswathi.m', 2.5)]", "foreign_cpu 3.72 cores > 2 top=[('hanvithasaraswathi.m', 1.928), ('prometheus', 1.735)]"]
+2026-10-26 05:26:37,380 INFO [182/1146] 29bd24d41beb35b1 linear tinygemm_int4_g128 graph N=512 cold -> clean median 4.59 us 214.0 GB/s
+2026-10-26 05:26:41,989 INFO [183/1146] ae7d21d0eaf6406e linear vllm_cutlass_fp8_rw isolated N=5504 cold -> contaminated median 119.94 us 658.3 GB/s reasons=["foreign_cpu 2.71 cores > 2 top=[('hanvithasaraswathi.m', 2.705)]"]
+2026-10-26 05:26:46,596 INFO [183/1146] ae7d21d0eaf6406e linear vllm_cutlass_fp8_rw isolated N=5504 cold -> contaminated median 119.97 us 658.1 GB/s reasons=["foreign_cpu 2.36 cores > 2 top=[('hanvithasaraswathi.m', 2.297)]", "foreign_cpu 2.10 cores > 2 top=[('hanvithasaraswathi.m', 2.021), ('root', 0.084)]"]
+2026-10-26 05:26:48,789 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 05:27:23,466 INFO [183/1146] ae7d21d0eaf6406e linear vllm_cutlass_fp8_rw isolated N=5504 cold -> contaminated median 119.90 us 658.5 GB/s reasons=["foreign_cpu 2.44 cores > 2 top=[('hanvithasaraswathi.m', 2.407)]", "foreign_cpu 2.06 cores > 2 top=[('hanvithasaraswathi.m', 2.008)]", "foreign_cpu 2.31 cores > 2 top=[('hanvithasaraswathi.m', 2.21), ('root', 0.096)]"]
+2026-10-26 05:27:28,070 INFO [183/1146] ae7d21d0eaf6406e linear vllm_cutlass_fp8_rw isolated N=5504 cold -> contaminated median 119.70 us 659.6 GB/s reasons=["foreign_cpu 2.02 cores > 2 top=[('hanvithasaraswathi.m', 1.983)]"]
+2026-10-26 05:27:32,674 INFO [183/1146] ae7d21d0eaf6406e linear vllm_cutlass_fp8_rw isolated N=5504 cold -> contaminated median 119.82 us 658.9 GB/s reasons=["foreign_cpu 3.03 cores > 2 top=[('hanvithasaraswathi.m', 2.015), ('prometheus', 0.8640000000000001), ('messagebus', 0.051)]"]
+2026-10-26 05:27:37,481 INFO [183/1146] ae7d21d0eaf6406e linear vllm_cutlass_fp8_rw isolated N=5504 cold -> clean median 119.78 us 659.2 GB/s
+2026-10-26 05:27:43,227 INFO [184/1146] 32f95f313555b85f linear torch_scaled_mm_fp8_pt eager N=19712 cold -> clean median 337.61 us 837.2 GB/s
+2026-10-26 05:27:49,243 INFO [185/1146] dde2895a1e3d15fe linear tinygemm_int4_g128 graph N=512 cold -> contaminated median 5.56 us 187.3 GB/s reasons=["foreign_cpu 2.65 cores > 2 top=[('hanvithasaraswathi.m', 2.535)]"]
+2026-10-26 05:27:55,236 INFO [185/1146] dde2895a1e3d15fe linear tinygemm_int4_g128 graph N=512 cold -> contaminated median 5.56 us 187.2 GB/s reasons=["foreign_cpu 2.58 cores > 2 top=[('hanvithasaraswathi.m', 2.513)]"]
+2026-10-26 05:28:01,250 INFO [185/1146] dde2895a1e3d15fe linear tinygemm_int4_g128 graph N=512 cold -> contaminated median 5.56 us 187.2 GB/s reasons=["foreign_cpu 3.19 cores > 2 top=[('hanvithasaraswathi.m', 3.109)]"]
+2026-10-26 05:28:07,263 INFO [185/1146] dde2895a1e3d15fe linear tinygemm_int4_g128 graph N=512 cold -> contaminated median 5.56 us 187.1 GB/s reasons=["foreign_cpu 2.12 cores > 2 top=[('hanvithasaraswathi.m', 2.089)]", "foreign_cpu 2.24 cores > 2 top=[('hanvithasaraswathi.m', 2.158)]"]
+2026-10-26 05:28:13,282 INFO [185/1146] dde2895a1e3d15fe linear tinygemm_int4_g128 graph N=512 cold -> contaminated median 5.56 us 187.2 GB/s reasons=["foreign_cpu 2.60 cores > 2 top=[('hanvithasaraswathi.m', 2.5970000000000004)]"]
+2026-10-26 05:28:19,303 INFO [185/1146] dde2895a1e3d15fe linear tinygemm_int4_g128 graph N=512 cold -> unclean_exhausted median 5.56 us 187.2 GB/s reasons=["foreign_cpu 2.04 cores > 2 top=[('hanvithasaraswathi.m', 1.681), ('root', 0.306)]", "foreign_cpu 2.66 cores > 2 top=[('hanvithasaraswathi.m', 2.6100000000000003)]"]
+2026-10-26 05:28:25,092 INFO [186/1146] 249fa25d0a1800e1 linear tinygemm_int4_g128 graph N=1024 cold -> clean median 5.73 us 392.4 GB/s
+2026-10-26 05:28:29,636 INFO [187/1146] 8555d2c6cebb9879 linear tinygemm_int4_g128 isolated N=5376 cold -> contaminated median 23.09 us 507.5 GB/s reasons=["foreign_cpu 3.07 cores > 2 top=[('hanvithasaraswathi.m', 2.787), ('root', 0.28500000000000003)]"]
+2026-10-26 05:28:31,833 INFO waiting 30s: gpu_util max 28% >= 5%
+2026-10-26 05:29:06,460 INFO [187/1146] 8555d2c6cebb9879 linear tinygemm_int4_g128 isolated N=5376 cold -> contaminated median 23.07 us 507.9 GB/s reasons=["foreign_cpu 2.09 cores > 2 top=[('hanvithasaraswathi.m', 1.9659999999999997)]", "foreign_cpu 2.44 cores > 2 top=[('hanvithasaraswathi.m', 2.4210000000000003)]"]
+2026-10-26 05:29:10,978 INFO [187/1146] 8555d2c6cebb9879 linear tinygemm_int4_g128 isolated N=5376 cold -> contaminated median 23.10 us 507.1 GB/s reasons=["foreign_cpu 2.35 cores > 2 top=[('hanvithasaraswathi.m', 2.314)]"]
+2026-10-26 05:29:15,494 INFO [187/1146] 8555d2c6cebb9879 linear tinygemm_int4_g128 isolated N=5376 cold -> clean median 23.10 us 507.1 GB/s
+2026-10-26 05:29:21,104 INFO [188/1146] cd2521d790d034bc linear vllm_cutlass_fp8_rw_full graph N=3584 cold -> clean median 19.05 us 677.9 GB/s
+2026-10-26 05:29:26,860 INFO [189/1146] c687fc65630b178d linear marlin_int4_g128 graph N=4096 cold -> contaminated median 12.86 us 675.4 GB/s reasons=["foreign_cpu 2.47 cores > 2 top=[('hanvithasaraswathi.m', 2.433)]", "foreign_cpu 2.05 cores > 2 top=[('hanvithasaraswathi.m', 1.985)]", "foreign_cpu 2.17 cores > 2 top=[('hanvithasaraswathi.m', 2.015), ('root', 0.155)]"]
+2026-10-26 05:29:32,635 INFO [189/1146] c687fc65630b178d linear marlin_int4_g128 graph N=4096 cold -> contaminated median 12.87 us 674.5 GB/s reasons=["foreign_cpu 2.32 cores > 2 top=[('hanvithasaraswathi.m', 2.231)]", "foreign_cpu 2.30 cores > 2 top=[('hanvithasaraswathi.m', 1.6039999999999999), ('prometheus', 0.647)]"]
+2026-10-26 05:29:38,618 INFO [189/1146] c687fc65630b178d linear marlin_int4_g128 graph N=4096 cold -> clean median 12.86 us 675.1 GB/s
+2026-10-26 05:29:44,380 INFO [190/1146] 7f427a0b5074bb88 linear tinygemm_int4_g128 graph N=18944 cold -> contaminated median 61.61 us 591.3 GB/s reasons=["foreign_cpu 2.40 cores > 2 top=[('hanvithasaraswathi.m', 2.319)]"]
+2026-10-26 05:29:50,120 INFO [190/1146] 7f427a0b5074bb88 linear tinygemm_int4_g128 graph N=18944 cold -> contaminated median 61.14 us 595.8 GB/s reasons=["foreign_cpu 2.98 cores > 2 top=[('hanvithasaraswathi.m', 2.89)]", "foreign_cpu 2.25 cores > 2 top=[('hanvithasaraswathi.m', 2.215)]"]
+2026-10-26 05:29:55,858 INFO [190/1146] 7f427a0b5074bb88 linear tinygemm_int4_g128 graph N=18944 cold -> contaminated median 61.63 us 591.1 GB/s reasons=["foreign_cpu 2.17 cores > 2 top=[('hanvithasaraswathi.m', 2.173)]"]
+2026-10-26 05:29:58,048 INFO waiting 30s: gpu_util max 11% >= 5%
+2026-10-26 05:30:33,861 INFO [190/1146] 7f427a0b5074bb88 linear tinygemm_int4_g128 graph N=18944 cold -> contaminated median 60.33 us 603.9 GB/s reasons=["foreign_cpu 2.68 cores > 2 top=[('hanvithasaraswathi.m', 2.6450000000000005)]", "foreign_cpu 2.02 cores > 2 top=[('hanvithasaraswathi.m', 2.017)]"]
+2026-10-26 05:30:36,055 INFO waiting 30s: gpu_util max 14% >= 5%
+2026-10-26 05:31:11,898 INFO [190/1146] 7f427a0b5074bb88 linear tinygemm_int4_g128 graph N=18944 cold -> contaminated median 60.97 us 597.5 GB/s reasons=["foreign_cpu 2.87 cores > 2 top=[('hanvithasaraswathi.m', 2.851)]", "foreign_cpu 2.08 cores > 2 top=[('hanvithasaraswathi.m', 2.0010000000000003)]"]
+2026-10-26 05:31:17,778 INFO [190/1146] 7f427a0b5074bb88 linear tinygemm_int4_g128 graph N=18944 cold -> unclean_exhausted median 59.54 us 611.8 GB/s reasons=["foreign_cpu 2.03 cores > 2 top=[('hanvithasaraswathi.m', 1.9480000000000002)]"]
+2026-10-26 05:31:23,350 INFO [191/1146] 7f6104ec836d91a2 linear torch_scaled_mm_fp8_pt_full graph N=3584 cold -> contaminated median 109.10 us 628.9 GB/s reasons=["foreign_cpu 2.66 cores > 2 top=[('hanvithasaraswathi.m', 2.5780000000000003)]", "foreign_cpu 2.07 cores > 2 top=[('hanvithasaraswathi.m', 2.018)]"]
+2026-10-26 05:31:28,914 INFO [191/1146] 7f6104ec836d91a2 linear torch_scaled_mm_fp8_pt_full graph N=3584 cold -> clean median 109.13 us 628.8 GB/s
+2026-10-26 05:31:34,676 INFO [192/1146] 69028a8b0a8583d9 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> contaminated median 77.44 us 759.0 GB/s reasons=["foreign_cpu 3.04 cores > 2 top=[('hanvithasaraswathi.m', 2.991)]", "foreign_cpu 2.07 cores > 2 top=[('hanvithasaraswathi.m', 2.008)]"]
+2026-10-26 05:31:40,204 INFO [192/1146] 69028a8b0a8583d9 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> contaminated median 77.44 us 759.0 GB/s reasons=["foreign_cpu 2.36 cores > 2 top=[('hanvithasaraswathi.m', 2.343)]", "foreign_cpu 2.07 cores > 2 top=[('hanvithasaraswathi.m', 2.0170000000000003)]"]
+2026-10-26 05:31:45,753 INFO [192/1146] 69028a8b0a8583d9 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> clean median 77.43 us 759.1 GB/s
+2026-10-26 05:31:51,476 INFO [193/1146] b606d0c4cbe8d132 linear torch_scaled_mm_fp8_pt graph N=512 cold -> contaminated median 9.45 us 202.0 GB/s reasons=["foreign_cpu 2.96 cores > 2 top=[('hanvithasaraswathi.m', 2.873)]", "foreign_cpu 2.45 cores > 2 top=[('hanvithasaraswathi.m', 2.02), ('root', 0.32099999999999995), ('saket.vempaty', 0.11199999999999999)]"]
+2026-10-26 05:31:57,209 INFO [193/1146] b606d0c4cbe8d132 linear torch_scaled_mm_fp8_pt graph N=512 cold -> contaminated median 9.45 us 201.9 GB/s reasons=["foreign_cpu 2.27 cores > 2 top=[('hanvithasaraswathi.m', 2.201)]"]
+2026-10-26 05:32:02,933 INFO [193/1146] b606d0c4cbe8d132 linear torch_scaled_mm_fp8_pt graph N=512 cold -> contaminated median 9.45 us 202.1 GB/s reasons=["foreign_cpu 2.18 cores > 2 top=[('hanvithasaraswathi.m', 2.083)]", "foreign_cpu 2.74 cores > 2 top=[('hanvithasaraswathi.m', 1.495), ('prometheus', 1.101)]"]
+2026-10-26 05:32:08,642 INFO [193/1146] b606d0c4cbe8d132 linear torch_scaled_mm_fp8_pt graph N=512 cold -> contaminated median 9.45 us 201.9 GB/s reasons=["foreign_cpu 3.17 cores > 2 top=[('hanvithasaraswathi.m', 2.682), ('root', 0.44)]"]
+2026-10-26 05:32:14,403 INFO [193/1146] b606d0c4cbe8d132 linear torch_scaled_mm_fp8_pt graph N=512 cold -> contaminated median 9.44 us 202.1 GB/s reasons=["foreign_cpu 2.39 cores > 2 top=[('hanvithasaraswathi.m', 2.344)]", "foreign_cpu 2.11 cores > 2 top=[('hanvithasaraswathi.m', 2.013)]"]
+2026-10-26 05:32:20,131 INFO [193/1146] b606d0c4cbe8d132 linear torch_scaled_mm_fp8_pt graph N=512 cold -> unclean_exhausted median 9.45 us 201.9 GB/s reasons=["foreign_cpu 3.12 cores > 2 top=[('hanvithasaraswathi.m', 3.125)]"]
+2026-10-26 05:32:25,911 INFO [194/1146] 4115b5a110acceae linear tinygemm_int4_g128 graph N=1024 cold -> contaminated median 5.83 us 389.6 GB/s reasons=["foreign_cpu 2.69 cores > 2 top=[('hanvithasaraswathi.m', 2.591)]", "foreign_cpu 2.10 cores > 2 top=[('hanvithasaraswathi.m', 2.018)]"]
+2026-10-26 05:32:31,894 INFO [194/1146] 4115b5a110acceae linear tinygemm_int4_g128 graph N=1024 cold -> contaminated median 5.84 us 388.4 GB/s reasons=["foreign_cpu 2.76 cores > 2 top=[('prometheus', 1.5119999999999998), ('hanvithasaraswathi.m', 1.003)]", "foreign_cpu 2.67 cores > 2 top=[('hanvithasaraswathi.m', 2.308), ('root', 0.363)]"]
+2026-10-26 05:32:37,885 INFO [194/1146] 4115b5a110acceae linear tinygemm_int4_g128 graph N=1024 cold -> contaminated median 5.84 us 388.4 GB/s reasons=["foreign_cpu 2.38 cores > 2 top=[('hanvithasaraswathi.m', 2.319)]"]
+2026-10-26 05:32:43,846 INFO [194/1146] 4115b5a110acceae linear tinygemm_int4_g128 graph N=1024 cold -> contaminated median 5.85 us 387.9 GB/s reasons=["foreign_cpu 2.13 cores > 2 top=[('hanvithasaraswathi.m', 1.965), ('root', 0.11900000000000001)]"]
+2026-10-26 05:32:50,876 INFO [194/1146] 4115b5a110acceae linear tinygemm_int4_g128 graph N=1024 cold -> contaminated median 5.86 us 387.4 GB/s reasons=["foreign_cpu 2.64 cores > 2 top=[('hanvithasaraswathi.m', 2.6060000000000003)]", "foreign_cpu 2.41 cores > 2 top=[('hanvithasaraswathi.m', 2.314)]"]
+2026-10-26 05:32:53,248 INFO waiting 30s: foreign_cpu 2.04 cores >= 2 top=[('hanvithasaraswathi.m', 1.961)]
+2026-10-26 05:33:29,102 INFO [194/1146] 4115b5a110acceae linear tinygemm_int4_g128 graph N=1024 cold -> unclean_exhausted median 5.81 us 390.6 GB/s reasons=["foreign_cpu 2.01 cores > 2 top=[('hanvithasaraswathi.m', 1.904)]"]
+2026-10-26 05:33:34,834 INFO [195/1146] 9f5a4ddb6988e0fb linear vllm_cutlass_fp8_rw_full graph N=14336 cold -> contaminated median 79.09 us 744.1 GB/s reasons=["foreign_cpu 2.44 cores > 2 top=[('hanvithasaraswathi.m', 2.406)]", "foreign_cpu 2.08 cores > 2 top=[('hanvithasaraswathi.m', 2.0140000000000002)]", "foreign_cpu 2.14 cores > 2 top=[('hanvithasaraswathi.m', 2.144)]"]
+2026-10-26 05:33:37,025 INFO waiting 30s: gpu_util max 31% >= 5%
+2026-10-26 05:34:12,874 INFO [195/1146] 9f5a4ddb6988e0fb linear vllm_cutlass_fp8_rw_full graph N=14336 cold -> contaminated median 79.12 us 743.9 GB/s reasons=["foreign_cpu 2.62 cores > 2 top=[('hanvithasaraswathi.m', 2.558)]", "foreign_cpu 2.27 cores > 2 top=[('hanvithasaraswathi.m', 2.173)]", "foreign_cpu 2.13 cores > 2 top=[('hanvithasaraswathi.m', 2.1310000000000002)]"]
+2026-10-26 05:34:15,064 INFO waiting 30s: gpu_util max 10% >= 5%
+2026-10-26 05:34:50,853 INFO [195/1146] 9f5a4ddb6988e0fb linear vllm_cutlass_fp8_rw_full graph N=14336 cold -> contaminated median 79.14 us 743.6 GB/s reasons=["foreign_cpu 2.46 cores > 2 top=[('hanvithasaraswathi.m', 2.388)]", "foreign_cpu 2.08 cores > 2 top=[('hanvithasaraswathi.m', 2.0170000000000003)]"]
+2026-10-26 05:34:53,045 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 05:35:28,768 INFO [195/1146] 9f5a4ddb6988e0fb linear vllm_cutlass_fp8_rw_full graph N=14336 cold -> contaminated median 79.11 us 744.0 GB/s reasons=["foreign_cpu 2.53 cores > 2 top=[('hanvithasaraswathi.m', 2.4589999999999996)]"]
+2026-10-26 05:35:34,534 INFO [195/1146] 9f5a4ddb6988e0fb linear vllm_cutlass_fp8_rw_full graph N=14336 cold -> contaminated median 79.15 us 743.6 GB/s reasons=["foreign_cpu 2.57 cores > 2 top=[('hanvithasaraswathi.m', 2.481)]", "foreign_cpu 2.30 cores > 2 top=[('hanvithasaraswathi.m', 2.25)]"]
+2026-10-26 05:35:40,194 INFO [195/1146] 9f5a4ddb6988e0fb linear vllm_cutlass_fp8_rw_full graph N=14336 cold -> clean median 79.12 us 743.8 GB/s
+2026-10-26 05:35:46,717 INFO [196/1146] 191c3d815a416e48 linear torch_scaled_mm_fp8_pt eager N=64 cold -> contaminated median 21.70 us 12.3 GB/s reasons=["foreign_cpu 2.78 cores > 2 top=[('hanvithasaraswathi.m', 2.684)]", "foreign_cpu 2.13 cores > 2 top=[('hanvithasaraswathi.m', 1.9820000000000002)]"]
+2026-10-26 05:35:53,220 INFO [196/1146] 191c3d815a416e48 linear torch_scaled_mm_fp8_pt eager N=64 cold -> clean median 21.64 us 12.3 GB/s
+2026-10-26 05:35:55,427 INFO waiting 30s: foreign_cpu 2.43 cores >= 2 top=[('hanvithasaraswathi.m', 1.356), ('root', 0.995)]
+2026-10-26 05:36:31,103 INFO [197/1146] 6e828de78550c053 linear torch_scaled_mm_fp8_pt graph N=28672 cold -> contaminated median 145.66 us 807.9 GB/s reasons=["foreign_cpu 2.64 cores > 2 top=[('hanvithasaraswathi.m', 2.579)]", "foreign_cpu 2.06 cores > 2 top=[('hanvithasaraswathi.m', 1.9980000000000002)]"]
+2026-10-26 05:36:36,709 INFO [197/1146] 6e828de78550c053 linear torch_scaled_mm_fp8_pt graph N=28672 cold -> contaminated median 145.71 us 807.7 GB/s reasons=["foreign_cpu 2.46 cores > 2 top=[('hanvithasaraswathi.m', 2.372)]", "foreign_cpu 2.07 cores > 2 top=[('hanvithasaraswathi.m', 2.02)]"]
+2026-10-26 05:36:42,288 INFO [197/1146] 6e828de78550c053 linear torch_scaled_mm_fp8_pt graph N=28672 cold -> clean median 145.73 us 807.6 GB/s
+2026-10-26 05:36:46,749 INFO [198/1146] 00d318a10db9f79d linear tinygemm_int4_g128 isolated N=10112 cold -> clean median 34.40 us 640.5 GB/s
+2026-10-26 05:36:52,430 INFO [199/1146] 406931713d530ff8 linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> contaminated median 30.31 us 555.7 GB/s reasons=["foreign_cpu 2.13 cores > 2 top=[('hanvithasaraswathi.m', 2.098)]"]
+2026-10-26 05:36:58,103 INFO [199/1146] 406931713d530ff8 linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> contaminated median 30.31 us 555.6 GB/s reasons=["foreign_cpu 2.40 cores > 2 top=[('hanvithasaraswathi.m', 2.33)]"]
+2026-10-26 05:37:03,759 INFO [199/1146] 406931713d530ff8 linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> contaminated median 30.31 us 555.7 GB/s reasons=["foreign_cpu 2.25 cores > 2 top=[('hanvithasaraswathi.m', 2.1790000000000003)]"]
+2026-10-26 05:37:09,399 INFO [199/1146] 406931713d530ff8 linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> contaminated median 30.31 us 555.7 GB/s reasons=["foreign_cpu 2.29 cores > 2 top=[('hanvithasaraswathi.m', 2.2399999999999998)]", "foreign_cpu 2.01 cores > 2 top=[('hanvithasaraswathi.m', 1.8940000000000001)]"]
+2026-10-26 05:37:15,115 INFO [199/1146] 406931713d530ff8 linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> clean median 30.02 us 561.1 GB/s
+2026-10-26 05:37:19,632 INFO [200/1146] b08ee679b61413b6 linear marlin_int4_g128 isolated N=6144 cold -> clean median 50.03 us 259.8 GB/s
+2026-10-26 05:37:25,426 INFO [201/1146] 705740a384b60f4c linear marlin_int4_g128 graph N=1536 cold -> contaminated median 8.82 us 369.1 GB/s reasons=["foreign_cpu 2.33 cores > 2 top=[('hanvithasaraswathi.m', 2.23)]", "foreign_cpu 2.02 cores > 2 top=[('hanvithasaraswathi.m', 1.988)]"]
+2026-10-26 05:37:31,094 INFO [201/1146] 705740a384b60f4c linear marlin_int4_g128 graph N=1536 cold -> clean median 8.82 us 369.1 GB/s
+2026-10-26 05:37:35,639 INFO [202/1146] 7ea203ac1777d8d2 linear torch_scaled_mm_fp8_pt isolated N=14336 cold -> contaminated median 98.10 us 598.9 GB/s reasons=["foreign_cpu 2.06 cores > 2 top=[('hanvithasaraswathi.m', 2.065)]"]
+2026-10-26 05:37:40,203 INFO [202/1146] 7ea203ac1777d8d2 linear torch_scaled_mm_fp8_pt isolated N=14336 cold -> contaminated median 97.92 us 600.0 GB/s reasons=["foreign_cpu 2.80 cores > 2 top=[('hanvithasaraswathi.m', 2.7960000000000003)]"]
+2026-10-26 05:37:44,767 INFO [202/1146] 7ea203ac1777d8d2 linear torch_scaled_mm_fp8_pt isolated N=14336 cold -> contaminated median 98.02 us 599.4 GB/s reasons=["foreign_cpu 2.83 cores > 2 top=[('hanvithasaraswathi.m', 2.755)]"]
+2026-10-26 05:37:49,327 INFO [202/1146] 7ea203ac1777d8d2 linear torch_scaled_mm_fp8_pt isolated N=14336 cold -> contaminated median 97.97 us 599.7 GB/s reasons=["foreign_cpu 2.34 cores > 2 top=[('hanvithasaraswathi.m', 2.3040000000000003)]"]
+2026-10-26 05:37:53,871 INFO [202/1146] 7ea203ac1777d8d2 linear torch_scaled_mm_fp8_pt isolated N=14336 cold -> contaminated median 98.02 us 599.4 GB/s reasons=["foreign_cpu 2.53 cores > 2 top=[('hanvithasaraswathi.m', 2.498)]", "foreign_cpu 2.36 cores > 2 top=[('hanvithasaraswathi.m', 2.2960000000000003)]"]
+2026-10-26 05:37:59,660 INFO [202/1146] 7ea203ac1777d8d2 linear torch_scaled_mm_fp8_pt isolated N=14336 cold -> clean median 97.92 us 600.0 GB/s
+2026-10-26 05:38:01,853 INFO waiting 30s: foreign_cpu 2.31 cores >= 2 top=[('hanvithasaraswathi.m', 1.888), ('prometheus', 0.32)]
+2026-10-26 05:38:37,502 INFO [203/1146] 115ff2ad90268c87 linear torch_scaled_mm_fp8_pt graph N=36480 cold -> clean median 177.04 us 844.5 GB/s
+2026-10-26 05:38:43,101 INFO [204/1146] ee13567f1f290127 linear torch_scaled_mm_fp8_pt_full graph N=3584 cold -> contaminated median 106.27 us 639.7 GB/s reasons=["foreign_cpu 2.95 cores > 2 top=[('hanvithasaraswathi.m', 2.899)]", "foreign_cpu 2.12 cores > 2 top=[('hanvithasaraswathi.m', 2.0500000000000003)]"]
+2026-10-26 05:38:48,684 INFO [204/1146] ee13567f1f290127 linear torch_scaled_mm_fp8_pt_full graph N=3584 cold -> contaminated median 106.25 us 639.9 GB/s reasons=["foreign_cpu 2.04 cores > 2 top=[('hanvithasaraswathi.m', 1.968)]", "foreign_cpu 2.04 cores > 2 top=[('hanvithasaraswathi.m', 2.006)]"]
+2026-10-26 05:38:54,272 INFO [204/1146] ee13567f1f290127 linear torch_scaled_mm_fp8_pt_full graph N=3584 cold -> clean median 106.25 us 639.9 GB/s
+2026-10-26 05:38:59,871 INFO [205/1146] b927a8b842d6b37e linear marlin_int4_g128 graph N=6144 cold -> contaminated median 18.86 us 705.3 GB/s reasons=["foreign_cpu 2.71 cores > 2 top=[('hanvithasaraswathi.m', 2.617)]"]
+2026-10-26 05:39:02,064 INFO waiting 30s: gpu_util max 8% >= 5%; foreign_cpu 2.03 cores >= 2 top=[('hanvithasaraswathi.m', 1.61), ('prometheus', 0.344)]
+2026-10-26 05:39:37,718 INFO [205/1146] b927a8b842d6b37e linear marlin_int4_g128 graph N=6144 cold -> contaminated median 18.82 us 706.9 GB/s reasons=["foreign_cpu 2.15 cores > 2 top=[('hanvithasaraswathi.m', 2.011)]"]
+2026-10-26 05:39:43,299 INFO [205/1146] b927a8b842d6b37e linear marlin_int4_g128 graph N=6144 cold -> contaminated median 18.83 us 706.4 GB/s reasons=["foreign_cpu 2.42 cores > 2 top=[('hanvithasaraswathi.m', 2.376)]"]
+2026-10-26 05:39:48,895 INFO [205/1146] b927a8b842d6b37e linear marlin_int4_g128 graph N=6144 cold -> clean median 18.84 us 706.2 GB/s
+2026-10-26 05:39:51,088 INFO waiting 30s: gpu_util max 16% >= 5%
+2026-10-26 05:40:26,716 INFO [206/1146] e420ebf1e997172f linear tinygemm_int4_g128 eager N=1536 cold -> clean median 17.04 us 688.6 GB/s
+2026-10-26 05:40:32,260 INFO [207/1146] 8cd5e265e8b0213b linear torch_scaled_mm_fp8_pt eager N=4096 cold -> contaminated median 21.83 us 769.2 GB/s reasons=["foreign_cpu 2.15 cores > 2 top=[('hanvithasaraswathi.m', 1.024), ('prometheus', 0.9590000000000001)]"]
+2026-10-26 05:40:37,797 INFO [207/1146] 8cd5e265e8b0213b linear torch_scaled_mm_fp8_pt eager N=4096 cold -> clean median 21.83 us 769.2 GB/s
+2026-10-26 05:40:43,335 INFO [208/1146] 64732477f4e5e70b linear vllm_cutlass_fp8_rw eager N=3584 cold -> clean median 20.52 us 627.1 GB/s
+2026-10-26 05:40:48,900 INFO [209/1146] dc7c50831a975bdf linear torch_scaled_mm_fp8_pt eager N=768 cold -> clean median 21.54 us 512.0 GB/s
+2026-10-26 05:40:51,094 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 05:41:26,867 INFO [210/1146] 66af3e6dcb705682 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> clean median 23.51 us 715.0 GB/s
+2026-10-26 05:41:29,062 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 05:42:04,688 INFO [211/1146] 4f761c0a170c45f7 linear vllm_cutlass_fp8_rw_full eager N=1024 cold -> clean median 35.46 us 118.7 GB/s
+2026-10-26 05:42:09,238 INFO [212/1146] 7143cc02c311ba8e linear marlin_int4_g128 isolated N=1536 cold -> clean median 59.23 us 55.0 GB/s
+2026-10-26 05:42:14,604 INFO [213/1146] 46d5755c0d9e7c48 linear marlin_int4_g128 isolated N=37504 cold -> clean median 350.21 us 791.9 GB/s
+2026-10-26 05:42:19,145 INFO [214/1146] 28222e050da564b8 linear marlin_int4_g128 isolated N=3584 cold -> clean median 75.97 us 461.4 GB/s
+2026-10-26 05:42:25,305 INFO [215/1146] 9776698a2b76b180 linear tinygemm_int4_g128 graph N=128256 cold -> clean median 856.01 us 331.0 GB/s
+2026-10-26 05:42:31,092 INFO [216/1146] 4e2aca31373eba27 linear torch_scaled_mm_fp8_pt graph N=5504 cold -> clean median 90.33 us 873.8 GB/s
+2026-10-26 05:42:36,634 INFO [217/1146] e606ffc04715c27a linear vllm_cutlass_fp8_rw graph N=18944 cold -> clean median 92.99 us 734.5 GB/s
+2026-10-26 05:42:42,188 INFO [218/1146] e650bb4b10424772 linear tinygemm_int4_g128 eager N=4096 cold -> clean median 38.63 us 808.6 GB/s
+2026-10-26 05:42:47,989 INFO [219/1146] 032af46e34de7943 linear torch_scaled_mm_fp8_pt graph N=128256 cold -> clean median 624.41 us 844.7 GB/s
+2026-10-26 05:42:52,501 INFO [220/1146] 33e8ce61edf2e58d linear vllm_cutlass_fp8_rw isolated N=1024 cold -> clean median 35.46 us 118.6 GB/s
+2026-10-26 05:42:58,358 INFO [221/1146] 2bdc2378704298db linear tinygemm_int4_g128 isolated N=64 cold -> clean median 18.78 us 7.9 GB/s
+2026-10-26 05:43:03,927 INFO [222/1146] da5b7f5051aff316 linear vllm_cutlass_fp8_rw graph N=4096 cold -> clean median 73.50 us 801.6 GB/s
+2026-10-26 05:43:06,120 INFO waiting 30s: gpu_util max 12% >= 5%
+2026-10-26 05:43:41,733 INFO [223/1146] 662cdd7baefefbe1 linear torch_scaled_mm_fp8_pt_full graph N=14336 cold -> clean median 79.98 us 736.1 GB/s
+2026-10-26 05:43:46,250 INFO [224/1146] 76b70159dfac33ed linear torch_scaled_mm_fp8_pt isolated N=3584 cold -> clean median 43.25 us 297.3 GB/s
+2026-10-26 05:43:51,833 INFO [225/1146] 8bf7185cdf7bf32e linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> clean median 29.55 us 568.2 GB/s
+2026-10-26 05:43:57,474 INFO [226/1146] b82d86a7db837784 linear torch_scaled_mm_fp8_pt_full graph N=1024 cold -> clean median 19.73 us 213.1 GB/s
+2026-10-26 05:44:02,079 INFO [227/1146] 955b88512b1add9a linear marlin_int4_g128 isolated N=4096 cold -> contaminated median 49.73 us 174.3 GB/s reasons=["foreign_cpu 2.44 cores > 2 top=[('prometheus', 1.345), ('hanvithasaraswathi.m', 1.0090000000000001)]"]
+2026-10-26 05:44:06,589 INFO [227/1146] 955b88512b1add9a linear marlin_int4_g128 isolated N=4096 cold -> clean median 49.89 us 173.7 GB/s
+2026-10-26 05:44:12,119 INFO [228/1146] 65c2ad6d0d9b56e9 linear torch_scaled_mm_fp8_pt_full graph N=14336 cold -> clean median 79.78 us 737.0 GB/s
+2026-10-26 05:44:17,667 INFO [229/1146] cfa84dc4a8431517 linear torch_scaled_mm_fp8_pt_full graph N=18944 cold -> clean median 88.36 us 770.5 GB/s
+2026-10-26 05:44:23,272 INFO [230/1146] aa628083cb26e678 linear tinygemm_int4_g128 graph N=6144 cold -> clean median 17.89 us 751.9 GB/s
+2026-10-26 05:44:28,821 INFO [231/1146] 3696de4d73dda24d linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> clean median 93.08 us 637.2 GB/s
+2026-10-26 05:44:34,661 INFO [232/1146] 3677b484d8c1ac11 linear tinygemm_int4_g128 eager N=512 cold -> clean median 9.39 us 104.7 GB/s
+2026-10-26 05:44:40,195 INFO [233/1146] b7e1803eb8ef1d8d linear vllm_cutlass_fp8_rw eager N=768 cold -> clean median 20.96 us 526.1 GB/s
+2026-10-26 05:44:45,934 INFO [234/1146] 0728728f028ed510 linear vllm_cutlass_fp8_rw_full eager N=128256 cold -> clean median 623.76 us 843.5 GB/s
+2026-10-26 05:44:52,684 INFO [235/1146] 894792df8bc51aed linear torch_scaled_mm_fp8_pt eager N=14336 cold -> clean median 71.88 us 817.3 GB/s
+2026-10-26 05:44:58,697 INFO [236/1146] 10c4084bb32a2e75 linear torch_scaled_mm_fp8_pt graph N=64 cold -> clean median 9.41 us 99.0 GB/s
+2026-10-26 05:45:04,688 INFO [237/1146] c7dc5cca1d0f0922 linear tinygemm_int4_g128 graph N=512 cold -> clean median 7.57 us 146.2 GB/s
+2026-10-26 05:45:10,425 INFO [238/1146] 18139c2bcb5b6eb0 linear marlin_int4_g128 eager N=512 cold -> clean median 37.56 us 25.4 GB/s
+2026-10-26 05:45:16,147 INFO [239/1146] a446467c292b3467 linear vllm_cutlass_fp8_rw graph N=4608 cold -> clean median 21.33 us 776.3 GB/s
+2026-10-26 05:45:22,562 INFO [240/1146] 95373afb9caeb076 linear torch_scaled_mm_fp8_pt isolated N=32 cold -> clean median 42.34 us 3.2 GB/s
+2026-10-26 05:45:28,314 INFO [241/1146] 39c3a2011b7f4e7e linear marlin_int4_g128 graph N=4096 cold -> clean median 12.86 us 674.1 GB/s
+2026-10-26 05:45:33,069 INFO [242/1146] 41caa59f7760d01d linear torch_scaled_mm_fp8_pt_full isolated N=28672 cold -> clean median 207.15 us 567.2 GB/s
+2026-10-26 05:45:37,624 INFO [243/1146] 96fc2123eadc4057 linear vllm_cutlass_fp8_rw isolated N=768 cold -> clean median 35.81 us 88.1 GB/s
+2026-10-26 05:45:43,110 INFO [244/1146] fdc41a3ae0c52fa0 linear torch_scaled_mm_fp8_pt eager N=4096 cold -> clean median 71.63 us 820.1 GB/s
+2026-10-26 05:45:49,017 INFO [245/1146] ef49c879b6ace019 linear torch_scaled_mm_fp8_pt eager N=64 cold -> clean median 21.42 us 43.5 GB/s
+2026-10-26 05:45:54,856 INFO [246/1146] 797eaa9d4642b324 linear vllm_cutlass_fp8_rw graph N=152064 cold -> clean median 650.23 us 842.9 GB/s
+2026-10-26 05:46:01,751 INFO [247/1146] 91cec6e529bdeefa linear tinygemm_int4_g128 graph N=4096 cold -> contaminated median 41.07 us 763.1 GB/s reasons=["foreign_cpu 2.36 cores > 2 top=[('prometheus', 1.263), ('hanvithasaraswathi.m', 0.997)]"]
+2026-10-26 05:46:07,360 INFO [247/1146] 91cec6e529bdeefa linear tinygemm_int4_g128 graph N=4096 cold -> clean median 41.12 us 762.3 GB/s
+2026-10-26 05:46:13,128 INFO [248/1146] 05f047ffe54c8a45 linear vllm_cutlass_fp8_rw_full graph N=128256 cold -> clean median 622.53 us 845.1 GB/s
+2026-10-26 05:46:17,618 INFO [249/1146] 8ac2843e710f10b1 linear tinygemm_int4_g128 isolated N=4096 cold -> clean median 19.44 us 459.3 GB/s
+2026-10-26 05:46:23,244 INFO [250/1146] 07113c24dad948a7 linear tinygemm_int4_g128 graph N=5504 cold -> clean median 54.50 us 769.8 GB/s
+2026-10-26 05:46:28,925 INFO [251/1146] 819019ce9851ae52 linear torch_scaled_mm_fp8_pt_full graph N=3584 cold -> clean median 25.10 us 512.8 GB/s
+2026-10-26 05:46:34,834 INFO [252/1146] ec01aea9a7ec2e76 linear vllm_cutlass_fp8_rw graph N=18944 cold -> clean median 92.32 us 737.2 GB/s
+2026-10-26 05:46:37,029 INFO waiting 30s: gpu_util max 9% >= 5%
+2026-10-26 05:47:12,853 INFO [253/1146] fced37f3d33f82ae linear tinygemm_int4_g128 graph N=18944 cold -> clean median 59.74 us 609.8 GB/s
+2026-10-26 05:47:15,047 INFO waiting 30s: gpu_util max 13% >= 5%
+2026-10-26 05:47:51,036 INFO [254/1146] 8c7abbabcf29758a linear tinygemm_int4_g128 graph N=152064 cold -> clean median 329.60 us 880.3 GB/s
+2026-10-26 05:47:56,697 INFO [255/1146] c0a79651fb37fe91 linear marlin_int4_g128 graph N=28672 cold -> clean median 70.35 us 862.7 GB/s
+2026-10-26 05:48:02,517 INFO [256/1146] a326d23ca24dfd66 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> contaminated median 23.51 us 714.9 GB/s reasons=["foreign_cpu 2.32 cores > 2 top=[('prometheus', 1.216), ('hanvithasaraswathi.m', 1.005)]"]
+2026-10-26 05:48:08,262 INFO [256/1146] a326d23ca24dfd66 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> clean median 23.52 us 714.8 GB/s
+2026-10-26 05:48:13,946 INFO [257/1146] 108903e95ccbcbd2 linear marlin_int4_g128 graph N=10112 cold -> clean median 27.08 us 789.8 GB/s
+2026-10-26 05:48:16,141 INFO waiting 30s: gpu_util max 19% >= 5%
+2026-10-26 05:48:51,943 INFO [258/1146] e74c756ee2c48f32 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> clean median 23.57 us 715.2 GB/s
+2026-10-26 05:48:54,137 INFO waiting 30s: gpu_util max 23% >= 5%
+2026-10-26 05:49:28,800 INFO [259/1146] 08bbe152693512e4 linear tinygemm_int4_g128 isolated N=1024 cold -> clean median 18.34 us 122.1 GB/s
+2026-10-26 05:49:34,356 INFO [260/1146] ad0dd1312aaad678 linear marlin_int4_g128 graph N=19200 cold -> clean median 48.72 us 833.3 GB/s
+2026-10-26 05:49:41,303 INFO [261/1146] b4755d71fcf768e5 linear tinygemm_int4_g128 graph N=64 cold -> clean median 2.89 us 51.0 GB/s
+2026-10-26 05:49:45,931 INFO [262/1146] 4a71b3a2c62cc2c2 linear torch_scaled_mm_fp8_pt_full isolated N=3584 cold -> clean median 142.75 us 475.9 GB/s
+2026-10-26 05:49:53,082 INFO [263/1146] 05f59ad449bff72c linear tinygemm_int4_g128 eager N=256 cold -> clean median 9.38 us 60.3 GB/s
+2026-10-26 05:49:58,699 INFO [264/1146] 7aed0fc6f10fced5 linear torch_scaled_mm_fp8_pt_full graph N=28672 cold -> clean median 154.42 us 763.9 GB/s
+2026-10-26 05:50:04,311 INFO [265/1146] 366bf660165d89a3 linear tinygemm_int4_g128 graph N=36480 cold -> clean median 91.20 us 871.3 GB/s
+2026-10-26 05:50:10,003 INFO [266/1146] 6e386a1b25a0782a linear tinygemm_int4_g128 graph N=4096 cold -> clean median 13.87 us 651.8 GB/s
+2026-10-26 05:50:15,557 INFO [267/1146] a1286a3cbe73e2a3 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> clean median 77.47 us 765.8 GB/s
+2026-10-26 05:50:20,253 INFO [268/1146] 1b2b739e4f6320b3 linear vllm_cutlass_fp8_rw isolated N=256 cold -> clean median 39.39 us 93.6 GB/s
+2026-10-26 05:50:24,792 INFO [269/1146] 9577da19817051ae linear tinygemm_int4_g128 isolated N=5504 cold -> clean median 61.79 us 679.0 GB/s
+2026-10-26 05:50:30,601 INFO [270/1146] 9aece5530a5444b4 linear marlin_int4_g128 graph N=4096 cold -> clean median 12.95 us 678.0 GB/s
+2026-10-26 05:50:36,149 INFO [271/1146] 183f591743a008c4 linear vllm_cutlass_fp8_rw graph N=5504 cold -> clean median 96.99 us 814.0 GB/s
+2026-10-26 05:50:41,791 INFO [272/1146] f53a2247656c2152 linear vllm_cutlass_fp8_rw_full graph N=3584 cold -> clean median 19.01 us 677.9 GB/s
+2026-10-26 05:50:47,637 INFO [273/1146] c29cd93b641033ad linear vllm_cutlass_fp8_rw_full graph N=512 cold -> clean median 8.13 us 234.1 GB/s
+2026-10-26 05:50:53,384 INFO [274/1146] 0f5741dbee77494f linear marlin_int4_g128 graph N=4096 cold -> clean median 12.87 us 673.4 GB/s
+2026-10-26 05:50:59,129 INFO [275/1146] 9c18cf1e4e7424b7 linear vllm_cutlass_fp8_rw_full graph N=4608 cold -> contaminated median 23.24 us 717.1 GB/s reasons=["foreign_cpu 2.06 cores > 2 top=[('hanvithasaraswathi.m', 1.011), ('root', 0.9940000000000001)]"]
+2026-10-26 05:51:04,888 INFO [275/1146] 9c18cf1e4e7424b7 linear vllm_cutlass_fp8_rw_full graph N=4608 cold -> clean median 23.24 us 717.0 GB/s
+2026-10-26 05:51:07,082 INFO waiting 30s: gpu_util max 16% >= 5%
+2026-10-26 05:51:41,700 INFO [276/1146] d786d6449f20ccd7 linear torch_scaled_mm_fp8_pt_full isolated N=1024 cold -> clean median 78.46 us 53.6 GB/s
+2026-10-26 05:51:47,394 INFO [277/1146] 09fb7975c44cc73f linear torch_scaled_mm_fp8_pt eager N=512 cold -> clean median 21.43 us 85.8 GB/s
+2026-10-26 05:51:52,960 INFO [278/1146] 8440f78d8a1ab72f linear torch_scaled_mm_fp8_pt graph N=28672 cold -> clean median 145.21 us 809.2 GB/s
+2026-10-26 05:51:55,152 INFO waiting 30s: gpu_util max 12% >= 5%
+2026-10-26 05:52:31,070 INFO [279/1146] edf9a1f4f6f0086f linear torch_scaled_mm_fp8_pt_full graph N=152064 cold -> clean median 648.30 us 848.3 GB/s
+2026-10-26 05:52:36,603 INFO [280/1146] 150556ee96734cc3 linear torch_scaled_mm_fp8_pt_full graph N=14336 cold -> clean median 79.92 us 736.5 GB/s
+2026-10-26 05:52:42,342 INFO [281/1146] c33c8b72ed8f846b linear torch_scaled_mm_fp8_pt eager N=152064 cold -> clean median 623.26 us 874.9 GB/s
+2026-10-26 05:52:48,123 INFO [282/1146] 92eeb16feb10e451 linear torch_scaled_mm_fp8_pt_full graph N=14336 cold -> clean median 80.09 us 736.8 GB/s
+2026-10-26 05:52:53,714 INFO [283/1146] ec59dc9d6092273d linear tinygemm_int4_g128 eager N=2816 cold -> clean median 9.65 us 636.7 GB/s
+2026-10-26 05:52:58,267 INFO [284/1146] 0513d11398217daa linear marlin_int4_g128 isolated N=10112 cold -> clean median 59.25 us 360.9 GB/s
+2026-10-26 05:53:03,792 INFO [285/1146] 80a14a0b1e7dda4c linear torch_scaled_mm_fp8_pt_full graph N=18944 cold -> clean median 88.47 us 771.5 GB/s
+2026-10-26 05:53:08,510 INFO [286/1146] 654b4a1de4ad0ab0 linear marlin_int4_g128 isolated N=512 cold -> clean median 59.28 us 16.1 GB/s
+2026-10-26 05:53:14,251 INFO [287/1146] 675dc235872b772b linear vllm_cutlass_fp8_rw graph N=18944 cold -> clean median 91.94 us 739.7 GB/s
+2026-10-26 05:53:19,819 INFO [288/1146] 4f764977c0c5868c linear vllm_cutlass_fp8_rw graph N=3584 cold -> clean median 84.07 us 810.3 GB/s
+2026-10-26 05:53:25,493 INFO [289/1146] 7f3072a1386afdc5 linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> clean median 30.32 us 555.5 GB/s
+2026-10-26 05:53:30,009 INFO [290/1146] 9cd0dec7c9ac14b5 linear torch_scaled_mm_fp8_pt isolated N=768 cold -> clean median 46.59 us 236.6 GB/s
+2026-10-26 05:53:35,683 INFO [291/1146] f815bbad0ba77dff linear torch_scaled_mm_fp8_pt_full isolated N=152064 cold -> clean median 687.07 us 793.7 GB/s
+2026-10-26 05:53:41,476 INFO [292/1146] 458b87ffa6e26841 linear marlin_int4_g128 graph N=6144 cold -> clean median 18.08 us 727.0 GB/s
+2026-10-26 05:53:47,150 INFO [293/1146] 7aa7f5ff8407afba linear torch_scaled_mm_fp8_pt graph N=19712 cold -> clean median 335.61 us 842.2 GB/s
+2026-10-26 05:53:52,908 INFO [294/1146] 0fa1844922a20b32 linear torch_scaled_mm_fp8_pt_full graph N=512 cold -> clean median 17.17 us 108.8 GB/s
+2026-10-26 05:53:55,100 INFO waiting 30s: gpu_util max 9% >= 5%
+2026-10-26 05:54:30,788 INFO [295/1146] 84e8e9e275dc03fa linear marlin_int4_g128 graph N=14336 cold -> clean median 37.08 us 817.6 GB/s
+2026-10-26 05:54:36,370 INFO [296/1146] 630b7ee15c8a60a1 linear torch_scaled_mm_fp8_pt graph N=28672 cold -> clean median 145.44 us 814.3 GB/s
+2026-10-26 05:54:40,883 INFO [297/1146] 43317c65092e4883 linear tinygemm_int4_g128 isolated N=1024 cold -> clean median 18.43 us 121.4 GB/s
+2026-10-26 05:54:43,076 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 05:55:18,704 INFO [298/1146] cc211f0d22427636 linear vllm_cutlass_fp8_rw graph N=3584 cold -> clean median 83.98 us 809.9 GB/s
+2026-10-26 05:55:24,231 INFO [299/1146] 7ceb1e8e9e24980f linear vllm_cutlass_fp8_rw_full eager N=28672 cold -> clean median 152.11 us 773.2 GB/s
+2026-10-26 05:55:30,024 INFO [300/1146] 5d1e4e9473f2e2ef linear vllm_cutlass_fp8_rw graph N=3584 cold -> clean median 17.11 us 752.2 GB/s
+2026-10-26 05:55:35,631 INFO [301/1146] 81eca2ee7bdfbc1f linear tinygemm_int4_g128 graph N=28672 cold -> clean median 71.96 us 868.0 GB/s
+2026-10-26 05:55:41,265 INFO [302/1146] a01373d2dd423fe0 linear vllm_cutlass_fp8_rw eager N=512 cold -> clean median 20.62 us 89.3 GB/s
+2026-10-26 05:55:46,863 INFO [303/1146] 37fbe989a82343a7 linear torch_scaled_mm_fp8_pt graph N=3584 cold -> clean median 83.15 us 819.0 GB/s
+2026-10-26 05:55:52,354 INFO [304/1146] b22abe67b86a4925 linear vllm_cutlass_fp8_rw eager N=10112 cold -> clean median 52.71 us 787.1 GB/s
+2026-10-26 05:55:58,117 INFO [305/1146] fe8b9b1ee9c0dbe1 linear marlin_int4_g128 graph N=28672 cold -> clean median 72.30 us 852.1 GB/s
+2026-10-26 05:56:03,879 INFO [306/1146] 016490d8a2555374 linear vllm_cutlass_fp8_rw graph N=18944 cold -> clean median 92.44 us 737.1 GB/s
+2026-10-26 05:56:09,451 INFO [307/1146] b09c4c385e1e5e5f linear marlin_int4_g128 graph N=4096 cold -> clean median 37.35 us 811.6 GB/s
+2026-10-26 05:56:15,381 INFO [308/1146] 5bee4a9c7a755e21 linear tinygemm_int4_g128 graph N=128256 cold -> clean median 316.28 us 883.2 GB/s
+2026-10-26 05:56:21,332 INFO [309/1146] a937f5f62dd6835e linear tinygemm_int4_g128 graph N=128256 cold -> clean median 318.56 us 877.8 GB/s
+2026-10-26 05:56:27,838 INFO [310/1146] 9f75ad349e19f97c linear vllm_cutlass_fp8_rw eager N=64 cold -> clean median 20.70 us 12.9 GB/s
+2026-10-26 05:56:32,381 INFO [311/1146] 59b567ccab4372af linear marlin_int4_g128 isolated N=1024 cold -> contaminated median 59.94 us 36.3 GB/s reasons=["foreign_cpu 2.27 cores > 2 top=[('prometheus', 1.115), ('hanvithasaraswathi.m', 1.013), ('messagebus', 0.051)]"]
+2026-10-26 05:56:36,910 INFO [311/1146] 59b567ccab4372af linear marlin_int4_g128 isolated N=1024 cold -> clean median 59.78 us 36.4 GB/s
+2026-10-26 05:56:42,426 INFO [312/1146] 4b1c7ee7a79b0962 linear marlin_int4_g128 eager N=18944 cold -> clean median 43.18 us 811.7 GB/s
+2026-10-26 05:56:47,998 INFO [313/1146] 1e592350e92bac5d linear torch_scaled_mm_fp8_pt_full graph N=37888 cold -> clean median 168.48 us 809.9 GB/s
+2026-10-26 05:56:55,350 INFO [314/1146] c5d318f4ed315656 linear tinygemm_int4_g128 graph N=152064 cold -> clean median 400.06 us 726.8 GB/s
+2026-10-26 05:57:00,900 INFO [315/1146] 9bd1b48492b93cec linear torch_scaled_mm_fp8_pt graph N=4096 cold -> clean median 72.06 us 815.5 GB/s
+2026-10-26 05:57:06,486 INFO [316/1146] ffa0af5a3b6b069f linear torch_scaled_mm_fp8_pt graph N=4608 cold -> clean median 20.78 us 799.6 GB/s
+2026-10-26 05:57:12,072 INFO [317/1146] 0145549a914073f5 linear vllm_cutlass_fp8_rw graph N=3584 cold -> clean median 84.38 us 809.7 GB/s
+2026-10-26 05:57:18,128 INFO [318/1146] 9d0601ba80d6cad6 linear marlin_int4_g128 graph N=128256 cold -> clean median 322.78 us 852.3 GB/s
+2026-10-26 05:57:23,769 INFO [319/1146] a8529136eb0ef3ef linear torch_scaled_mm_fp8_pt eager N=5376 cold -> clean median 28.18 us 781.9 GB/s
+2026-10-26 05:57:29,479 INFO [320/1146] 4931feb51f09ac92 linear torch_scaled_mm_fp8_pt graph N=512 cold -> clean median 8.50 us 217.0 GB/s
+2026-10-26 05:57:34,033 INFO [321/1146] 589c872a77450214 linear marlin_int4_g128 isolated N=2944 cold -> clean median 61.33 us 355.4 GB/s
+2026-10-26 05:57:39,560 INFO [322/1146] 763ce804f2ce61ab linear torch_scaled_mm_fp8_pt graph N=18944 cold -> clean median 79.58 us 855.3 GB/s
+2026-10-26 05:57:44,177 INFO [323/1146] a1ed5769bf399390 linear torch_scaled_mm_fp8_pt_full isolated N=18944 cold -> clean median 140.16 us 484.7 GB/s
+2026-10-26 05:57:49,995 INFO [324/1146] 2927d07ddee52173 linear vllm_cutlass_fp8_rw_full isolated N=14336 cold -> clean median 116.18 us 506.3 GB/s
+2026-10-26 05:57:55,790 INFO [325/1146] be6c52a26f090ff6 linear tinygemm_int4_g128 graph N=4096 cold -> clean median 55.32 us 569.3 GB/s
+2026-10-26 05:58:01,428 INFO [326/1146] 1697f6089a6721c7 linear tinygemm_int4_g128 graph N=14336 cold -> contaminated median 40.12 us 781.1 GB/s reasons=["foreign_cpu 2.47 cores > 2 top=[('prometheus', 1.3419999999999999), ('hanvithasaraswathi.m', 0.993), ('messagebus', 0.07)]"]
+2026-10-26 05:58:07,034 INFO [326/1146] 1697f6089a6721c7 linear tinygemm_int4_g128 graph N=14336 cold -> clean median 39.82 us 787.1 GB/s
+2026-10-26 05:58:12,548 INFO [327/1146] f0cc83cc8f688497 linear torch_scaled_mm_fp8_pt eager N=3584 cold -> clean median 82.58 us 822.5 GB/s
+2026-10-26 05:58:18,194 INFO [328/1146] 9527150b662e6a66 linear torch_scaled_mm_fp8_pt_full graph N=37888 cold -> clean median 170.25 us 805.4 GB/s
+2026-10-26 05:58:24,028 INFO [329/1146] ec3f103ba0b4c98d linear vllm_cutlass_fp8_rw isolated N=512 cold -> clean median 35.46 us 51.9 GB/s
+2026-10-26 05:58:30,082 INFO [330/1146] ffa96e84ecd49c50 linear tinygemm_int4_g128 graph N=512 cold -> clean median 5.13 us 196.5 GB/s
+2026-10-26 05:58:35,668 INFO [331/1146] 88570dadca80995e linear tinygemm_int4_g128 graph N=4096 cold -> clean median 12.10 us 741.9 GB/s
+2026-10-26 05:58:40,178 INFO [332/1146] 5c56f7965fbc3775 linear vllm_cutlass_fp8_rw isolated N=3584 cold -> clean median 39.26 us 327.8 GB/s
+2026-10-26 05:58:42,373 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 05:59:18,151 INFO [333/1146] 99fe41a6897a21aa linear torch_scaled_mm_fp8_pt graph N=4096 cold -> clean median 20.99 us 800.6 GB/s
+2026-10-26 05:59:25,003 INFO [334/1146] b35d2cf0f547f8dd linear vllm_cutlass_fp8_rw_full graph N=37888 cold -> clean median 174.21 us 784.1 GB/s
+2026-10-26 05:59:30,555 INFO [335/1146] 317954d91a09df84 linear vllm_cutlass_fp8_rw_full graph N=14336 cold -> clean median 79.41 us 747.6 GB/s
+2026-10-26 05:59:36,144 INFO [336/1146] d45fb6d6f72d7df6 linear torch_scaled_mm_fp8_pt graph N=768 cold -> clean median 19.78 us 557.5 GB/s
+2026-10-26 05:59:41,905 INFO [337/1146] 397e727cf1f00dea linear tinygemm_int4_g128 isolated N=1536 cold -> clean median 18.18 us 184.5 GB/s
+2026-10-26 05:59:47,985 INFO [338/1146] 3ea0f54985be4400 linear tinygemm_int4_g128 graph N=512 cold -> clean median 7.56 us 146.3 GB/s
+2026-10-26 05:59:53,606 INFO [339/1146] 3d7e7528345c70ee linear torch_scaled_mm_fp8_pt_full graph N=28672 cold -> clean median 155.01 us 759.3 GB/s
+2026-10-26 05:59:59,218 INFO [340/1146] 6ebeb9fd2f7fbea3 linear torch_scaled_mm_fp8_pt graph N=4608 cold -> clean median 20.73 us 798.0 GB/s
+2026-10-26 06:00:05,063 INFO [341/1146] c065e68b679c7bc7 linear torch_scaled_mm_fp8_pt_full graph N=3584 cold -> clean median 25.44 us 509.4 GB/s
+2026-10-26 06:00:09,637 INFO [342/1146] 0f9cbe3df2382ea5 linear vllm_cutlass_fp8_rw isolated N=18944 cold -> clean median 114.40 us 594.5 GB/s
+2026-10-26 06:00:15,191 INFO [343/1146] adb82cfaa3dfee6f linear vllm_cutlass_fp8_rw eager N=5376 cold -> clean median 28.32 us 778.8 GB/s
+2026-10-26 06:00:17,385 INFO waiting 30s: gpu_util max 10% >= 5%
+2026-10-26 06:00:53,030 INFO [344/1146] 3f021f6bcc853b4d linear vllm_cutlass_fp8_rw graph N=28672 cold -> clean median 148.93 us 789.8 GB/s
+2026-10-26 06:00:58,696 INFO [345/1146] a27398d2eae85b17 linear torch_scaled_mm_fp8_pt_full graph N=37888 cold -> clean median 167.65 us 812.0 GB/s
+2026-10-26 06:01:04,438 INFO [346/1146] af565043d4077b57 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> clean median 23.57 us 715.4 GB/s
+2026-10-26 06:01:10,184 INFO [347/1146] c46c471fbf5893fd linear vllm_cutlass_fp8_rw graph N=10112 cold -> clean median 51.88 us 799.6 GB/s
+2026-10-26 06:01:12,374 INFO waiting 30s: gpu_util max 11% >= 5%
+2026-10-26 06:01:48,215 INFO [348/1146] 136f2e5573649546 linear vllm_cutlass_fp8_rw_full graph N=1024 cold -> clean median 9.72 us 448.6 GB/s
+2026-10-26 06:01:55,463 INFO [349/1146] 67d1c891e12cf072 linear tinygemm_int4_g128 graph N=512 cold -> clean median 4.59 us 214.1 GB/s
+2026-10-26 06:02:01,314 INFO [350/1146] ef359e4266282d1a linear vllm_cutlass_fp8_rw graph N=512 cold -> clean median 6.18 us 297.9 GB/s
+2026-10-26 06:02:06,599 INFO [351/1146] 31c4fefbb0a7037b linear tinygemm_int4_g128 isolated N=131072 cold -> clean median 331.22 us 861.9 GB/s
+2026-10-26 06:02:11,193 INFO [352/1146] 4e2a995e69c12ccf linear torch_scaled_mm_fp8_pt_full isolated N=512 cold -> clean median 78.56 us 23.5 GB/s
+2026-10-26 06:02:18,055 INFO [353/1146] 572e23e629556013 linear marlin_int4_g128 graph N=28672 cold -> clean median 70.55 us 865.7 GB/s
+2026-10-26 06:02:23,569 INFO [354/1146] 33045e2aed6a5a71 linear torch_scaled_mm_fp8_pt_full graph N=18944 cold -> clean median 88.02 us 771.9 GB/s
+2026-10-26 06:02:29,197 INFO [355/1146] 37cc14ea943542c3 linear tinygemm_int4_g128 graph N=28672 cold -> clean median 72.72 us 859.8 GB/s
+2026-10-26 06:02:35,199 INFO [356/1146] 40e635204344b6c1 linear vllm_cutlass_fp8_rw_full isolated N=37888 cold -> clean median 208.29 us 653.1 GB/s
+2026-10-26 06:02:42,329 INFO [357/1146] cf56c1cf4a620847 linear marlin_int4_g128 graph N=1024 cold -> clean median 8.67 us 254.2 GB/s
+2026-10-26 06:02:47,899 INFO [358/1146] 1e399f5c441cd81a linear marlin_int4_g128 eager N=768 cold -> clean median 37.41 us 152.6 GB/s
+2026-10-26 06:02:53,671 INFO [359/1146] 4def25ad14866299 linear vllm_cutlass_fp8_rw graph N=3584 cold -> clean median 17.16 us 751.8 GB/s
+2026-10-26 06:02:58,265 INFO [360/1146] 76ea066bdd9df22f linear tinygemm_int4_g128 isolated N=2816 cold -> clean median 18.40 us 333.8 GB/s
+2026-10-26 06:03:02,920 INFO [361/1146] 2302840694f70720 linear tinygemm_int4_g128 isolated N=10368 cold -> clean median 101.06 us 781.9 GB/s
+2026-10-26 06:03:08,495 INFO [362/1146] 861614f980c81b64 linear vllm_cutlass_fp8_rw eager N=37888 cold -> clean median 171.43 us 793.5 GB/s
+2026-10-26 06:03:14,185 INFO [363/1146] b948a79c05ebac96 linear torch_scaled_mm_fp8_pt graph N=768 cold -> clean median 9.64 us 326.7 GB/s
+2026-10-26 06:03:16,377 INFO waiting 30s: gpu_util max 27% >= 5%
+2026-10-26 06:03:51,001 INFO [364/1146] 8361caf3d50e927a linear vllm_cutlass_fp8_rw isolated N=4096 cold -> clean median 43.95 us 382.4 GB/s
+2026-10-26 06:03:56,745 INFO [365/1146] 4ce5aae5154a89df linear vllm_cutlass_fp8_rw_full isolated N=152064 cold -> clean median 682.66 us 799.7 GB/s
+2026-10-26 06:04:02,749 INFO [366/1146] 4cf9c10eae2823c9 linear tinygemm_int4_g128 graph N=128 cold -> contaminated median 9.30 us 107.9 GB/s reasons=["foreign_cpu 2.42 cores > 2 top=[('prometheus', 1.166), ('hanvithasaraswathi.m', 1.0190000000000001), ('root', 0.099)]"]
+2026-10-26 06:04:08,747 INFO [366/1146] 4cf9c10eae2823c9 linear tinygemm_int4_g128 graph N=128 cold -> clean median 9.30 us 107.9 GB/s
+2026-10-26 06:04:14,467 INFO [367/1146] e31da1bcd03750c6 linear vllm_cutlass_fp8_rw graph N=4096 cold -> clean median 21.67 us 777.2 GB/s
+2026-10-26 06:04:20,011 INFO [368/1146] 450b17e758ca2f08 linear tinygemm_int4_g128 graph N=10112 cold -> clean median 27.15 us 811.5 GB/s
+2026-10-26 06:04:25,641 INFO [369/1146] 8d9ebb4308efac9a linear vllm_cutlass_fp8_rw_full graph N=18944 cold -> clean median 94.34 us 722.4 GB/s
+2026-10-26 06:04:31,175 INFO [370/1146] 0296ce5d762b714e linear torch_scaled_mm_fp8_pt eager N=19200 cold -> clean median 95.84 us 821.0 GB/s
+2026-10-26 06:04:35,952 INFO [371/1146] b5cea9284b1ff587 linear tinygemm_int4_g128 isolated N=512 cold -> clean median 18.32 us 53.7 GB/s
+2026-10-26 06:04:41,482 INFO [372/1146] f1deaaa6c718e1d1 linear vllm_cutlass_fp8_rw graph N=14336 cold -> clean median 77.27 us 761.5 GB/s
+2026-10-26 06:04:47,107 INFO [373/1146] bac14ccef8c581db linear torch_scaled_mm_fp8_pt graph N=4608 cold -> clean median 20.56 us 805.6 GB/s
+2026-10-26 06:04:52,719 INFO [374/1146] 4900786fc6bc65ce linear marlin_int4_g128 eager N=10368 cold -> clean median 89.93 us 852.7 GB/s
+2026-10-26 06:04:57,290 INFO [375/1146] a423739f1bae6427 linear vllm_cutlass_fp8_rw isolated N=18944 cold -> clean median 114.59 us 593.5 GB/s
+2026-10-26 06:05:02,883 INFO [376/1146] 403f898948c5af83 linear marlin_int4_g128 graph N=3584 cold -> contaminated median 42.95 us 817.2 GB/s reasons=["foreign_cpu 2.41 cores > 2 top=[('hanvithasaraswathi.m', 1.1300000000000001), ('prometheus', 1.097), ('root', 0.081)]"]
+2026-10-26 06:05:08,721 INFO [376/1146] 403f898948c5af83 linear marlin_int4_g128 graph N=3584 cold -> clean median 42.97 us 816.9 GB/s
+2026-10-26 06:05:14,399 INFO [377/1146] 29a8111a79b4d209 linear torch_scaled_mm_fp8_pt_full graph N=3584 cold -> clean median 24.89 us 516.6 GB/s
+2026-10-26 06:05:19,925 INFO [378/1146] 3a2a70576d25446c linear torch_scaled_mm_fp8_pt graph N=18944 cold -> clean median 79.52 us 854.9 GB/s
+2026-10-26 06:05:24,707 INFO [379/1146] b392e3391703285f linear tinygemm_int4_g128 isolated N=512 cold -> clean median 18.34 us 53.6 GB/s
+2026-10-26 06:05:31,048 INFO [380/1146] db68ba750b32b1ae linear marlin_int4_g128 graph N=64 cold -> clean median 18.82 us 7.6 GB/s
+2026-10-26 06:05:36,795 INFO [381/1146] 702017d103846b5b linear torch_scaled_mm_fp8_pt graph N=128 cold -> clean median 9.85 us 187.8 GB/s
+2026-10-26 06:05:42,631 INFO [382/1146] f90de493f1be5472 linear marlin_int4_g128 graph N=512 cold -> clean median 10.82 us 88.2 GB/s
+2026-10-26 06:05:48,191 INFO [383/1146] 8f54dd64182ca32a linear vllm_cutlass_fp8_rw eager N=10368 cold -> clean median 181.03 us 821.5 GB/s
+2026-10-26 06:05:50,352 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 06:06:25,807 INFO [384/1146] 54e118de3b638300 linear marlin_int4_g128 isolated N=131072 cold -> clean median 350.11 us 791.4 GB/s
+2026-10-26 06:06:31,534 INFO [385/1146] 0cb9037dea6e9c40 linear torch_scaled_mm_fp8_pt graph N=512 cold -> contaminated median 8.49 us 218.2 GB/s reasons=["foreign_cpu 2.17 cores > 2 top=[('prometheus', 1.071), ('hanvithasaraswathi.m', 1.004)]"]
+2026-10-26 06:06:37,253 INFO [385/1146] 0cb9037dea6e9c40 linear torch_scaled_mm_fp8_pt graph N=512 cold -> clean median 8.51 us 217.8 GB/s
+2026-10-26 06:06:43,182 INFO [386/1146] bbb8baf829e0e87c linear vllm_cutlass_fp8_rw_full graph N=4608 cold -> clean median 23.30 us 720.7 GB/s
+2026-10-26 06:06:45,373 INFO waiting 30s: gpu_util max 12% >= 5%
+2026-10-26 06:07:20,594 INFO [387/1146] c58b8921538230ce linear torch_scaled_mm_fp8_pt isolated N=128 cold -> clean median 42.02 us 12.6 GB/s
+2026-10-26 06:07:25,716 INFO [388/1146] 0840f75a7984bee0 linear torch_scaled_mm_fp8_pt isolated N=32 cold -> clean median 42.37 us 11.2 GB/s
+2026-10-26 06:07:30,396 INFO [389/1146] 36031d0477946103 linear marlin_int4_g128 isolated N=512 cold -> clean median 59.26 us 16.1 GB/s
+2026-10-26 06:07:34,942 INFO [390/1146] bb6aa0159ee44cab linear vllm_cutlass_fp8_rw isolated N=768 cold -> clean median 42.37 us 260.3 GB/s
+2026-10-26 06:07:39,428 INFO [391/1146] 94743ee023198021 linear torch_scaled_mm_fp8_pt isolated N=3584 cold -> clean median 43.10 us 298.3 GB/s
+2026-10-26 06:07:45,214 INFO [392/1146] 1ed7bba70e332038 linear vllm_cutlass_fp8_rw graph N=1024 cold -> clean median 7.90 us 533.1 GB/s
+2026-10-26 06:07:51,994 INFO [393/1146] 46625806af9f0a08 linear torch_scaled_mm_fp8_pt eager N=36480 cold -> clean median 178.50 us 837.5 GB/s
+2026-10-26 06:07:57,701 INFO [394/1146] d7ee7eced45802b8 linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> clean median 30.18 us 557.0 GB/s
+2026-10-26 06:08:02,251 INFO [395/1146] 1c84db2a18d830d4 linear vllm_cutlass_fp8_rw_full isolated N=6144 cold -> contaminated median 68.67 us 367.1 GB/s reasons=["foreign_cpu 2.44 cores > 2 top=[('prometheus', 1.311), ('hanvithasaraswathi.m', 1.026)]"]
+2026-10-26 06:08:06,968 INFO [395/1146] 1c84db2a18d830d4 linear vllm_cutlass_fp8_rw_full isolated N=6144 cold -> clean median 68.42 us 368.5 GB/s
+2026-10-26 06:08:12,555 INFO [396/1146] c3d796521a4686c7 linear marlin_int4_g128 graph N=18944 cold -> clean median 43.45 us 822.3 GB/s
+2026-10-26 06:08:18,099 INFO [397/1146] bc59c6d03517388e linear vllm_cutlass_fp8_rw eager N=4608 cold -> clean median 22.05 us 750.2 GB/s
+2026-10-26 06:08:23,929 INFO [398/1146] beca6d2a4ff8dfff linear tinygemm_int4_g128 eager N=512 cold -> clean median 9.39 us 104.7 GB/s
+2026-10-26 06:08:29,468 INFO [399/1146] 24ab4da9aab7eb64 linear torch_scaled_mm_fp8_pt_full graph N=18944 cold -> clean median 88.37 us 770.4 GB/s
+2026-10-26 06:08:35,121 INFO [400/1146] 4e799e228b892e6b linear torch_scaled_mm_fp8_pt_full graph N=4608 cold -> clean median 29.08 us 569.0 GB/s
+2026-10-26 06:08:37,312 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 06:09:13,034 INFO [401/1146] 1d5a909053c4f8f5 linear torch_scaled_mm_fp8_pt_full graph N=1024 cold -> clean median 20.01 us 211.7 GB/s
+2026-10-26 06:09:18,831 INFO [402/1146] 9d2a32b2bdde5a13 linear vllm_cutlass_fp8_rw graph N=768 cold -> clean median 7.29 us 432.6 GB/s
+2026-10-26 06:09:24,360 INFO [403/1146] 928fad99c58ac2bb linear vllm_cutlass_fp8_rw eager N=3584 cold -> clean median 20.58 us 625.4 GB/s
+2026-10-26 06:09:30,145 INFO [404/1146] 053153d064402dec linear torch_scaled_mm_fp8_pt graph N=4096 cold -> clean median 20.99 us 800.4 GB/s
+2026-10-26 06:09:35,890 INFO [405/1146] 55c5ff4353f8ac13 linear marlin_int4_g128 graph N=4096 cold -> clean median 12.86 us 675.3 GB/s
+2026-10-26 06:09:41,465 INFO [406/1146] a367736266a5b9b3 linear tinygemm_int4_g128 graph N=14336 cold -> clean median 37.83 us 826.5 GB/s
+2026-10-26 06:09:47,170 INFO [407/1146] e294855294c47905 linear torch_scaled_mm_fp8_pt_full graph N=512 cold -> clean median 17.12 us 109.1 GB/s
+2026-10-26 06:09:52,914 INFO [408/1146] 9be855e412e435a4 linear vllm_cutlass_fp8_rw_full graph N=4608 cold -> clean median 23.17 us 714.9 GB/s
+2026-10-26 06:09:57,533 INFO [409/1146] 9ef57888686eb6cf linear torch_scaled_mm_fp8_pt isolated N=768 cold -> clean median 42.34 us 74.4 GB/s
+2026-10-26 06:10:03,178 INFO [410/1146] ee8664861013bd45 linear torch_scaled_mm_fp8_pt_full graph N=1024 cold -> contaminated median 19.87 us 212.1 GB/s reasons=["foreign_cpu 2.19 cores > 2 top=[('prometheus', 1.0590000000000002), ('hanvithasaraswathi.m', 1.025)]"]
+2026-10-26 06:10:08,806 INFO [410/1146] ee8664861013bd45 linear torch_scaled_mm_fp8_pt_full graph N=1024 cold -> clean median 19.87 us 212.1 GB/s
+2026-10-26 06:10:14,122 INFO [411/1146] e4974f6c3ebbe2bc linear tinygemm_int4_g128 isolated N=128256 cold -> clean median 324.45 us 861.0 GB/s
+2026-10-26 06:10:19,002 INFO [412/1146] a95f5f83d9c04ffe linear marlin_int4_g128 isolated N=36480 cold -> clean median 122.18 us 631.3 GB/s
+2026-10-26 06:10:24,971 INFO [413/1146] b73a56bfdb901fee linear tinygemm_int4_g128 graph N=37504 cold -> clean median 325.38 us 878.1 GB/s
+2026-10-26 06:10:31,500 INFO [414/1146] 03108c149836e0c8 linear vllm_cutlass_fp8_rw isolated N=32 cold -> contaminated median 35.97 us 3.8 GB/s reasons=["foreign_cpu 4.05 cores > 2 top=[('prometheus', 2.542), ('hanvithasaraswathi.m', 0.996), ('root', 0.151)]"]
+2026-10-26 06:10:37,806 INFO [414/1146] 03108c149836e0c8 linear vllm_cutlass_fp8_rw isolated N=32 cold -> clean median 36.11 us 3.7 GB/s
+2026-10-26 06:10:43,436 INFO [415/1146] f01ad785750524b0 linear tinygemm_int4_g128 graph N=18944 cold -> clean median 122.51 us 300.3 GB/s
+2026-10-26 06:10:49,036 INFO [416/1146] e5c2ee007e38ba06 linear tinygemm_int4_g128 graph N=14336 cold -> clean median 37.90 us 825.0 GB/s
+2026-10-26 06:10:54,794 INFO [417/1146] 834b362dbedc6fed linear marlin_int4_g128 graph N=3584 cold -> clean median 10.61 us 625.6 GB/s
+2026-10-26 06:11:00,520 INFO [418/1146] f90b77ac76d61568 linear torch_scaled_mm_fp8_pt_full graph N=512 cold -> clean median 18.08 us 105.1 GB/s
+2026-10-26 06:11:06,323 INFO [419/1146] dd80d30b64ca88d1 linear vllm_cutlass_fp8_rw_full graph N=512 cold -> clean median 8.16 us 233.1 GB/s
+2026-10-26 06:11:10,848 INFO [420/1146] 81c610b2dcecc6c1 linear torch_scaled_mm_fp8_pt isolated N=10112 cold -> clean median 76.93 us 538.7 GB/s
+2026-10-26 06:11:16,638 INFO [421/1146] 41b27ba4387c079e linear marlin_int4_g128 graph N=3584 cold -> clean median 11.10 us 617.4 GB/s
+2026-10-26 06:11:22,338 INFO [422/1146] 00a22d7f7c2e317e linear torch_scaled_mm_fp8_pt graph N=1024 cold -> clean median 10.83 us 387.9 GB/s
+2026-10-26 06:11:28,157 INFO [423/1146] 3ede17768d135d4b linear marlin_int4_g128 graph N=10368 cold -> clean median 89.38 us 858.0 GB/s
+2026-10-26 06:11:30,352 INFO waiting 30s: gpu_util max 7% >= 5%
+2026-10-26 06:12:05,330 INFO [424/1146] a50566645ca10658 linear marlin_int4_g128 isolated N=19712 cold -> clean median 201.98 us 721.7 GB/s
+2026-10-26 06:12:09,903 INFO [425/1146] 8b92e1c413ba6026 linear marlin_int4_g128 isolated N=5504 cold -> clean median 81.79 us 497.9 GB/s
+2026-10-26 06:12:15,650 INFO [426/1146] 756cb7c0d97b10cf linear tinygemm_int4_g128 graph N=256 cold -> clean median 9.66 us 204.8 GB/s
+2026-10-26 06:12:20,222 INFO [427/1146] ce87f208cbfc175f linear vllm_cutlass_fp8_rw_full isolated N=4096 cold -> clean median 111.71 us 526.1 GB/s
+2026-10-26 06:12:27,054 INFO [428/1146] 53615a649a32407b linear tinygemm_int4_g128 graph N=4096 cold -> clean median 12.00 us 748.1 GB/s
+2026-10-26 06:12:32,681 INFO [429/1146] b2933a8307372f04 linear torch_scaled_mm_fp8_pt eager N=768 cold -> contaminated median 21.31 us 147.9 GB/s reasons=["foreign_cpu 2.38 cores > 2 top=[('prometheus', 1.25), ('hanvithasaraswathi.m', 1.005)]"]
+2026-10-26 06:12:38,326 INFO [429/1146] b2933a8307372f04 linear torch_scaled_mm_fp8_pt eager N=768 cold -> clean median 21.35 us 147.6 GB/s
+2026-10-26 06:12:44,034 INFO [430/1146] d497e1b18d669374 linear torch_scaled_mm_fp8_pt graph N=512 cold -> clean median 8.48 us 218.6 GB/s
+2026-10-26 06:12:48,581 INFO [431/1146] 7758ac3cbefd3ae3 linear torch_scaled_mm_fp8_pt_full isolated N=6144 cold -> clean median 91.01 us 276.7 GB/s
+2026-10-26 06:12:53,339 INFO [432/1146] ed0185e5ea8f41b2 linear vllm_cutlass_fp8_rw isolated N=10368 cold -> clean median 202.40 us 734.7 GB/s
+2026-10-26 06:12:58,103 INFO [433/1146] c314d2c4291fd0a1 linear marlin_int4_g128 isolated N=256 cold -> clean median 63.18 us 8.7 GB/s
+2026-10-26 06:13:03,892 INFO [434/1146] eab8752907236ecf linear marlin_int4_g128 graph N=4096 cold -> clean median 12.86 us 678.0 GB/s
+2026-10-26 06:13:09,675 INFO [435/1146] 3bf3b91d859a0492 linear torch_scaled_mm_fp8_pt_full graph N=128256 cold -> clean median 628.01 us 838.2 GB/s
+2026-10-26 06:13:15,427 INFO [436/1146] d1674f1222965116 linear vllm_cutlass_fp8_rw graph N=4608 cold -> clean median 21.34 us 777.1 GB/s
+2026-10-26 06:13:20,992 INFO [437/1146] 0efc1eccf1a48246 linear torch_scaled_mm_fp8_pt eager N=384 cold -> clean median 21.20 us 260.4 GB/s
+2026-10-26 06:13:26,707 INFO [438/1146] 1057fd4d8a711e33 linear torch_scaled_mm_fp8_pt graph N=3584 cold -> clean median 16.59 us 774.9 GB/s
+2026-10-26 06:13:32,919 INFO [439/1146] 47e986160cfe2e95 linear tinygemm_int4_g128 graph N=128256 cold -> contaminated median 500.82 us 561.5 GB/s reasons=["foreign_cpu 2.55 cores > 2 top=[('prometheus', 1.31), ('hanvithasaraswathi.m', 1.0), ('root', 0.098)]"]
+2026-10-26 06:13:39,071 INFO [439/1146] 47e986160cfe2e95 linear tinygemm_int4_g128 graph N=128256 cold -> clean median 510.31 us 551.0 GB/s
+2026-10-26 06:13:44,576 INFO [440/1146] 01c6494aced582c2 linear vllm_cutlass_fp8_rw isolated N=64 cold -> clean median 35.82 us 7.4 GB/s
+2026-10-26 06:13:50,101 INFO [441/1146] f55a21170172351e linear torch_scaled_mm_fp8_pt_full eager N=3584 cold -> clean median 49.72 us 258.7 GB/s
+2026-10-26 06:13:55,705 INFO [442/1146] 705783fb423fa7fc linear vllm_cutlass_fp8_rw_full graph N=3584 cold -> clean median 19.14 us 683.9 GB/s
+2026-10-26 06:14:01,474 INFO [443/1146] 355b0f2c9f1a2cd1 linear vllm_cutlass_fp8_rw graph N=10368 cold -> contaminated median 179.65 us 827.8 GB/s reasons=["foreign_cpu 2.16 cores > 2 top=[('prometheus', 1.054), ('hanvithasaraswathi.m', 1.037)]"]
+2026-10-26 06:14:07,207 INFO [443/1146] 355b0f2c9f1a2cd1 linear vllm_cutlass_fp8_rw graph N=10368 cold -> clean median 179.73 us 827.4 GB/s
+2026-10-26 06:14:09,397 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 06:14:45,287 INFO [444/1146] 65733211308bb4a1 linear marlin_int4_g128 graph N=512 cold -> clean median 10.77 us 93.9 GB/s
+2026-10-26 06:14:52,046 INFO [445/1146] 08b801fbdab42ae7 linear tinygemm_int4_g128 eager N=10112 cold -> clean median 27.87 us 790.5 GB/s
+2026-10-26 06:14:57,692 INFO [446/1146] edcbe88fd0f5ec99 linear torch_scaled_mm_fp8_pt graph N=1536 cold -> clean median 13.10 us 480.9 GB/s
+2026-10-26 06:15:03,525 INFO [447/1146] f9896f45e946e707 linear vllm_cutlass_fp8_rw_full graph N=152064 cold -> contaminated median 648.33 us 843.5 GB/s reasons=["foreign_cpu 2.58 cores > 2 top=[('prometheus', 1.453), ('hanvithasaraswathi.m', 0.991)]"]
+2026-10-26 06:15:09,350 INFO [447/1146] f9896f45e946e707 linear vllm_cutlass_fp8_rw_full graph N=152064 cold -> clean median 648.53 us 843.2 GB/s
+2026-10-26 06:15:15,110 INFO [448/1146] aae1a634783542b4 linear vllm_cutlass_fp8_rw_full graph N=1024 cold -> clean median 9.59 us 446.5 GB/s
+2026-10-26 06:15:20,933 INFO [449/1146] 3eb6f4a22358e930 linear vllm_cutlass_fp8_rw_full graph N=512 cold -> clean median 8.00 us 230.8 GB/s
+2026-10-26 06:15:25,475 INFO [450/1146] c9ba069b53b8b4a9 linear marlin_int4_g128 isolated N=18944 cold -> clean median 74.82 us 468.5 GB/s
+2026-10-26 06:15:31,032 INFO [451/1146] 64d448bdcc64a1b6 linear tinygemm_int4_g128 eager N=3584 cold -> clean median 44.31 us 815.1 GB/s
+2026-10-26 06:15:36,595 INFO [452/1146] 55f8341aae35ba9b linear vllm_cutlass_fp8_rw graph N=19200 cold -> clean median 103.22 us 763.1 GB/s
+2026-10-26 06:15:41,157 INFO [453/1146] b3531edc021a4969 linear torch_scaled_mm_fp8_pt isolated N=4096 cold -> clean median 99.17 us 592.4 GB/s
+2026-10-26 06:15:46,718 INFO [454/1146] 3e60bd82c83bdf3c linear marlin_int4_g128 eager N=3584 cold -> clean median 30.63 us 216.7 GB/s
+2026-10-26 06:15:52,410 INFO [455/1146] b2ae739ec77ddc8a linear vllm_cutlass_fp8_rw eager N=128 cold -> clean median 20.27 us 91.3 GB/s
+2026-10-26 06:15:57,972 INFO [456/1146] 6fe6ec45f6805766 linear vllm_cutlass_fp8_rw graph N=37888 cold -> clean median 172.40 us 792.2 GB/s
+2026-10-26 06:16:03,648 INFO [457/1146] 664b5615afc99be4 linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> contaminated median 30.18 us 557.0 GB/s reasons=["foreign_cpu 2.23 cores > 2 top=[('prometheus', 1.1079999999999999), ('hanvithasaraswathi.m', 1.006)]"]
+2026-10-26 06:16:09,349 INFO [457/1146] 664b5615afc99be4 linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> clean median 30.18 us 556.9 GB/s
+2026-10-26 06:16:14,914 INFO [458/1146] 9f28710781bed1d2 linear tinygemm_int4_g128 eager N=3584 cold -> clean median 10.55 us 648.0 GB/s
+2026-10-26 06:16:20,544 INFO [459/1146] e98cdc011b857f1a linear torch_scaled_mm_fp8_pt_full graph N=1024 cold -> clean median 20.11 us 216.7 GB/s
+2026-10-26 06:16:25,725 INFO [460/1146] f4e84c840953ffee linear vllm_cutlass_fp8_rw isolated N=19712 cold -> clean median 412.37 us 685.6 GB/s
+2026-10-26 06:16:30,349 INFO [461/1146] 02ce1aec27332c1f linear torch_scaled_mm_fp8_pt_full isolated N=4096 cold -> clean median 132.00 us 445.1 GB/s
+2026-10-26 06:16:36,031 INFO [462/1146] 3b9e90f9a56c919f linear vllm_cutlass_fp8_rw_full graph N=3584 cold -> clean median 18.98 us 678.1 GB/s
+2026-10-26 06:16:41,546 INFO [463/1146] 1221861883a8a856 linear tinygemm_int4_g128 eager N=14336 cold -> clean median 38.51 us 811.0 GB/s
+2026-10-26 06:16:47,345 INFO [464/1146] ddd8c93703dbe3fc linear torch_scaled_mm_fp8_pt graph N=14336 cold -> clean median 69.83 us 844.6 GB/s
+2026-10-26 06:16:53,223 INFO [465/1146] 0fe6e9fd0627a9ea linear vllm_cutlass_fp8_rw graph N=512 cold -> clean median 6.24 us 300.5 GB/s
+2026-10-26 06:16:59,083 INFO [466/1146] a9cd8d2e3ffd138d linear vllm_cutlass_fp8_rw isolated N=384 cold -> clean median 35.52 us 44.5 GB/s
+2026-10-26 06:17:04,660 INFO [467/1146] 404bfb9fae2c49d9 linear torch_scaled_mm_fp8_pt eager N=1024 cold -> clean median 21.38 us 196.5 GB/s
+2026-10-26 06:17:10,462 INFO [468/1146] 0a418ed997241f88 linear torch_scaled_mm_fp8_pt graph N=10368 cold -> clean median 171.09 us 869.0 GB/s
+2026-10-26 06:17:16,239 INFO [469/1146] f7c9ab07ebfb01c8 linear vllm_cutlass_fp8_rw_full graph N=1024 cold -> clean median 9.59 us 442.2 GB/s
+2026-10-26 06:17:22,062 INFO [470/1146] d22ac662efd865b2 linear marlin_int4_g128 eager N=64 cold -> clean median 65.32 us 7.7 GB/s
+2026-10-26 06:17:27,730 INFO [471/1146] 6aeacb620a294d80 linear torch_scaled_mm_fp8_pt_full graph N=37888 cold -> clean median 166.78 us 815.2 GB/s
+2026-10-26 06:17:33,266 INFO [472/1146] e92988d9f02d07b7 linear torch_scaled_mm_fp8_pt_full eager N=28672 cold -> contaminated median 155.99 us 753.3 GB/s reasons=["foreign_cpu 2.44 cores > 2 top=[('prometheus', 1.263), ('hanvithasaraswathi.m', 1.011), ('root', 0.052000000000000005)]"]
+2026-10-26 06:17:35,457 INFO waiting 30s: gpu_util max 9% >= 5%
+2026-10-26 06:18:11,075 INFO [472/1146] e92988d9f02d07b7 linear torch_scaled_mm_fp8_pt_full eager N=28672 cold -> clean median 155.80 us 754.2 GB/s
+2026-10-26 06:18:16,778 INFO [473/1146] 7ba02fe64fa62b26 linear vllm_cutlass_fp8_rw eager N=512 cold -> clean median 20.51 us 89.8 GB/s
+2026-10-26 06:18:22,293 INFO [474/1146] 083bc5d760a89b2a linear vllm_cutlass_fp8_rw eager N=5504 cold -> clean median 97.90 us 806.5 GB/s
+2026-10-26 06:18:29,145 INFO [475/1146] 5bce83023005aa25 linear torch_scaled_mm_fp8_pt_full graph N=4608 cold -> clean median 29.48 us 564.6 GB/s
+2026-10-26 06:18:34,678 INFO [476/1146] 0ed5c14a9ed4f99a linear vllm_cutlass_fp8_rw graph N=18944 cold -> clean median 93.11 us 733.6 GB/s
+2026-10-26 06:18:40,400 INFO [477/1146] f5c542d0856beacf linear vllm_cutlass_fp8_rw_full graph N=1024 cold -> clean median 9.76 us 447.1 GB/s
+2026-10-26 06:18:46,136 INFO [478/1146] 563c1a371830f81d linear vllm_cutlass_fp8_rw_full graph N=3584 cold -> clean median 88.84 us 765.4 GB/s
+2026-10-26 06:18:51,798 INFO [479/1146] dcd5e5ba9decd53c linear tinygemm_int4_g128 graph N=18944 cold -> clean median 122.57 us 300.2 GB/s
+2026-10-26 06:18:57,368 INFO [480/1146] 2bdd4633c1adb0f2 linear tinygemm_int4_g128 eager N=1536 cold -> clean median 9.33 us 359.6 GB/s
+2026-10-26 06:19:03,097 INFO [481/1146] 7d6582f036b517c5 linear marlin_int4_g128 graph N=384 cold -> contaminated median 17.94 us 159.9 GB/s reasons=["foreign_cpu 2.17 cores > 2 top=[('prometheus', 1.052), ('hanvithasaraswathi.m', 1.0190000000000001)]"]
+2026-10-26 06:19:08,788 INFO [481/1146] 7d6582f036b517c5 linear marlin_int4_g128 graph N=384 cold -> clean median 17.88 us 160.4 GB/s
+2026-10-26 06:19:14,375 INFO [482/1146] e358932e741fc295 linear marlin_int4_g128 eager N=37888 cold -> clean median 82.87 us 845.9 GB/s
+2026-10-26 06:19:20,129 INFO [483/1146] eda78f954ef1db10 linear vllm_cutlass_fp8_rw graph N=768 cold -> clean median 20.08 us 549.4 GB/s
+2026-10-26 06:19:26,048 INFO [484/1146] 4828a9fc88dd10b3 linear tinygemm_int4_g128 eager N=131072 cold -> clean median 324.92 us 878.6 GB/s
+2026-10-26 06:19:31,590 INFO [485/1146] 7b41795670c3895f linear torch_scaled_mm_fp8_pt eager N=6144 cold -> contaminated median 31.91 us 789.1 GB/s reasons=["foreign_cpu 3.21 cores > 2 top=[('prometheus', 1.87), ('hanvithasaraswathi.m', 1.0170000000000001), ('messagebus', 0.092)]"]
+2026-10-26 06:19:37,161 INFO [485/1146] 7b41795670c3895f linear torch_scaled_mm_fp8_pt eager N=6144 cold -> clean median 31.92 us 788.9 GB/s
+2026-10-26 06:19:42,769 INFO [486/1146] a0e7b973431ea1c9 linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> clean median 30.27 us 562.9 GB/s
+2026-10-26 06:19:48,885 INFO [487/1146] 6961dfe4797caddb linear marlin_int4_g128 graph N=131072 cold -> clean median 317.06 us 873.9 GB/s
+2026-10-26 06:19:54,666 INFO [488/1146] 036c6e43ac6ac3ee linear vllm_cutlass_fp8_rw graph N=3584 cold -> clean median 17.17 us 750.2 GB/s
+2026-10-26 06:19:59,269 INFO [489/1146] 2200918b1ea1dfdc linear vllm_cutlass_fp8_rw_full isolated N=3584 cold -> clean median 122.05 us 556.8 GB/s
+2026-10-26 06:20:06,314 INFO [490/1146] e50d06ffa957a240 linear vllm_cutlass_fp8_rw graph N=1024 cold -> clean median 7.93 us 532.3 GB/s
+2026-10-26 06:20:12,283 INFO [491/1146] 0ef423f1adcaa4d2 linear tinygemm_int4_g128 graph N=4096 cold -> clean median 11.74 us 760.5 GB/s
+2026-10-26 06:20:19,294 INFO [492/1146] eefcc2c8516e59e2 linear torch_scaled_mm_fp8_pt graph N=3584 cold -> clean median 16.67 us 775.5 GB/s
+2026-10-26 06:20:27,168 INFO [493/1146] f9961a3393f9dbbc linear vllm_cutlass_fp8_rw graph N=32 cold -> clean median 5.88 us 23.0 GB/s
+2026-10-26 06:20:31,713 INFO canary ref drift vs previous: -0.03%
+2026-10-26 06:20:31,715 INFO canary reference 823.84 GB/s (cv 0.0013)
+2026-10-26 06:20:37,195 INFO [494/1146] be6304e854965d41 linear torch_scaled_mm_fp8_pt isolated N=64 cold -> clean median 42.05 us 6.3 GB/s
+2026-10-26 06:20:39,389 INFO waiting 30s: gpu_util max 7% >= 5%
+2026-10-26 06:21:15,270 INFO [495/1146] c18587c858790827 linear vllm_cutlass_fp8_rw graph N=1024 cold -> clean median 7.96 us 533.8 GB/s
+2026-10-26 06:21:22,310 INFO [496/1146] 49865c62edadaa76 linear marlin_int4_g128 graph N=512 cold -> clean median 11.85 us 90.9 GB/s
+2026-10-26 06:21:28,043 INFO [497/1146] 70e679a565f8dbce linear marlin_int4_g128 eager N=768 cold -> clean median 37.70 us 43.3 GB/s
+2026-10-26 06:21:33,578 INFO [498/1146] 00b6bcac85c8de34 linear vllm_cutlass_fp8_rw_full graph N=14336 cold -> contaminated median 79.27 us 745.2 GB/s reasons=["foreign_cpu 2.40 cores > 2 top=[('prometheus', 1.253), ('hanvithasaraswathi.m', 1.033), ('messagebus', 0.051)]"]
+2026-10-26 06:21:39,171 INFO [498/1146] 00b6bcac85c8de34 linear vllm_cutlass_fp8_rw_full graph N=14336 cold -> clean median 79.31 us 744.8 GB/s
+2026-10-26 06:21:44,899 INFO [499/1146] b82552f1582278b7 linear vllm_cutlass_fp8_rw graph N=4096 cold -> clean median 21.67 us 775.9 GB/s
+2026-10-26 06:21:50,480 INFO [500/1146] eb97a2a02bb038c9 linear tinygemm_int4_g128 graph N=3584 cold -> clean median 9.64 us 709.1 GB/s
+2026-10-26 06:21:56,004 INFO [501/1146] b2f17cc0eadeb4e3 linear torch_scaled_mm_fp8_pt eager N=3584 cold -> clean median 19.16 us 670.8 GB/s
+2026-10-26 06:22:01,596 INFO [502/1146] c9e5f96395cc5042 linear tinygemm_int4_g128 graph N=3584 cold -> contaminated median 43.05 us 838.9 GB/s reasons=["foreign_cpu 2.54 cores > 2 top=[('prometheus', 1.403), ('hanvithasaraswathi.m', 1.01), ('messagebus', 0.055999999999999994)]"]
+2026-10-26 06:22:07,180 INFO [502/1146] c9e5f96395cc5042 linear tinygemm_int4_g128 graph N=3584 cold -> clean median 43.07 us 838.6 GB/s
+2026-10-26 06:22:13,277 INFO [503/1146] dee9f9fe9de56cc5 linear vllm_cutlass_fp8_rw eager N=128 cold -> clean median 20.38 us 26.0 GB/s
+2026-10-26 06:22:15,473 INFO waiting 30s: gpu_util max 9% >= 5%
+2026-10-26 06:22:50,223 INFO [504/1146] 84d4d36563362444 linear torch_scaled_mm_fp8_pt isolated N=5376 cold -> clean median 53.92 us 408.7 GB/s
+2026-10-26 06:22:55,753 INFO [505/1146] 8eab6fc23e5d1a55 linear torch_scaled_mm_fp8_pt eager N=4096 cold -> clean median 21.81 us 769.8 GB/s
+2026-10-26 06:23:01,561 INFO [506/1146] 94fe72fd8f15fb02 linear vllm_cutlass_fp8_rw_full graph N=512 cold -> contaminated median 8.23 us 239.2 GB/s reasons=["foreign_cpu 2.06 cores > 2 top=[('hanvithasaraswathi.m', 1.015), ('prometheus', 0.9309999999999999)]", "foreign_cpu 2.12 cores > 2 top=[('hanvithasaraswathi.m', 1.037), ('prometheus', 0.792), ('root', 0.23199999999999998)]"]
+2026-10-26 06:23:07,344 INFO [506/1146] 94fe72fd8f15fb02 linear vllm_cutlass_fp8_rw_full graph N=512 cold -> clean median 8.23 us 239.3 GB/s
+2026-10-26 06:23:13,099 INFO [507/1146] a3794a83e75e1759 linear marlin_int4_g128 graph N=18944 cold -> clean median 42.58 us 826.5 GB/s
+2026-10-26 06:23:17,644 INFO [508/1146] 2d69c4e21b74382a linear vllm_cutlass_fp8_rw isolated N=1536 cold -> clean median 50.62 us 435.4 GB/s
+2026-10-26 06:23:23,358 INFO [509/1146] 903731785d63ad3e linear vllm_cutlass_fp8_rw graph N=4096 cold -> clean median 21.69 us 778.8 GB/s
+2026-10-26 06:23:28,931 INFO [510/1146] 785f4bee101f6570 linear vllm_cutlass_fp8_rw_full graph N=3584 cold -> clean median 88.72 us 773.6 GB/s
+2026-10-26 06:23:34,678 INFO [511/1146] 276fb94019adcd5d linear marlin_int4_g128 graph N=4608 cold -> clean median 13.68 us 627.0 GB/s
+2026-10-26 06:23:39,189 INFO [512/1146] 300090d79d05f308 linear vllm_cutlass_fp8_rw isolated N=2816 cold -> clean median 37.98 us 304.2 GB/s
+2026-10-26 06:23:44,958 INFO [513/1146] 121395a1eb01026f linear marlin_int4_g128 graph N=4608 cold -> clean median 14.48 us 606.1 GB/s
+2026-10-26 06:23:50,560 INFO [514/1146] 15f6246af42ee595 linear marlin_int4_g128 eager N=28672 cold -> clean median 71.76 us 844.8 GB/s
+2026-10-26 06:23:56,217 INFO [515/1146] 85236dc95f510568 linear torch_scaled_mm_fp8_pt graph N=384 cold -> clean median 13.89 us 397.5 GB/s
+2026-10-26 06:24:01,960 INFO [516/1146] 30eee5e1313e5e70 linear vllm_cutlass_fp8_rw eager N=2816 cold -> contaminated median 20.43 us 565.5 GB/s reasons=["foreign_cpu 2.39 cores > 2 top=[('prometheus', 1.176), ('hanvithasaraswathi.m', 0.997), ('root', 0.098)]"]
+2026-10-26 06:24:07,486 INFO [516/1146] 30eee5e1313e5e70 linear vllm_cutlass_fp8_rw eager N=2816 cold -> clean median 20.51 us 563.5 GB/s
+2026-10-26 06:24:13,248 INFO [517/1146] cf0eb5b075095247 linear torch_scaled_mm_fp8_pt_full eager N=152064 cold -> clean median 632.12 us 862.7 GB/s
+2026-10-26 06:24:20,025 INFO [518/1146] 36acf05cb1490f49 linear torch_scaled_mm_fp8_pt eager N=1536 cold -> clean median 31.21 us 706.2 GB/s
+2026-10-26 06:24:25,757 INFO [519/1146] f5c0c1d5d00a6206 linear vllm_cutlass_fp8_rw_full graph N=28672 cold -> clean median 151.32 us 777.7 GB/s
+2026-10-26 06:24:31,423 INFO [520/1146] ac4b0d95a640758c linear tinygemm_int4_g128 graph N=10368 cold -> contaminated median 94.47 us 836.4 GB/s reasons=["foreign_cpu 2.47 cores > 2 top=[('prometheus', 1.376), ('hanvithasaraswathi.m', 1.011)]"]
+2026-10-26 06:24:37,085 INFO [520/1146] ac4b0d95a640758c linear tinygemm_int4_g128 graph N=10368 cold -> clean median 94.48 us 836.2 GB/s
+2026-10-26 06:24:42,604 INFO [521/1146] f3c0c2e3cadb14f0 linear torch_scaled_mm_fp8_pt graph N=4096 cold -> clean median 72.49 us 815.0 GB/s
+2026-10-26 06:24:47,203 INFO [522/1146] d70bafd80e121b90 linear torch_scaled_mm_fp8_pt isolated N=512 cold -> clean median 42.53 us 43.3 GB/s
+2026-10-26 06:24:52,945 INFO [523/1146] fd87bb6a9105a271 linear vllm_cutlass_fp8_rw graph N=3584 cold -> clean median 17.20 us 750.3 GB/s
+2026-10-26 06:24:58,541 INFO [524/1146] 66b56d1913ddd250 linear tinygemm_int4_g128 eager N=1024 cold -> clean median 9.37 us 238.9 GB/s
+2026-10-26 06:25:04,389 INFO [525/1146] c75ba9efc2ca6c71 linear marlin_int4_g128 graph N=512 cold -> clean median 10.82 us 89.0 GB/s
+2026-10-26 06:25:10,089 INFO [526/1146] efabd482da04af3a linear vllm_cutlass_fp8_rw isolated N=152064 cold -> clean median 667.25 us 818.2 GB/s
+2026-10-26 06:25:15,861 INFO [527/1146] 6e8a172281a8f28c linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> clean median 23.67 us 720.5 GB/s
+2026-10-26 06:25:21,503 INFO [528/1146] f6c02eda4f54f26f linear vllm_cutlass_fp8_rw_full graph N=14336 cold -> clean median 79.24 us 743.7 GB/s
+2026-10-26 06:25:27,055 INFO [529/1146] 20430e3800ee783c linear torch_scaled_mm_fp8_pt graph N=3584 cold -> clean median 83.52 us 818.0 GB/s
+2026-10-26 06:25:31,604 INFO [530/1146] 11e939f9a8dd4e7b linear tinygemm_int4_g128 isolated N=1536 cold -> contaminated median 23.74 us 494.0 GB/s reasons=["foreign_cpu 2.39 cores > 2 top=[('prometheus', 1.179), ('hanvithasaraswathi.m', 1.016)]"]
+2026-10-26 06:25:36,153 INFO [530/1146] 11e939f9a8dd4e7b linear tinygemm_int4_g128 isolated N=1536 cold -> clean median 23.71 us 494.7 GB/s
+2026-10-26 06:25:41,718 INFO [531/1146] 8a4da5b8fd25a542 linear vllm_cutlass_fp8_rw_full graph N=37888 cold -> clean median 172.67 us 788.3 GB/s
+2026-10-26 06:25:47,436 INFO [532/1146] 97d3259d9663a3a0 linear torch_scaled_mm_fp8_pt graph N=3584 cold -> clean median 16.68 us 775.4 GB/s
+2026-10-26 06:25:53,091 INFO [533/1146] 529be2efdd811521 linear vllm_cutlass_fp8_rw eager N=69120 cold -> clean median 342.39 us 828.1 GB/s
+2026-10-26 06:25:58,880 INFO [534/1146] 047a411cccde5353 linear marlin_int4_g128 graph N=3584 cold -> clean median 10.63 us 628.5 GB/s
+2026-10-26 06:26:06,361 INFO [535/1146] 5c4b332c7953c66f linear torch_scaled_mm_fp8_pt eager N=32 cold -> clean median 21.93 us 6.2 GB/s
+2026-10-26 06:26:08,554 INFO waiting 30s: gpu_util max 25% >= 5%
+2026-10-26 06:26:43,993 INFO [536/1146] 53dd98ae0319eeee linear marlin_int4_g128 isolated N=128256 cold -> clean median 343.50 us 789.3 GB/s
+2026-10-26 06:26:49,567 INFO [537/1146] e1e5e766639cf244 linear vllm_cutlass_fp8_rw eager N=36480 cold -> clean median 187.34 us 798.8 GB/s
+2026-10-26 06:26:55,436 INFO [538/1146] a0f0b99483357919 linear tinygemm_int4_g128 graph N=19712 cold -> clean median 174.23 us 862.1 GB/s
+2026-10-26 06:27:00,284 INFO [539/1146] 606df121652d2ff4 linear tinygemm_int4_g128 isolated N=384 cold -> clean median 18.34 us 46.1 GB/s
+2026-10-26 06:27:02,480 INFO waiting 30s: gpu_util max 7% >= 5%
+2026-10-26 06:27:38,560 INFO [540/1146] c0e404305cd68ef2 linear marlin_int4_g128 eager N=152064 cold -> clean median 322.11 us 873.4 GB/s
+2026-10-26 06:27:44,159 INFO [541/1146] 5b6da49055041d35 linear tinygemm_int4_g128 graph N=4096 cold -> clean median 37.64 us 830.8 GB/s
+2026-10-26 06:27:49,970 INFO [542/1146] 4e3a2176cafc5a99 linear tinygemm_int4_g128 graph N=1024 cold -> clean median 6.37 us 362.8 GB/s
+2026-10-26 06:27:55,486 INFO [543/1146] 36a8d710b5bc4d14 linear vllm_cutlass_fp8_rw_full eager N=4608 cold -> clean median 35.33 us 468.4 GB/s
+2026-10-26 06:28:01,283 INFO [544/1146] 90aef769ca8f7b35 linear torch_scaled_mm_fp8_pt graph N=128256 cold -> clean median 633.01 us 836.5 GB/s
+2026-10-26 06:28:08,096 INFO [545/1146] 4aea23d74f8e09b4 linear marlin_int4_g128 graph N=14336 cold -> clean median 37.12 us 819.7 GB/s
+2026-10-26 06:28:13,928 INFO [546/1146] 44963f3a331285d2 linear tinygemm_int4_g128 eager N=69120 cold -> clean median 173.22 us 869.1 GB/s
+2026-10-26 06:28:19,747 INFO [547/1146] 4c11acd94ce69d99 linear torch_scaled_mm_fp8_pt_full graph N=128256 cold -> clean median 643.37 us 823.1 GB/s
+2026-10-26 06:28:26,059 INFO [548/1146] e571b78083dc0b37 linear vllm_cutlass_fp8_rw graph N=32 cold -> clean median 15.03 us 31.5 GB/s
+2026-10-26 06:28:31,579 INFO [549/1146] 72e5cff946c434de linear torch_scaled_mm_fp8_pt eager N=10112 cold -> contaminated median 50.90 us 814.1 GB/s reasons=["foreign_cpu 3.17 cores > 2 top=[('prometheus', 1.9240000000000002), ('hanvithasaraswathi.m', 1.024), ('messagebus', 0.075)]"]
+2026-10-26 06:28:37,093 INFO [549/1146] 72e5cff946c434de linear torch_scaled_mm_fp8_pt eager N=10112 cold -> clean median 50.94 us 813.6 GB/s
+2026-10-26 06:28:43,173 INFO [550/1146] 9b4f055565a74d69 linear marlin_int4_g128 graph N=128256 cold -> clean median 310.07 us 874.5 GB/s
+2026-10-26 06:28:47,674 INFO [551/1146] 60a8ec49ae33fc2b linear tinygemm_int4_g128 isolated N=18944 cold -> clean median 50.34 us 717.5 GB/s
+2026-10-26 06:28:53,379 INFO [552/1146] 9f45261c8f895d31 linear torch_scaled_mm_fp8_pt eager N=384 cold -> clean median 21.49 us 73.4 GB/s
+2026-10-26 06:28:58,494 INFO [553/1146] fc0c6b870219c7c3 linear marlin_int4_g128 isolated N=69120 cold -> clean median 201.71 us 724.4 GB/s
+2026-10-26 06:29:04,291 INFO [554/1146] 067b609de37bf4ed linear torch_scaled_mm_fp8_pt graph N=152064 cold -> clean median 631.94 us 866.3 GB/s
+2026-10-26 06:29:11,284 INFO [555/1146] 12e986855de2490d linear marlin_int4_g128 graph N=768 cold -> clean median 10.08 us 161.9 GB/s
+2026-10-26 06:29:13,443 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 06:29:49,209 INFO [556/1146] 21f609fab0445dab linear torch_scaled_mm_fp8_pt graph N=14336 cold -> clean median 69.84 us 841.3 GB/s
+2026-10-26 06:29:55,276 INFO [557/1146] bfa778d2f87a641f linear marlin_int4_g128 graph N=128256 cold -> clean median 312.95 us 868.9 GB/s
+2026-10-26 06:30:01,073 INFO [558/1146] 805a1d60dc2fec19 linear marlin_int4_g128 graph N=5504 cold -> clean median 49.57 us 821.5 GB/s
+2026-10-26 06:30:06,831 INFO [559/1146] 614337931863b668 linear vllm_cutlass_fp8_rw graph N=1536 cold -> clean median 9.90 us 636.7 GB/s
+2026-10-26 06:30:12,363 INFO [560/1146] 486a42536394dea4 linear vllm_cutlass_fp8_rw_full graph N=4096 cold -> clean median 77.51 us 759.7 GB/s
+2026-10-26 06:30:14,524 INFO waiting 30s: gpu_util max 17% >= 5%
+2026-10-26 06:30:50,356 INFO [561/1146] a560c743a9f1953e linear torch_scaled_mm_fp8_pt eager N=131072 cold -> clean median 628.68 us 854.4 GB/s
+2026-10-26 06:30:57,083 INFO [562/1146] c5854e74cde9a8ae linear torch_scaled_mm_fp8_pt_full graph N=18944 cold -> clean median 88.16 us 771.1 GB/s
+2026-10-26 06:31:02,799 INFO [563/1146] 6c62182431131525 linear marlin_int4_g128 graph N=256 cold -> contaminated median 19.40 us 99.0 GB/s reasons=["foreign_cpu 2.42 cores > 2 top=[('prometheus', 1.149), ('hanvithasaraswathi.m', 1.0290000000000001), ('messagebus', 0.069)]"]
+2026-10-26 06:31:08,407 INFO [563/1146] 6c62182431131525 linear marlin_int4_g128 graph N=256 cold -> clean median 19.38 us 99.1 GB/s
+2026-10-26 06:31:13,935 INFO [564/1146] 2135e96f0d031edf linear torch_scaled_mm_fp8_pt_full graph N=3584 cold -> clean median 108.92 us 626.7 GB/s
+2026-10-26 06:31:19,724 INFO [565/1146] c1d866fbb1a345eb linear torch_scaled_mm_fp8_pt eager N=128256 cold -> clean median 614.12 us 855.9 GB/s
+2026-10-26 06:31:25,221 INFO [566/1146] 3cb255baa5352c12 linear vllm_cutlass_fp8_rw graph N=2944 cold -> clean median 50.58 us 835.0 GB/s
+2026-10-26 06:31:30,743 INFO [567/1146] 5ba37f0919cb2ea9 linear vllm_cutlass_fp8_rw eager N=6144 cold -> clean median 31.81 us 792.5 GB/s
+2026-10-26 06:31:36,446 INFO [568/1146] 75f97388cbc41d43 linear torch_scaled_mm_fp8_pt graph N=1024 cold -> clean median 10.88 us 394.5 GB/s
+2026-10-26 06:31:42,225 INFO [569/1146] f89efadc32b14b50 linear vllm_cutlass_fp8_rw graph N=18944 cold -> clean median 92.48 us 736.7 GB/s
+2026-10-26 06:31:47,729 INFO [570/1146] f673c994ab2057c2 linear vllm_cutlass_fp8_rw_full eager N=14336 cold -> clean median 80.62 us 729.5 GB/s
+2026-10-26 06:31:54,253 INFO [571/1146] cdf1aeada1ec3cd8 linear torch_scaled_mm_fp8_pt graph N=32 cold -> clean median 9.13 us 51.8 GB/s
+2026-10-26 06:31:58,864 INFO [572/1146] f0f81c914bd93f43 linear tinygemm_int4_g128 isolated N=36480 cold -> clean median 99.22 us 800.9 GB/s
+2026-10-26 06:32:04,339 INFO [573/1146] 8d96bb3473ab8507 linear torch_scaled_mm_fp8_pt eager N=14336 cold -> clean median 71.80 us 818.3 GB/s
+2026-10-26 06:32:06,531 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 06:32:42,408 INFO [574/1146] 338091faf51b239e linear torch_scaled_mm_fp8_pt graph N=4608 cold -> clean median 20.83 us 802.7 GB/s
+2026-10-26 06:32:48,291 INFO [575/1146] 8c00d47becc2b5fc linear marlin_int4_g128 graph N=512 cold -> clean median 10.75 us 91.0 GB/s
+2026-10-26 06:32:50,485 INFO waiting 30s: gpu_util max 11% >= 5%
+2026-10-26 06:33:25,159 INFO [576/1146] 7fcc902d59d7aedc linear vllm_cutlass_fp8_rw_full isolated N=18944 cold -> clean median 130.24 us 522.2 GB/s
+2026-10-26 06:33:30,972 INFO [577/1146] 7603a6c22ca55417 linear marlin_int4_g128 graph N=37888 cold -> clean median 81.13 us 865.0 GB/s
+2026-10-26 06:33:36,632 INFO [578/1146] 26e0c1a314a6f3e1 linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> clean median 30.43 us 560.0 GB/s
+2026-10-26 06:33:42,394 INFO [579/1146] 3b972842cdb643bb linear torch_scaled_mm_fp8_pt graph N=4096 cold -> clean median 20.99 us 799.8 GB/s
+2026-10-26 06:33:48,215 INFO [580/1146] 9f7b2a14c521619b linear vllm_cutlass_fp8_rw graph N=37888 cold -> clean median 170.92 us 797.2 GB/s
+2026-10-26 06:33:53,951 INFO [581/1146] 723f473efee7c99e linear vllm_cutlass_fp8_rw_full graph N=4608 cold -> clean median 23.20 us 715.3 GB/s
+2026-10-26 06:33:58,556 INFO [582/1146] 01f43f6c7752aed2 linear torch_scaled_mm_fp8_pt_full isolated N=14336 cold -> clean median 131.36 us 447.3 GB/s
+2026-10-26 06:34:04,114 INFO [583/1146] 7e173953c231ec20 linear marlin_int4_g128 eager N=2944 cold -> clean median 30.98 us 703.5 GB/s
+2026-10-26 06:34:08,874 INFO [584/1146] 9369c3ae571281f5 linear vllm_cutlass_fp8_rw isolated N=36480 cold -> clean median 208.69 us 717.1 GB/s
+2026-10-26 06:34:14,494 INFO [585/1146] 21776beb064023ec linear torch_scaled_mm_fp8_pt eager N=128 cold -> clean median 21.46 us 86.2 GB/s
+2026-10-26 06:34:19,005 INFO [586/1146] 0ef89681e06290fb linear tinygemm_int4_g128 isolated N=4096 cold -> clean median 19.49 us 458.2 GB/s
+2026-10-26 06:34:23,605 INFO [587/1146] 43b70c0f7dbe6b47 linear torch_scaled_mm_fp8_pt_full isolated N=512 cold -> clean median 78.05 us 23.6 GB/s
+2026-10-26 06:34:29,411 INFO [588/1146] beed35467ec5933e linear vllm_cutlass_fp8_rw graph N=37504 cold -> clean median 736.90 us 729.9 GB/s
+2026-10-26 06:34:36,342 INFO [589/1146] 0ca02757112b66f1 linear tinygemm_int4_g128 graph N=28672 cold -> clean median 112.03 us 561.6 GB/s
+2026-10-26 06:34:43,150 INFO [590/1146] 209b6a97bdae14f8 linear tinygemm_int4_g128 graph N=14336 cold -> clean median 37.68 us 828.9 GB/s
+2026-10-26 06:34:48,682 INFO [591/1146] 0a3b20a0cdd98fd5 linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> clean median 92.87 us 635.4 GB/s
+2026-10-26 06:34:54,466 INFO [592/1146] acf18de0466d2bc6 linear vllm_cutlass_fp8_rw graph N=1024 cold -> clean median 7.93 us 532.5 GB/s
+2026-10-26 06:35:00,044 INFO [593/1146] 369bf6fc5e0bb3fc linear marlin_int4_g128 graph N=3584 cold -> clean median 43.27 us 817.4 GB/s
+2026-10-26 06:35:05,924 INFO [594/1146] b6ca1aa4b9eb84c4 linear vllm_cutlass_fp8_rw graph N=384 cold -> clean median 6.55 us 241.3 GB/s
+2026-10-26 06:35:11,592 INFO [595/1146] 7ea65d687e7f9398 linear marlin_int4_g128 graph N=37888 cold -> clean median 83.53 us 854.1 GB/s
+2026-10-26 06:35:17,128 INFO [596/1146] 7afb112a7b9fa715 linear tinygemm_int4_g128 eager N=18944 cold -> clean median 43.67 us 827.0 GB/s
+2026-10-26 06:35:21,656 INFO [597/1146] 713da26a7eda013c linear vllm_cutlass_fp8_rw isolated N=10112 cold -> clean median 74.56 us 556.4 GB/s
+2026-10-26 06:35:28,011 INFO [598/1146] 9c955efc18d1f809 linear tinygemm_int4_g128 graph N=32 cold -> clean median 7.43 us 36.7 GB/s
+2026-10-26 06:35:33,572 INFO [599/1146] 514f593f0edfa5d8 linear vllm_cutlass_fp8_rw graph N=3584 cold -> contaminated median 82.86 us 819.9 GB/s reasons=["foreign_cpu 2.93 cores > 2 top=[('prometheus', 1.3969999999999998), ('hanvithasaraswathi.m', 0.9990000000000001), ('root', 0.386)]"]
+2026-10-26 06:35:39,114 INFO [599/1146] 514f593f0edfa5d8 linear vllm_cutlass_fp8_rw graph N=3584 cold -> clean median 82.89 us 819.6 GB/s
+2026-10-26 06:35:46,435 INFO [600/1146] f1867c7ec63be598 linear vllm_cutlass_fp8_rw eager N=32 cold -> clean median 20.79 us 6.5 GB/s
+2026-10-26 06:35:52,107 INFO [601/1146] f91db77f81b168e4 linear vllm_cutlass_fp8_rw graph N=37888 cold -> clean median 174.65 us 785.7 GB/s
+2026-10-26 06:35:56,670 INFO [602/1146] 007596a479f17c80 linear tinygemm_int4_g128 isolated N=3584 cold -> clean median 50.96 us 708.7 GB/s
+2026-10-26 06:36:02,345 INFO [603/1146] cf366f45722175b4 linear vllm_cutlass_fp8_rw_full graph N=37888 cold -> contaminated median 171.98 us 790.9 GB/s reasons=["foreign_cpu 2.10 cores > 2 top=[('hanvithasaraswathi.m', 0.995), ('prometheus', 0.977)]", "foreign_cpu 2.06 cores > 2 top=[('hanvithasaraswathi.m', 1.01), ('root', 0.975)]"]
+2026-10-26 06:36:04,538 INFO waiting 30s: gpu_util max 12% >= 5%
+2026-10-26 06:36:40,396 INFO [603/1146] cf366f45722175b4 linear vllm_cutlass_fp8_rw_full graph N=37888 cold -> clean median 171.82 us 791.7 GB/s
+2026-10-26 06:36:45,893 INFO [604/1146] 436b9cea35679ba5 linear tinygemm_int4_g128 eager N=2944 cold -> clean median 28.43 us 790.0 GB/s
+2026-10-26 06:36:51,553 INFO [605/1146] 02d32e465a03e0c4 linear tinygemm_int4_g128 graph N=3584 cold -> clean median 11.36 us 610.8 GB/s
+2026-10-26 06:36:57,370 INFO [606/1146] 7cdecccff2f55faa linear tinygemm_int4_g128 graph N=1024 cold -> clean median 8.87 us 269.7 GB/s
+2026-10-26 06:37:04,125 INFO [607/1146] 5db09f40de855fcd linear torch_scaled_mm_fp8_pt_full eager N=18944 cold -> clean median 89.31 us 760.7 GB/s
+2026-10-26 06:37:10,084 INFO [608/1146] 5fc586722a78d0eb linear torch_scaled_mm_fp8_pt graph N=256 cold -> clean median 8.54 us 123.4 GB/s
+2026-10-26 06:37:15,605 INFO [609/1146] 2a3e09d8f17c137b linear vllm_cutlass_fp8_rw eager N=19200 cold -> clean median 105.07 us 749.6 GB/s
+2026-10-26 06:37:21,158 INFO [610/1146] a34ad779a1841877 linear marlin_int4_g128 graph N=18944 cold -> clean median 42.59 us 823.1 GB/s
+2026-10-26 06:37:26,708 INFO [611/1146] f6b52abfbf4150ee linear tinygemm_int4_g128 eager N=19200 cold -> clean median 50.11 us 834.7 GB/s
+2026-10-26 06:37:32,469 INFO [612/1146] 08087de9f65c18af linear vllm_cutlass_fp8_rw_full graph N=18944 cold -> contaminated median 94.95 us 719.7 GB/s reasons=["foreign_cpu 2.34 cores > 2 top=[('prometheus', 1.13), ('hanvithasaraswathi.m', 1.0170000000000001), ('root', 0.065)]"]
+2026-10-26 06:37:38,235 INFO [612/1146] 08087de9f65c18af linear vllm_cutlass_fp8_rw_full graph N=18944 cold -> clean median 94.90 us 720.0 GB/s
+2026-10-26 06:37:43,812 INFO [613/1146] 7098ab5f55082dc8 linear marlin_int4_g128 graph N=4096 cold -> clean median 37.39 us 811.7 GB/s
+2026-10-26 06:37:48,362 INFO [614/1146] c0daa3760e22b787 linear marlin_int4_g128 isolated N=1024 cold -> clean median 59.89 us 36.3 GB/s
+2026-10-26 06:37:54,094 INFO [615/1146] 260363459f52b0e0 linear vllm_cutlass_fp8_rw isolated N=1536 cold -> clean median 35.30 us 178.6 GB/s
+2026-10-26 06:37:59,654 INFO [616/1146] 11c776c5711c96cb linear torch_scaled_mm_fp8_pt_full graph N=4096 cold -> clean median 92.86 us 634.0 GB/s
+2026-10-26 06:38:05,243 INFO [617/1146] 65db7d568b697e08 linear marlin_int4_g128 graph N=14336 cold -> clean median 37.15 us 819.0 GB/s
+2026-10-26 06:38:11,020 INFO [618/1146] 8f699e779cbbc9e0 linear torch_scaled_mm_fp8_pt graph N=4096 cold -> clean median 21.06 us 801.3 GB/s
+2026-10-26 06:38:16,502 INFO [619/1146] 94d812c7cbe73cc5 linear vllm_cutlass_fp8_rw eager N=18944 cold -> clean median 92.73 us 733.4 GB/s
+2026-10-26 06:38:22,166 INFO [620/1146] 3e5ee29f34306356 linear torch_scaled_mm_fp8_pt_full graph N=14336 cold -> clean median 80.37 us 738.0 GB/s
+2026-10-26 06:38:27,708 INFO [621/1146] 61d7d7d0407523c2 linear tinygemm_int4_g128 graph N=18944 cold -> clean median 42.88 us 842.3 GB/s
+2026-10-26 06:38:32,201 INFO [622/1146] f65da54f52700754 linear torch_scaled_mm_fp8_pt isolated N=6144 cold -> contaminated median 57.52 us 437.8 GB/s reasons=["foreign_cpu 2.53 cores > 2 top=[('prometheus', 1.222), ('hanvithasaraswathi.m', 1.0979999999999999), ('root', 0.053)]"]
+2026-10-26 06:38:36,692 INFO [622/1146] f65da54f52700754 linear torch_scaled_mm_fp8_pt isolated N=6144 cold -> clean median 57.44 us 438.4 GB/s
+2026-10-26 06:38:42,500 INFO [623/1146] 88f4583bf3057956 linear vllm_cutlass_fp8_rw graph N=128256 cold -> contaminated median 620.68 us 847.6 GB/s reasons=["foreign_cpu 3.23 cores > 2 top=[('hanvithasaraswathi.m', 3.1770000000000005)]", "foreign_cpu 2.52 cores > 2 top=[('hanvithasaraswathi.m', 2.02), ('root', 0.44799999999999995)]"]
+2026-10-26 06:38:48,298 INFO [623/1146] 88f4583bf3057956 linear vllm_cutlass_fp8_rw graph N=128256 cold -> contaminated median 620.79 us 847.5 GB/s reasons=["foreign_cpu 2.33 cores > 2 top=[('hanvithasaraswathi.m', 2.279)]", "foreign_cpu 2.12 cores > 2 top=[('hanvithasaraswathi.m', 2.0010000000000003)]"]
+2026-10-26 06:38:50,492 INFO waiting 30s: foreign_cpu 2.52 cores >= 2 top=[('hanvithasaraswathi.m', 2.0380000000000003), ('root', 0.397)]
+2026-10-26 06:39:26,360 INFO [623/1146] 88f4583bf3057956 linear vllm_cutlass_fp8_rw graph N=128256 cold -> clean median 620.23 us 848.3 GB/s
+2026-10-26 06:39:32,903 INFO [624/1146] cdfbc374e64bca57 linear tinygemm_int4_g128 isolated N=152064 cold -> contaminated median 336.26 us 862.0 GB/s reasons=["foreign_cpu 3.12 cores > 2 top=[('hanvithasaraswathi.m', 1.853), ('prometheus', 1.0959999999999999), ('root', 0.051)]", "foreign_cpu 2.87 cores > 2 top=[('hanvithasaraswathi.m', 2.6630000000000003), ('root', 0.114)]", "foreign_cpu 2.26 cores > 2 top=[('hanvithasaraswathi.m', 2.1109999999999998), ('root', 0.081)]"]
+2026-10-26 06:39:38,203 INFO [624/1146] cdfbc374e64bca57 linear tinygemm_int4_g128 isolated N=152064 cold -> contaminated median 336.19 us 862.1 GB/s reasons=["foreign_cpu 2.05 cores > 2 top=[('hanvithasaraswathi.m', 1.93)]"]
+2026-10-26 06:39:43,502 INFO [624/1146] cdfbc374e64bca57 linear tinygemm_int4_g128 isolated N=152064 cold -> clean median 336.29 us 861.9 GB/s
+2026-10-26 06:39:49,217 INFO [625/1146] 16fd8bd34d1ce5c8 linear tinygemm_int4_g128 graph N=768 cold -> contaminated median 11.09 us 530.2 GB/s reasons=["foreign_cpu 2.96 cores > 2 top=[('hanvithasaraswathi.m', 2.895)]", "foreign_cpu 2.15 cores > 2 top=[('hanvithasaraswathi.m', 2.0010000000000003)]"]
+2026-10-26 06:39:54,985 INFO [625/1146] 16fd8bd34d1ce5c8 linear tinygemm_int4_g128 graph N=768 cold -> contaminated median 11.09 us 530.0 GB/s reasons=["foreign_cpu 2.71 cores > 2 top=[('hanvithasaraswathi.m', 2.3000000000000003), ('root', 0.41000000000000003)]"]
+2026-10-26 06:40:00,727 INFO [625/1146] 16fd8bd34d1ce5c8 linear tinygemm_int4_g128 graph N=768 cold -> contaminated median 11.10 us 529.6 GB/s reasons=["foreign_cpu 2.48 cores > 2 top=[('hanvithasaraswathi.m', 2.428)]", "foreign_cpu 2.05 cores > 2 top=[('hanvithasaraswathi.m', 1.9859999999999998)]", "foreign_cpu 2.04 cores > 2 top=[('hanvithasaraswathi.m', 1.9420000000000002), ('root', 0.09300000000000001)]"]
+2026-10-26 06:40:06,556 INFO [625/1146] 16fd8bd34d1ce5c8 linear tinygemm_int4_g128 graph N=768 cold -> contaminated median 11.12 us 528.9 GB/s reasons=["foreign_cpu 2.13 cores > 2 top=[('hanvithasaraswathi.m', 1.999)]"]
+2026-10-26 06:40:12,297 INFO [625/1146] 16fd8bd34d1ce5c8 linear tinygemm_int4_g128 graph N=768 cold -> contaminated median 11.12 us 528.5 GB/s reasons=["foreign_cpu 2.81 cores > 2 top=[('hanvithasaraswathi.m', 2.744)]"]
+2026-10-26 06:40:18,068 INFO [625/1146] 16fd8bd34d1ce5c8 linear tinygemm_int4_g128 graph N=768 cold -> unclean_exhausted median 11.12 us 528.5 GB/s reasons=["foreign_cpu 2.03 cores > 2 top=[('hanvithasaraswathi.m', 2.016)]"]
+2026-10-26 06:40:22,675 INFO [626/1146] bbee46f4346bb4f0 linear vllm_cutlass_fp8_rw isolated N=19200 cold -> clean median 127.14 us 619.5 GB/s
+2026-10-26 06:40:28,793 INFO [627/1146] f7f66ee5bd2b5cbc linear vllm_cutlass_fp8_rw_full graph N=152064 cold -> contaminated median 646.42 us 845.0 GB/s reasons=["foreign_cpu 2.76 cores > 2 top=[('hanvithasaraswathi.m', 2.678)]"]
+2026-10-26 06:40:30,986 INFO waiting 30s: foreign_cpu 2.06 cores >= 2 top=[('hanvithasaraswathi.m', 1.625), ('prometheus', 0.32)]
+2026-10-26 06:41:06,861 INFO [627/1146] f7f66ee5bd2b5cbc linear vllm_cutlass_fp8_rw_full graph N=152064 cold -> clean median 645.80 us 845.8 GB/s
+2026-10-26 06:41:11,374 INFO [628/1146] f14d97f932fce374 linear vllm_cutlass_fp8_rw_full isolated N=1024 cold -> clean median 52.10 us 80.8 GB/s
+2026-10-26 06:41:13,565 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 06:41:49,463 INFO [629/1146] 2798abf497ac37d1 linear tinygemm_int4_g128 graph N=69120 cold -> clean median 171.39 us 878.4 GB/s
+2026-10-26 06:41:55,029 INFO [630/1146] 429ef69c0051df11 linear marlin_int4_g128 eager N=6144 cold -> clean median 29.85 us 435.4 GB/s
+2026-10-26 06:42:00,587 INFO [631/1146] 8c0390bfb084f05c linear torch_scaled_mm_fp8_pt graph N=4096 cold -> clean median 72.13 us 815.4 GB/s
+2026-10-26 06:42:06,295 INFO [632/1146] 2f2395b91b04ac94 linear torch_scaled_mm_fp8_pt graph N=4096 cold -> clean median 21.11 us 804.1 GB/s
+2026-10-26 06:42:08,485 INFO waiting 30s: gpu_util max 8% >= 5%
+2026-10-26 06:42:43,054 INFO [633/1146] cd8db77109bdd2df linear vllm_cutlass_fp8_rw_full isolated N=1024 cold -> clean median 52.16 us 80.7 GB/s
+2026-10-26 06:42:49,204 INFO [634/1146] e229abdf67e20399 linear vllm_cutlass_fp8_rw eager N=32 cold -> clean median 20.72 us 22.8 GB/s
+2026-10-26 06:42:54,710 INFO [635/1146] b61a23cf45a0230c linear torch_scaled_mm_fp8_pt graph N=18944 cold -> clean median 79.76 us 859.6 GB/s
+2026-10-26 06:43:00,310 INFO [636/1146] adc79621f2139b07 linear torch_scaled_mm_fp8_pt graph N=4608 cold -> clean median 20.71 us 797.9 GB/s
+2026-10-26 06:43:06,070 INFO [637/1146] 290b4af3f441014c linear torch_scaled_mm_fp8_pt_full graph N=512 cold -> clean median 18.15 us 108.3 GB/s
+2026-10-26 06:43:11,855 INFO [638/1146] f7a8a9851782ea4c linear marlin_int4_g128 graph N=3584 cold -> clean median 11.09 us 617.7 GB/s
+2026-10-26 06:43:17,464 INFO [639/1146] 8ed63c0f0fde80ae linear marlin_int4_g128 graph N=14336 cold -> clean median 37.11 us 816.9 GB/s
+2026-10-26 06:43:24,121 INFO [640/1146] d4a5505ba8d40123 linear torch_scaled_mm_fp8_pt_full graph N=1024 cold -> clean median 20.01 us 211.7 GB/s
+2026-10-26 06:43:30,420 INFO [641/1146] b327f26333a287d7 linear vllm_cutlass_fp8_rw graph N=128 cold -> clean median 6.12 us 86.4 GB/s
+2026-10-26 06:43:32,609 INFO waiting 30s: gpu_util max 16% >= 5%
+2026-10-26 06:44:04,814 INFO waiting 60s: foreign_cpu 3.05 cores >= 2 top=[('hanvithasaraswathi.m', 2.7209999999999996), ('root', 0.062)]
+2026-10-26 06:45:07,082 INFO waiting 120s: foreign_cpu 4.12 cores >= 2 top=[('hanvithasaraswathi.m', 4.066)]
+2026-10-26 06:47:09,388 INFO waiting 240s: foreign_cpu 4.12 cores >= 2 top=[('hanvithasaraswathi.m', 4.051)]
+2026-10-26 06:51:11,694 INFO waiting 480s: foreign_cpu 4.12 cores >= 2 top=[('hanvithasaraswathi.m', 4.081)]
+2026-10-26 06:59:13,998 INFO waiting 600s: foreign_cpu 4.14 cores >= 2 top=[('hanvithasaraswathi.m', 4.069)]
+2026-10-26 07:09:16,225 INFO waiting 600s: foreign_cpu 3.18 cores >= 2 top=[('hanvithasaraswathi.m', 3.1390000000000002)]

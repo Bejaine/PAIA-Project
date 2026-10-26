@@ -40,7 +40,14 @@ CARD=results/$TAG/card_${D}.txt
 ECC="$(nvidia-smi --query-gpu=ecc.mode.current --format=csv,noheader | head -1)"
 [[ "$ECC" == "Disabled" || "${PAIA_ALLOW_ECC:-0}" == "1" ]] || { echo "ABORT: ECC enabled"; exit 3; }
 CARD_ID="$PAIA_GPU ecc=$ECC"
-[[ -f $CARD && "$(cat $CARD)" != "$CARD_ID" ]] && { echo "ABORT: sessions *_${D} use $(cat $CARD), got $CARD_ID"; exit 6; }
+retry_later() {   # resubmit 1 h later (until PAIA_RETRY_UNTIL) and exit without measuring
+  if [[ -n "${PAIA_RETRY_UNTIL:-}" && $(date +%s) -lt ${PAIA_RETRY_UNTIL} ]]; then
+    sbatch -w "$SLURMD_NODENAME" --begin=now+3600 --export=ALL /home/bejaine.birju/paia/project/PAIA-Project/paia-bench/scripts/slurm_rtx6000ada_e4.sh
+    echo "$1: resubmitted for 1 h later; exiting without measuring"; exit 0
+  fi
+  echo "$1: past PAIA_RETRY_UNTIL; exiting without measuring"; exit 8
+}
+[[ -f $CARD && "$(cat $CARD)" != "$CARD_ID" ]] && { echo "WRONG_CARD: sessions *_${D} use $(cat $CARD), got $CARD_ID"; retry_later WRONG_CARD; }
 [[ -x $PAIA_VENV/bin/python ]] || { echo "ABORT: no E4 venv on this node"; exit 4; }
 id=$(sha1sum $PAIA_VENV/requirements.lock.txt | cut -c1-16); [[ "$id" == "$LOCK_ID" ]] || { echo "ABORT: venv lock $id != $LOCK_ID"; exit 5; }
 FOREIGN=$($PAIA_VENV/bin/python - <<'PY'
@@ -61,11 +68,7 @@ PY
 )
 echo "preflight: other users' CPU over 60 s = $FOREIGN cores (max ${PAIA_PREFLIGHT_MAX_CORES:-2})"
 if awk "BEGIN{exit !($FOREIGN > ${PAIA_PREFLIGHT_MAX_CORES:-2})}"; then
-  if [[ -n "${PAIA_RETRY_UNTIL:-}" && $(date +%s) -lt ${PAIA_RETRY_UNTIL} ]]; then
-    sbatch -w "$SLURMD_NODENAME" --begin=now+3600 --export=ALL /home/bejaine.birju/paia/project/PAIA-Project/paia-bench/scripts/slurm_rtx6000ada_e4.sh
-    echo "PREFLIGHT_BUSY: resubmitted for 1 h later; exiting without measuring"; exit 0
-  fi
-  echo "PREFLIGHT_BUSY: past PAIA_RETRY_UNTIL; exiting without measuring"; exit 8
+  retry_later PREFLIGHT_BUSY
 fi
 [[ -f $CARD ]] || echo "$CARD_ID" > $CARD
 ( last=$(date +%s); pid=""

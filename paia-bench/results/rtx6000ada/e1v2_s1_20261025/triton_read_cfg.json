@@ -1,0 +1,119 @@
+{
+ "BLOCK": 2048,
+ "num_warps": 8,
+ "waves": 8,
+ "sm_count": 142,
+ "tuning": [
+  {
+   "BLOCK": 1024,
+   "num_warps": 4,
+   "waves": 2,
+   "median_ms": 1.2210559844970703
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 4,
+   "waves": 4,
+   "median_ms": 1.2194559574127197
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 4,
+   "waves": 8,
+   "median_ms": 1.2200000286102295
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 8,
+   "waves": 2,
+   "median_ms": 1.220736026763916
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 8,
+   "waves": 4,
+   "median_ms": 1.21779203414917
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 8,
+   "waves": 8,
+   "median_ms": 1.2184319496154785
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 4,
+   "waves": 2,
+   "median_ms": 1.2186880111694336
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 4,
+   "waves": 4,
+   "median_ms": 1.2188160419464111
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 4,
+   "waves": 8,
+   "median_ms": 1.2211840152740479
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 8,
+   "waves": 2,
+   "median_ms": 1.2183680534362793
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 8,
+   "waves": 4,
+   "median_ms": 1.2190719842910767
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 8,
+   "waves": 8,
+   "median_ms": 1.217087984085083
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 4,
+   "waves": 2,
+   "median_ms": 1.2329280376434326
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 4,
+   "waves": 4,
+   "median_ms": 1.222048044204712
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 4,
+   "waves": 8,
+   "median_ms": 1.2189439535140991
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 8,
+   "waves": 2,
+   "median_ms": 1.2188800573349
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 8,
+   "waves": 4,
+   "median_ms": 1.2191359996795654
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 8,
+   "waves": 8,
+   "median_ms": 1.217471957206726
+  }
+ ],
+ "note": "tuned once per session on a cold 1 GiB buffer; timings here are for selection only",
+ "tuned_clean": true,
+ "tune_reasons": []
+}

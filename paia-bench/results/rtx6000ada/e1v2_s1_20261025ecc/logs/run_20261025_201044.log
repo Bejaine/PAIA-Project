@@ -1,0 +1,96 @@
+2026-10-25 20:10:44,629 INFO session e1v2_s1_20261025ecc phase e1: 360 cells, 360 to run (resume skips clean cells)
+2026-10-25 20:10:50,924 INFO canary reference 736.16 GB/s (cv 0.0002)
+2026-10-25 20:10:53,857 INFO triton read probe config: BLOCK=1024 warps=4 waves=2
+2026-10-25 20:10:59,633 INFO [1/360] 035ebcfe206064fe write torch_fill_ isolated N=2147483648 cold -> clean median 2798.75 us 767.3 GB/s
+2026-10-25 20:11:05,420 INFO [2/360] ec827ae679059252 write torch_fill_ eager N=2147483648 hot -> clean median 2790.18 us 769.7 GB/s
+2026-10-25 20:11:09,964 INFO [3/360] fa2e139171942d64 read triton_read isolated N=67108864 cold -> clean median 94.53 us 709.9 GB/s
+2026-10-25 20:11:16,224 INFO [4/360] 199652a5df74ce1e copy torch_copy_ graph N=2147483648 hot -> clean median 5844.06 us 734.9 GB/s
+2026-10-25 20:11:22,394 INFO [5/360] 3225b07a8a9c4c47 write torch_fill_ eager N=4294967296 cold -> contaminated median 5580.14 us 769.7 GB/s reasons=["foreign_cpu 2.07 cores > 2 top=[('aditya.shankar', 1.004), ('prometheus', 0.941)]"]
+2026-10-25 20:11:28,542 INFO [5/360] 3225b07a8a9c4c47 write torch_fill_ eager N=4294967296 cold -> clean median 5579.42 us 769.8 GB/s
+2026-10-25 20:11:34,153 INFO [6/360] 76eb716b2cdea884 read triton_read graph N=8388608 cold -> clean median 11.24 us 746.6 GB/s
+2026-10-25 20:11:36,344 INFO waiting 30s: gpu_util max 23% >= 5%
+2026-10-25 20:12:14,315 INFO [7/360] cb6f61fa3b1e4860 copy torch_copy_ graph N=4294967296 hot -> clean median 11682.99 us 735.3 GB/s
+2026-10-25 20:12:19,916 INFO [8/360] 45e8f80f150e2070 write torch_fill_ graph N=2097152 cold -> clean median 2.95 us 711.6 GB/s
+2026-10-25 20:12:25,384 INFO [9/360] 33bd3210f712c493 copy torch_copy_ eager N=33554432 hot -> clean median 14.34 us 4679.0 GB/s
+2026-10-25 20:12:30,831 INFO [10/360] 907d455ea9d2d4a0 read triton_read eager N=67108864 cold -> clean median 83.40 us 804.7 GB/s
+2026-10-25 20:12:36,326 INFO [11/360] cba499e2e1ac5548 read triton_read eager N=2097152 cold -> clean median 9.97 us 210.5 GB/s
+2026-10-25 20:12:41,706 INFO [12/360] 38e51f66769860bc copy torch_copy_ eager N=16777216 hot -> clean median 7.81 us 4294.7 GB/s
+2026-10-25 20:12:47,464 INFO [13/360] 26dd643a12d437eb read torch_sum graph N=1048576 cold -> clean median 6.68 us 156.9 GB/s
+2026-10-25 20:12:53,364 INFO [14/360] 4390e6593d823ea5 read triton_read eager N=2147483648 cold -> clean median 2691.31 us 797.9 GB/s
+2026-10-25 20:12:59,189 INFO [15/360] 48a219cba531d106 read triton_read graph N=1073741824 cold -> clean median 1334.82 us 804.4 GB/s
+2026-10-25 20:13:04,848 INFO [16/360] 113196c654b6c91f write torch_fill_ eager N=4194304 cold -> clean median 5.55 us 755.7 GB/s
+2026-10-25 20:13:09,468 INFO [17/360] da18d1e81e047efa write torch_fill_ isolated N=262144 cold -> clean median 13.36 us 19.6 GB/s
+2026-10-25 20:13:15,193 INFO [18/360] caea8147e6085d80 write torch_fill_ graph N=1073741824 hot -> clean median 1390.07 us 772.4 GB/s
+2026-10-25 20:13:21,122 INFO [19/360] e2eb14e7040bb75e read triton_read eager N=524288 cold -> contaminated median 10.11 us 52.0 GB/s reasons=["foreign_cpu 2.17 cores > 2 top=[('prometheus', 1.085), ('aditya.shankar', 1.003)]"]
+2026-10-25 20:13:23,313 INFO waiting 30s: gpu_util max 24% >= 5%
+2026-10-25 20:13:59,098 INFO [19/360] e2eb14e7040bb75e read triton_read eager N=524288 cold -> clean median 10.12 us 51.9 GB/s
+2026-10-25 20:14:04,786 INFO [20/360] 668ad1de7170f818 read triton_read isolated N=2147483648 hot -> clean median 2704.99 us 793.9 GB/s
+2026-10-25 20:14:09,150 INFO [21/360] af954d9f18f7368d read triton_read isolated N=33554432 hot -> clean median 19.26 us 1741.9 GB/s
+2026-10-25 20:14:11,341 INFO waiting 30s: gpu_util max 9% >= 5%
+2026-10-25 20:14:46,989 INFO [22/360] db0249dfb36fee35 read triton_read graph N=16777216 hot -> clean median 4.19 us 3999.6 GB/s
+2026-10-25 20:14:52,585 INFO [23/360] 52bb5103b436c6b0 read triton_read eager N=268435456 cold -> contaminated median 336.40 us 798.0 GB/s reasons=["foreign_cpu 2.34 cores > 2 top=[('prometheus', 1.178), ('aditya.shankar', 1.0090000000000001)]"]
+2026-10-25 20:14:58,235 INFO [23/360] 52bb5103b436c6b0 read triton_read eager N=268435456 cold -> clean median 336.43 us 797.9 GB/s
+2026-10-25 20:15:04,074 INFO [24/360] 0e2ccfc16931ae6c write torch_fill_ eager N=2147483648 cold -> clean median 2790.72 us 769.5 GB/s
+2026-10-25 20:15:10,250 INFO [25/360] 992ddcb28c23be15 write torch_fill_ graph N=4294967296 cold -> clean median 5566.10 us 771.6 GB/s
+2026-10-25 20:15:16,319 INFO [26/360] 3e31d11a3df5446d read torch_sum isolated N=4294967296 hot -> clean median 5477.25 us 784.1 GB/s
+2026-10-25 20:15:22,204 INFO [27/360] 00e9cc903ae69daa write torch_fill_ graph N=1048576 cold -> contaminated median 1.47 us 715.1 GB/s reasons=["foreign_cpu 2.29 cores > 2 top=[('prometheus', 1.193), ('aditya.shankar', 0.98)]"]
+2026-10-25 20:15:28,065 INFO [27/360] 00e9cc903ae69daa write torch_fill_ graph N=1048576 cold -> clean median 1.47 us 715.1 GB/s
+2026-10-25 20:15:33,562 INFO [28/360] 18c5ebddaf398035 read triton_read graph N=134217728 hot -> clean median 163.96 us 818.6 GB/s
+2026-10-25 20:15:37,935 INFO [29/360] 972e9aadca196ab9 copy torch_copy_ isolated N=33554432 hot -> clean median 18.53 us 3622.0 GB/s
+2026-10-25 20:15:43,695 INFO [30/360] 62d7c515b296f577 read triton_read eager N=1073741824 cold -> clean median 1345.83 us 797.8 GB/s
+2026-10-25 20:15:49,452 INFO [31/360] c3a0c39eecb1d4fe read triton_read eager N=262144 cold -> clean median 10.09 us 26.1 GB/s
+2026-10-25 20:15:51,645 INFO waiting 30s: gpu_util max 14% >= 5%
+2026-10-25 20:16:27,111 INFO [32/360] 2be2d9c1da639585 copy torch_copy_ isolated N=268435456 hot -> clean median 790.30 us 679.3 GB/s
+2026-10-25 20:16:31,684 INFO [33/360] 7f80cc4ed67b4ef6 read triton_read isolated N=524288 cold -> clean median 19.20 us 27.4 GB/s
+2026-10-25 20:16:37,161 INFO [34/360] f430bfed9fb91360 write torch_fill_ isolated N=1073741824 hot -> clean median 1401.50 us 766.1 GB/s
+2026-10-25 20:16:41,522 INFO [35/360] bb50ed2af5f4adf6 copy torch_copy_ isolated N=8388608 hot -> clean median 14.34 us 1170.3 GB/s
+2026-10-25 20:16:43,713 INFO waiting 30s: gpu_util max 11% >= 5%
+2026-10-25 20:17:19,658 INFO [36/360] ad58134c6f39b6b9 write torch_fill_ eager N=1073741824 cold -> clean median 1395.75 us 769.3 GB/s
+2026-10-25 20:17:25,320 INFO [37/360] b03d1cd803b00590 copy torch_copy_ graph N=268435456 cold -> clean median 779.92 us 688.4 GB/s
+2026-10-25 20:17:31,042 INFO [38/360] 99fa3249ae8cedbb copy torch_copy_ eager N=268435456 cold -> clean median 782.24 us 686.3 GB/s
+2026-10-25 20:17:37,103 INFO [39/360] 3b8db3c73e44caed write torch_fill_ graph N=262144 cold -> clean median 0.76 us 344.8 GB/s
+2026-10-25 20:17:43,168 INFO [40/360] a0e85ca76efb4076 write torch_fill_ eager N=4294967296 hot -> clean median 5579.20 us 769.8 GB/s
+2026-10-25 20:17:47,799 INFO [41/360] 01b246b4f5ae8c69 copy torch_copy_ isolated N=67108864 hot -> clean median 187.95 us 714.1 GB/s
+2026-10-25 20:17:49,989 INFO waiting 30s: gpu_util max 11% >= 5%
+2026-10-25 20:18:26,385 INFO [42/360] ec0801975b4fb19e read triton_read graph N=4294967296 cold -> clean median 5381.66 us 798.1 GB/s
+2026-10-25 20:18:32,554 INFO [43/360] 4c26b45f681818b6 read triton_read eager N=4294967296 hot -> clean median 5384.74 us 797.6 GB/s
+2026-10-25 20:18:38,042 INFO [44/360] 3eb057a2d07b737d read triton_read eager N=8388608 cold -> clean median 12.05 us 696.0 GB/s
+2026-10-25 20:18:45,966 INFO [45/360] 246351bb3f476233 copy torch_copy_ eager N=4294967296 hot -> clean median 12095.70 us 710.2 GB/s
+2026-10-25 20:18:50,590 INFO [46/360] 5cd0dbe6eba51a4b read triton_read isolated N=134217728 hot -> clean median 178.34 us 752.6 GB/s
+2026-10-25 20:18:55,135 INFO [47/360] a6f41c1ebaa41449 copy torch_copy_ isolated N=1048576 cold -> clean median 14.37 us 146.0 GB/s
+2026-10-25 20:19:00,704 INFO [48/360] 1760e6aea034734a read torch_sum graph N=8388608 cold -> clean median 15.84 us 529.5 GB/s
+2026-10-25 20:19:06,333 INFO [49/360] 353eebd46777bebf write torch_fill_ eager N=134217728 cold -> clean median 174.61 us 768.7 GB/s
+2026-10-25 20:19:12,449 INFO [50/360] 50c6c4e5ddce4d3b copy torch_copy_ eager N=2147483648 cold -> clean median 6223.87 us 690.1 GB/s
+2026-10-25 20:19:18,709 INFO [51/360] 3c09f4e2cd4c8443 read triton_read eager N=4294967296 cold -> clean median 5382.30 us 798.0 GB/s
+2026-10-25 20:19:24,369 INFO [52/360] 65a8010d5d3c7ac6 read torch_sum eager N=536870912 cold -> clean median 686.47 us 782.1 GB/s
+2026-10-25 20:19:29,823 INFO [53/360] 60c7d7d2f4e804fc copy torch_copy_ eager N=8388608 cold -> clean median 25.28 us 663.7 GB/s
+2026-10-25 20:19:35,286 INFO [54/360] ae21abb213fc6c68 write torch_fill_ isolated N=536870912 cold -> clean median 701.63 us 765.2 GB/s
+2026-10-25 20:19:40,660 INFO [55/360] 370173209f1892db write torch_fill_ eager N=524288 hot -> clean median 4.84 us 108.4 GB/s
+2026-10-25 20:19:45,029 INFO [56/360] 601925aef4b7a104 read triton_read isolated N=67108864 hot -> clean median 24.06 us 2788.8 GB/s
+2026-10-25 20:19:50,674 INFO [57/360] fd32d1fd7419133a copy torch_copy_ graph N=67108864 cold -> clean median 195.63 us 686.1 GB/s
+2026-10-25 20:19:56,092 INFO [58/360] 7068617557f8a437 read triton_read eager N=67108864 hot -> clean median 14.36 us 4673.4 GB/s
+2026-10-25 20:20:01,699 INFO [59/360] 68b0847b2a35a016 write torch_fill_ graph N=67108864 hot -> clean median 22.63 us 2965.0 GB/s
+2026-10-25 20:20:07,326 INFO [60/360] f82f4f55179ebec5 read triton_read graph N=536870912 hot -> clean median 661.63 us 811.4 GB/s
+2026-10-25 20:20:11,700 INFO [61/360] bfb1d84d0cdaff7b copy torch_copy_ isolated N=1048576 hot -> clean median 14.19 us 147.8 GB/s
+2026-10-25 20:20:17,169 INFO [62/360] 806970c773cc354b read triton_read eager N=4194304 cold -> clean median 10.05 us 417.3 GB/s
+2026-10-25 20:20:22,693 INFO [63/360] 522fb630a55f3828 read torch_sum isolated N=1073741824 hot -> contaminated median 1378.72 us 778.8 GB/s reasons=["foreign_cpu 2.10 cores > 2 top=[('aditya.shankar', 1.012), ('prometheus', 1.012)]"]
+2026-10-25 20:20:28,206 INFO [63/360] 522fb630a55f3828 read torch_sum isolated N=1073741824 hot -> clean median 1378.78 us 778.8 GB/s
+2026-10-25 20:20:32,742 INFO [64/360] 1dbd8b62dfd206a1 copy torch_copy_ isolated N=16777216 cold -> clean median 51.94 us 646.1 GB/s
+2026-10-25 20:20:38,665 INFO [65/360] cb569d9245302e2c write torch_fill_ isolated N=4294967296 hot -> clean median 5586.98 us 768.7 GB/s
+2026-10-25 20:20:44,723 INFO [66/360] d3d844659e561bc2 read torch_sum isolated N=4294967296 cold -> clean median 5476.70 us 784.2 GB/s
+2026-10-25 20:20:51,070 INFO [67/360] 2e3f1a33b2c8bebd read torch_sum graph N=4294967296 cold -> contaminated median 5462.59 us 786.3 GB/s reasons=["foreign_cpu 2.70 cores > 2 top=[('prometheus', 1.48), ('aditya.shankar', 1.032), ('messagebus', 0.075)]"]
+2026-10-25 20:20:57,400 INFO [67/360] 2e3f1a33b2c8bebd read torch_sum graph N=4294967296 cold -> clean median 5462.85 us 786.2 GB/s
+2026-10-25 20:21:01,767 INFO [68/360] 09e2046b316433f2 copy torch_copy_ isolated N=4194304 hot -> clean median 14.22 us 589.8 GB/s
+2026-10-25 20:21:07,424 INFO [69/360] fc4ca3871a53e3bb read torch_sum eager N=1048576 cold -> clean median 10.08 us 104.0 GB/s
+2026-10-25 20:21:13,296 INFO [70/360] 0b35f59c8b31a95b copy torch_copy_ eager N=1073741824 cold -> clean median 3110.94 us 690.3 GB/s
+2026-10-25 20:21:17,660 INFO [71/360] 91b2b7af0886acba write torch_fill_ isolated N=16777216 hot -> clean median 13.63 us 1230.7 GB/s
+2026-10-25 20:21:23,230 INFO [72/360] c6922d9a51ac4a7e copy torch_copy_ graph N=33554432 hot -> clean median 14.04 us 4780.5 GB/s
+2026-10-25 20:21:28,640 INFO [73/360] e4a84aa44efb187e read torch_sum eager N=2097152 cold -> contaminated median 10.12 us 207.3 GB/s reasons=["foreign_cpu 2.36 cores > 2 top=[('aditya.shankar', 1.0), ('avdhesh.mishra', 0.82), ('root', 0.377)]", "foreign_cpu 2.14 cores > 2 top=[('aditya.shankar', 1.023), ('avdhesh.mishra', 1.023)]"]
+2026-10-25 20:21:34,125 INFO [73/360] e4a84aa44efb187e read torch_sum eager N=2097152 cold -> contaminated median 10.08 us 208.0 GB/s reasons=["foreign_cpu 2.05 cores > 2 top=[('aditya.shankar', 0.992), ('avdhesh.mishra', 0.992)]", "foreign_cpu 2.04 cores > 2 top=[('aditya.shankar', 1.002), ('avdhesh.mishra', 1.002)]", "foreign_cpu 2.06 cores > 2 top=[('aditya.shankar', 0.9990000000000001), ('avdhesh.mishra', 0.9990000000000001)]"]
+2026-10-25 20:21:36,318 INFO waiting 30s: foreign_cpu 2.05 cores >= 2 top=[('avdhesh.mishra', 1.0170000000000001), ('aditya.shankar', 0.998)]
+2026-10-25 20:22:08,558 INFO waiting 60s: foreign_cpu 3.06 cores >= 2 top=[('avdhesh.mishra', 2.0260000000000002), ('aditya.shankar', 0.9990000000000001)]
+2026-10-25 20:23:10,821 INFO waiting 120s: foreign_cpu 3.03 cores >= 2 top=[('avdhesh.mishra', 2.001), ('aditya.shankar', 0.998)]
+2026-10-25 20:25:13,125 INFO waiting 240s: foreign_cpu 3.08 cores >= 2 top=[('avdhesh.mishra', 2.029), ('aditya.shankar', 1.003)]
+2026-10-25 20:29:15,333 INFO waiting 480s: foreign_cpu 3.03 cores >= 2 top=[('avdhesh.mishra', 1.9980000000000002), ('aditya.shankar', 0.9990000000000001)]
+2026-10-25 20:37:17,633 INFO waiting 600s: foreign_cpu 3.03 cores >= 2 top=[('avdhesh.mishra', 1.995), ('aditya.shankar', 1.004)]
+2026-10-25 20:47:19,934 INFO waiting 600s: foreign_cpu 2.42 cores >= 2 top=[('aditya.shankar', 1.0), ('avdhesh.mishra', 1.0), ('prometheus', 0.366)]
