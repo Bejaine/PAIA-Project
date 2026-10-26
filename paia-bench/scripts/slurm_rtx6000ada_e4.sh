@@ -26,6 +26,7 @@ export PAIA_GPU="$(nvidia-smi --query-gpu=uuid --format=csv,noheader | head -1)"
 TAG=rtx6000ada; D=${PAIA_DATE:-$(date +%Y%m%d)}; R=scripts/hrun.sh
 CONTACT="Bejaine <bejainebirju@gmail.com>"; LOCK_ID=9014db2581becb83
 ENV_S=env_e4_${D}; E1=e1v2_s1_${D}; E2A=e2v2_s1_${D}; E4A=e4_s1_${D}; E2B=e2v2_s2_${D}; E4B=e4_s2_${D}
+S1A=s1_s1_${D}; S1B=s1_s2_${D}   # P1's S1 BF16 GEMV (src/paia_gemv, variants frozen in src/tuned/$TAG.json)
 STEPS="${PAIA_STEPS:-test env e1 e2a e4a e2b e4b dispatch analyze}"
 T=results/$TAG/dispatch_${D}/dispatch_table_e2_e4.json
 mkdir -p results/$TAG/$ENV_S
@@ -94,6 +95,16 @@ for step in $STEPS; do
     e4a)  sess e4 $E4A ;;
     e2b)  sess e2 $E2B ;;
     e4b)  sess e4 $E4B ;;
+    tune) L=/tmp/paia_bench.lock   # P1's dev sweep refuses on any lock; remove only our own stale one
+          if [[ -f $L ]]; then pid=$(python3 -c "import json;print(json.load(open('$L'))['pid'])")
+            [[ "$(stat -c %U $L)" == "$(id -un)" ]] && ! kill -0 "$pid" 2>/dev/null && rm -f $L; fi
+          run $R python ../src/tools/dev_sweep_bf16.py --platform-tag $TAG --all-real --write-tuned ;;   # DEV, same card
+    s1a)  sess s1 $S1A ;;
+    s1b)  sess s1 $S1B ;;
+    s1cmp) for S in $S1A $S1B; do mkdir -p results/$TAG/$S/summary
+             run $R python ../src/tools/compare_to_cublas.py --b0 "$(python3 -c "import json;print(json.load(open('results/$TAG/$E1/summary/b0.json'))['R_inf_B0_gbps'])")" \
+               --tau-us 1.25 results/$TAG/$E2A results/$TAG/$E2B --ours results/$TAG/$S > results/$TAG/$S/summary/compare_to_cublas.txt
+           done ;;
     dispatch) mkdir -p $(dirname $T); run $R python scripts/diag/dispatch_table.py $T e2 e4 ;;
     analyze)
       run $R python -m bench.analyze --session $E1 --platform-tag $TAG
