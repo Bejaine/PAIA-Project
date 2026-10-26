@@ -48,6 +48,11 @@ Date committed: 2026-10-16.
 
 Per the identity S_actual = (bytes_16 / bytes_q) x (BW_q / BW_16), the ratio "measured / theoretical" should equal BW_q / BW_16 for every row.
 
+**Note added 2026-10-26, after E4 (`e4_s1`, `e4_s2`):** all three predictions were too pessimistic. Measured speedups over
+cuBLAS BF16 exceed the byte ratio on most shapes (INT4 3.6 to 5.2x on large shapes), because the BF16 baseline runs at about
+70% of B0 on 13 of 20 shapes, while the quantized library kernels stream large ops at 83 to 98% of B0. The predicted
+mechanism for small shapes (a larger fixed cost per op) did hold: Qwen k_proj reached only 1.2x (Marlin) and 2.1x (tinygemm).
+
 ## E5 whole-token decode (BF16, batch 1)
 
 Bytes per token, excluding the embedding table and counting the lm_head (not tied): Llama 15.01 GB, Qwen 14.14 GB.
