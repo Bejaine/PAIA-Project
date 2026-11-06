@@ -95,3 +95,14 @@ but v6's 16-lane rows keep half the bytes in flight per warp, so it stalls on me
   `sm89_xmma` GEMM). A gate-bypassed debug run (`debug_e4a`, 220 graph cells) exercised the analysis; hints only (see
   `findings.md`): quantized large ops run near B0, the loss concentrates on small ops (Qwen k/v).
 - Next: two gated E4 sessions (about 2 h each), then ncu on the library kernels.
+
+## 2026-10-23 to 10-26: E4 sessions of record (GB10)
+
+- PR #11 merged. `e4_s1` and `e4_s2` ran back to back on 2026-10-23 from the pinned commit `4b3d269`
+  (`/home/bejaine/paia-runs/e4_4b3d269`): 2 x 1,146 cells, all clean, 3.6 h in total.
+- **Result:** against cuBLAS BF16 the library quantized kernels beat the byte ratio (BF16 is the slow side); against B0 they
+  reach 92 to 95% per token (INT4 about 95%). Large ops are near the memory bound; the remaining quantized loss is per op on
+  small ops (k/v), plus FP8 activation quantization (+11% per token, per-tensor). Details in `docs/RESULTS.md`.
+- Open anomaly: tinygemm at M = 16 differs between sessions by up to 30% (findings).
+- **The machine was upgraded on 2026-10-25** (OS kernel 6.17 -> 7.0, driver 580.159 -> 580.178). All results so far are on the
+  old stack; a re-baseline is needed before new measurements are compared with them.

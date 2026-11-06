@@ -4,7 +4,7 @@ What we have measured so far, the numbers of record, and where the evidence live
 surprises are in `paia-bench/findings.md`; the chronological story is in `docs/PROGRESS.md`; what comes next is in
 `docs/PLAN.md`. Update this file whenever a phase produces results of record.
 
-Last updated: 2026-10-22 (after E1/E2 schema v2 reruns and the focused E3 on GB10).
+Last updated: 2026-10-26 (E4 library FP8 / INT4 on GB10, two sessions).
 
 ## Status by experiment
 
@@ -14,7 +14,7 @@ Last updated: 2026-10-22 (after E1/E2 schema v2 reruns and the focused E3 on GB1
 | E1 bandwidth ceiling (B0) | **done, schema v2, 2 sessions** (`e1v2_s1`, `e1v2_s2`) | preliminary: 80 of 360 cells, schema v1, different stack |
 | E2 cuBLAS BF16 GEMV | **done, schema v2, 2 sessions** (`e2v2_s1`, `e2v2_s2`) | not started |
 | E3 Nsight Compute | focused: v6 vs v7 GEMV (`e3_ncu_gemv_variants`); byte-match check done in Phase 0 | counters accessible; not run |
-| E4 library FP8 / INT4 | **not started** (all library paths verified functional) | not started (no vLLM, so no Marlin) |
+| E4 library FP8 / INT4 | **done, schema v2, 2 sessions** (`e4_s1`, `e4_s2`) | not started (no vLLM, so no Marlin) |
 | E5 whole-token decode | feasibility only (vLLM Llama-8B eager and graph decode; nsys works) | not started |
 
 Results of record live under `paia-bench/results/dgxspark_gb10/<session>/summary/` (`summary.md`, `fits.json`,
@@ -77,6 +77,50 @@ Same bytes, same register-limited occupancy, but v6's 16-lane rows keep about ha
 waits on memory and loses about 30%. Byte accounting works on GB10 via `lts__d_sectors_fill_sysmem` x 32 B (no `dram__*`
 metrics exist on GB10); measured/expected bytes = 1.00 to 1.002.
 
+## E4: library FP8 / INT4 vs cuBLAS BF16 (GB10, schema v2)
+
+Sessions `e4_s1`, `e4_s2` (code `4b3d269`, 1,146 cells each, all clean; same OS / driver as E1 and E2). Graph mode, M = 1,
+mean of the two sessions. BF16 = cuBLAS (E2 v2). %B0 against 239.5 GB/s; bytes are the stored format incl. metadata.
+
+| Shape (Llama / Qwen) | cuBLAS BF16 | FP8 pt `_scaled_mm` | FP8 rw CUTLASS | INT4 tinygemm | INT4 Marlin | FP8 pt + act quant | FP8 rw + act quant |
+|---|---|---|---|---|---|---|---|
+| k_proj | 70.6 / 87.0 | 82.6 / 67.6 | 46.9 / **24.3** | 72.1 / 49.3 | 56.2 / **27.4** | 50.4 / 31.2 | 43.9 / 22.4 |
+| q_proj | 70.6 / 67.9 | 85.5 / 81.8 | 85.3 / 83.8 | 91.4 / 87.7 | 90.7 / 87.7 | 73.4 / 69.6 | 82.9 / 80.4 |
+| qkv_fused | 70.2 / 69.5 | 91.0 / 90.5 | 88.0 / 86.4 | 92.7 / 90.4 | 95.2 / 90.3 | 80.2 / 74.9 | 86.4 / 83.2 |
+| gate_proj | 97.7 / 71.0 | 91.9 / 89.9 | 90.4 / 86.1 | 94.9 / 95.3 | 94.8 / 94.9 | 83.7 / 82.9 | 88.8 / 86.2 |
+| down_proj | 96.4 / 96.6 | 92.3 / 89.8 | 90.5 / 90.1 | 93.4 / 93.2 | 95.0 / 95.3 | 82.5 / 79.9 | 89.3 / 88.3 |
+| gate_up_fused | 98.3 / 71.4 | 98.7 / 95.6 | 93.8 / 93.8 | 95.6 / 95.8 | 95.9 / 95.9 | 88.4 / 93.4 | 91.5 / 90.6 |
+| lm_head | 73.0 / 72.2 | 83.9 / 87.0 | 93.6 / 92.9 | 97.2 / 97.6 | 96.4 / 96.5 | 83.6 / 86.5 | 92.9 / 92.9 |
+
+(% of B0. v_proj = k_proj; o_proj = q_proj within 1 point.)
+
+**Per-token GEMV cost** (graph, M = 1, fused QKV and gate-up, all layers + lm_head; ideal = bytes / B0):
+
+| | Llama ms | % of ideal | speedup vs cuBLAS BF16 (theory) | Qwen ms | % of ideal | speedup (theory) |
+|---|---|---|---|---|---|---|
+| cuBLAS BF16 | 70.28 | 89.2 | 1.00 | 77.15 | 76.6 | 1.00 |
+| FP8 pt `_scaled_mm` | 33.37 | 94.0 | 2.11 (2.00) | 32.05 | 92.2 | 2.41 (2.00) |
+| FP8 rw CUTLASS | 34.23 | 91.7 | 2.05 (2.00) | 32.26 | 91.6 | 2.39 (2.00) |
+| INT4 tinygemm | 17.62 | 94.6 | 3.99 (3.76) | 16.63 | 94.4 | 4.64 (3.76) |
+| INT4 Marlin | 16.99 | 95.2 | 4.14 (3.88) | 16.06 | 94.9 | 4.81 (3.88) |
+| FP8 pt + dynamic act quant | 37.16 | 84.4 | 1.89 (2.00) | 34.33 | 86.1 | 2.25 (2.00) |
+| FP8 rw + dynamic act quant | 34.94 | 89.8 | 2.01 (2.00) | 33.20 | 89.1 | 2.32 (2.00) |
+
+- **Against cuBLAS BF16 the library kernels beat the byte ratio** (INT4 4.0 to 4.8x vs 3.76 to 3.88x), because the BF16
+  baseline itself loses 11% (Llama) to 23% (Qwen) per token to `gemvx` v6. Against an ideal kernel at B0 the library
+  kernels reach 92 to 95% per token: **on GB10 the large-op quantized paths are close to the memory bound.**
+- **Asymptotic rates (ops >= 64 MiB):** tinygemm 98%, Marlin 97%, CUTLASS FP8 93.5%, `_scaled_mm` FP8 83 to 84% of B0
+  (its `sm89_xmma` and `nvjet_192x112` kernels; gate/up and lm_head). The INT4 per-byte loss is small.
+- **What remains is per op, on small ops:** Qwen k/v (3.5 MiB BF16) reach only 24% (CUTLASS FP8), 27% (Marlin), 49%
+  (tinygemm), 68% (`_scaled_mm`) of B0, against 87% for cuBLAS BF16, i.e. quantized k/v are **slower than BF16** with
+  CUTLASS FP8 and Marlin. Excess over B/B0: CUTLASS 19 to 24 us, Marlin 7 to 10 us, tinygemm 3.6 to 4.2 us; almost all of
+  it per op. CUTLASS FP8 also pays 7 to 26 us per op on mid and large shapes.
+- **Dynamic activation quantization:** per-tensor (3 operations: memset, max reduction, quantize) costs a median 14.0 us per
+  op in graph mode, which is 3.8 ms per Llama token (+11%); per-token (1 kernel) 2.7 us.
+- Cross-session agreement: median |diff| 0.32%, 35 of 1,146 cells > 3%. 12 of the 35 are tinygemm at M = 16 (graph),
+  slower in `e4_s2` by 8 to 30% on 7 Llama shapes with tight spread inside each session (open anomaly, see findings). All M = 1
+  real-shape cells of every library agree within 2%.
+
 ## Measurement quality (GB10)
 
 - Cross-session agreement (v2): E2 median |diff| 0.27% (8 of 218 cells > 3%); E1 0.38% (outliers are hot L2-edge cells).
@@ -109,3 +153,6 @@ about 1.6 MiB, with similar tau. Needs RTX on a matched stack, a stable SM clock
 | hot L2 peak | about 1 TB/s | 1.4 to 1.5 TB/s |
 | cuBLAS GEMV R_inf vs B0 | 90% | 70% (v6) to 98% (v7), shape dependent |
 | non-GEMV dispatch at M = 1 | none | none |
+| FP8 `_scaled_mm` speedup vs cuBLAS BF16, large / k_proj | 1.5x / 1.1x | 1.9 to 2.5x / 2.3x (Llama), 1.6x (Qwen) |
+| INT4 tinygemm speedup, large / small | 2.2x / 1.3x | 3.6 to 5.1x / 3.8x (Llama k), 2.1x (Qwen k) |
+| INT4 Marlin speedup, large / small | 2.8x / 1.6x | 3.8 to 5.2x / 3.1x (Llama k), 1.2x (Qwen k) |

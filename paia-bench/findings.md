@@ -348,6 +348,32 @@ Code: `bench/ops/lib_quant.py`, phase `e4` in `bench/run.py`, `bench/analyze_e4.
 - Predictions: the 2026-10-16 E4 predictions (FP8 `_scaled_mm`, tinygemm, Marlin) were committed before any E4 number.
   No prediction was added for row-wise CUTLASS FP8 or the `*_full` variants, because debug numbers for them had been seen.
 
+## E4 results, GB10 (sessions `e4_s1`, `e4_s2`, 2026-10-23, schema v2; numbers of record in `docs/RESULTS.md`)
+
+- 2 x 1,146 cells, all clean, no retries needed; about 1 h 47 min per session. OS kernel 6.17.0-1021, driver 580.159 (as E1/E2).
+- **The quantization gap on GB10 is not where the brief expected it.** Per byte, the library INT4 kernels are near the bound
+  (tinygemm 98%, Marlin 97% of B0 on ops >= 64 MiB); FP8 CUTLASS 93.5%; FP8 `_scaled_mm` 83 to 84% on its `sm89_xmma` /
+  `nvjet_192x112` dispatches. The largest per-byte loss on the whole decode path is still cuBLAS BF16 `gemvx` v6 (about 70%).
+- **The quantized loss is per op and concentrated on small N:** k/v projections (Llama 1024 x 4096, Qwen 512 x 3584).
+  On Qwen k/v, CUTLASS FP8 (31.6 us) and Marlin (14.3 us) are slower than or close to cuBLAS BF16 (17.7 us) although they move
+  half or a quarter of the bytes. CUTLASS FP8 has a large fixed cost everywhere (7 to 26 us of excess at mid and large N).
+  Fused QKV hides most of this in a real model (qkv_fused reaches 86 to 95% of B0).
+- **FP8 W8A8 pays for activation quantization:** vLLM's dynamic per-tensor path is 3 operations (memset, max reduction,
+  quantize), median 14.0 us per op in graph mode (+3.8 ms per Llama token, 11%). A W8A16 kernel (P1's FP8 design) avoids it.
+- The per-op / per-byte split is reliable for tinygemm, Marlin and CUTLASS (one kernel each). For `_scaled_mm` the dispatch
+  changes with shape (6 kernels), so its asymptotes rest on 3 to 6 points and the split gives negative per-op values on
+  gate/up/lm_head: treat `_scaled_mm`'s split as unreliable.
+- `*_full` minus GEMM-only in isolated / eager modes is sometimes negative on small shapes (launch noise of separate cells);
+  only the graph-mode activation-quant cost is meaningful.
+- **Open anomaly: tinygemm at M = 16 (graph) differs between sessions** on 7 Llama shapes (lm_head, gate_up_fused, gate/up, q/o,
+  qkv): `e4_s2` slower by 8 to 30%, while the 5 allocations inside each session agree within 1%. Same kernel, same SM clock
+  (2184 MHz), canary normal, and the slow cells are interleaved over 85 minutes with neighbours that agree. tinygemm at
+  M = 1 to 8 agrees (median 0.1 to 0.5%). Not resolved; M = 16 is outside the main regime. A third session of these cells
+  (or ncu of both states) would decide it.
+- **Machine change after E4:** the Spark was rebooted on 2026-10-25 into OS kernel 7.0.0-1019 with driver 580.178.04.
+  E0 to E4 were all measured on 6.17 / 580.159. Results measured from now on are on a different system stack and must
+  not be compared with E1/E2/E4 without a re-baseline (at least E1, and spot checks of E2/E4).
+
 ## Platform `rtxpro5000bw`: environment and preliminary E1 (P3)
 
 Raw evidence: `paia-results/rtxpro5000bw/{env_20261016,s1_20261016}/`, preflight report on the host at
