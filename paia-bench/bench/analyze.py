@@ -37,6 +37,37 @@ def load_cells(sess_dir):
     return out
 
 
+def fill_kernel_names(cells, table_path):
+    """Fill cells whose kernel_names is empty from a dispatch table (same GPU model and stack), in memory only.
+    Every name a cell did record must be in the table entry; otherwise the dispatch differs and analysis aborts. A cell
+    that recorded a strict subset (the profiler on torch 2.11 also drops some events of a call) gets the full entry."""
+    t = json.loads(Path(table_path).read_text())["table"]
+    filled = checked = partial = 0
+    for c in cells:
+        if c.get("phase") not in ("e2", "e4") or not c.get("shape"):
+            continue
+        shape = f"{c['shape']['M']}x{c['shape']['N']}x{c['shape']['K']}"
+        names = t.get(f"{c['impl']}|{shape}", t.get(shape) if c["impl"] == "cublas_f_linear" else None)
+        if names is None:
+            continue
+        if c.get("kernel_names"):
+            if not set(c["kernel_names"]) <= set(names):
+                raise SystemExit(f"dispatch table disagrees with recorded kernel names for cell {c['cell_id']}")
+            if set(c["kernel_names"]) == set(names):
+                checked += 1
+            else:
+                c["kernel_names"] = names
+                c["kernel_names_source"] = "dispatch_table (recorded list was a subset)"
+                partial += 1
+        else:
+            c["kernel_names"] = names
+            c["kernel_names_source"] = "dispatch_table"
+            filled += 1
+    print(f"dispatch table {table_path}: filled {filled} cells, matched {checked} recorded cells exactly, "
+          f"completed {partial} partial recordings")
+    return {"table": str(table_path), "filled": filled, "matched": checked, "partial": partial}
+
+
 def key(c):
     return f"{c['op']}/{c['impl']}"
 
@@ -405,10 +436,13 @@ def main():
     ap.add_argument("--e1-session", default=None, help="E1 session providing B0 and the same-size reference (E2+)")
     ap.add_argument("--bf16-sessions", nargs="*", default=[], help="E2 sessions providing the BF16 reference (E4)")
     ap.add_argument("--results-root", default=None)
+    ap.add_argument("--dispatch-table", default=None,
+                    help="scripts/diag/dispatch_table.py output: fills empty kernel_names in memory (cell files unchanged)")
     a = ap.parse_args()
     root = Path(a.results_root) if a.results_root else RESULTS_ROOT
     sess_dir = root / a.platform_tag / a.session
     cells = load_cells(sess_dir)
+    dispatch = fill_kernel_names(cells, a.dispatch_table) if a.dispatch_table else None
     if a.use_contaminated:
         for c in cells:
             if c["status"] == "contaminated" and c.get("median_us"):
@@ -454,15 +488,21 @@ def main():
     if any(c["phase"] == "e4" for c in cells):
         from bench import analyze_e4
         bf16_cells = [c for s in a.bf16_sessions for c in load_cells(root / a.platform_tag / s)]
+        if a.dispatch_table:
+            fill_kernel_names(bf16_cells, a.dispatch_table)
         e4, e4_md, p4 = analyze_e4.analyze(cells, bf16_cells, b0, out)
         plots.update(p4)
     fits = {"session": a.session, "valid": not a.use_contaminated, "e1": e1, "e2": e2, "e4": e4, "b0_gbps": b0,
             "e1_reference_session": a.e1_session, "bf16_reference_sessions": a.bf16_sessions, "canary": canary,
-            "telemetry": tel}
+            "telemetry": tel, "dispatch_table": dispatch}
     write_json_atomic(out / "fits.json", fits)
     text = summary_md(a.session, cells, e1, canary, tel, cmp_rows, plots, a.use_contaminated)
     if e2_md or e4_md:
         text = text.replace("## Canary", "\n".join(e2_md + e4_md) + "\n## Canary", 1)
+    if dispatch:
+        text = text.replace("\n## Canary", f"\nKernel names: {dispatch['filled']} cells filled from `{Path(dispatch['table']).name}` "
+                            f"(profiler capture lost on this stack, findings.md); {dispatch['matched']} recorded cells matched it "
+                            f"exactly, {dispatch.get('partial', 0)} partial recordings were a subset of it and were completed.\n\n## Canary", 1)
     (out / "summary.md").write_text(text)
     print(f"wrote {out}/summary.md")
 

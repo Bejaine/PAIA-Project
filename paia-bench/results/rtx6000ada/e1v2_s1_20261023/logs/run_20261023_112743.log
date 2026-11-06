@@ -1,0 +1,626 @@
+2026-10-23 11:27:43,356 INFO session e1v2_s1_20261023 phase e1: 360 cells, 360 to run (resume skips clean cells)
+2026-10-23 11:27:48,295 INFO canary reference 825.20 GB/s (cv 0.0019)
+2026-10-23 11:27:51,596 INFO triton read probe config: BLOCK=2048 warps=8 waves=8
+2026-10-23 11:27:57,008 INFO [1/360] 035ebcfe206064fe write torch_fill_ isolated N=2147483648 cold -> contaminated median 2413.70 us 889.7 GB/s reasons=['canary_after 779.61 < 783.94 GB/s']
+2026-10-23 11:28:02,657 INFO [1/360] 035ebcfe206064fe write torch_fill_ isolated N=2147483648 cold -> contaminated median 2413.79 us 889.7 GB/s reasons=['canary_after 779.14 < 783.94 GB/s']
+2026-10-23 11:28:07,662 INFO [1/360] 035ebcfe206064fe write torch_fill_ isolated N=2147483648 cold -> contaminated median 2413.54 us 889.8 GB/s reasons=['canary_after 779.10 < 783.94 GB/s']
+2026-10-23 11:28:12,667 INFO [1/360] 035ebcfe206064fe write torch_fill_ isolated N=2147483648 cold -> contaminated median 2413.76 us 889.7 GB/s reasons=['canary_after 778.65 < 783.94 GB/s']
+2026-10-23 11:28:17,673 INFO [1/360] 035ebcfe206064fe write torch_fill_ isolated N=2147483648 cold -> contaminated median 2413.86 us 889.6 GB/s reasons=['canary_after 779.28 < 783.94 GB/s']
+2026-10-23 11:28:22,678 INFO [1/360] 035ebcfe206064fe write torch_fill_ isolated N=2147483648 cold -> unclean_exhausted median 2413.63 us 889.7 GB/s reasons=['canary_after 778.67 < 783.94 GB/s']
+2026-10-23 11:28:27,980 INFO [2/360] ec827ae679059252 write torch_fill_ eager N=2147483648 hot -> clean median 2408.06 us 891.8 GB/s
+2026-10-23 11:28:32,780 INFO [3/360] fa2e139171942d64 read triton_read isolated N=67108864 cold -> clean median 87.26 us 769.1 GB/s
+2026-10-23 11:28:38,200 INFO [4/360] 199652a5df74ce1e copy torch_copy_ graph N=2147483648 hot -> clean median 5312.69 us 808.4 GB/s
+2026-10-23 11:28:44,855 INFO [5/360] 3225b07a8a9c4c47 write torch_fill_ eager N=4294967296 cold -> contaminated median 4816.10 us 891.8 GB/s reasons=['canary_after 778.89 < 783.94 GB/s']
+2026-10-23 11:28:51,714 INFO [5/360] 3225b07a8a9c4c47 write torch_fill_ eager N=4294967296 cold -> contaminated median 4816.17 us 891.8 GB/s reasons=['canary_after 779.09 < 783.94 GB/s']
+2026-10-23 11:28:57,729 INFO [5/360] 3225b07a8a9c4c47 write torch_fill_ eager N=4294967296 cold -> contaminated median 4816.17 us 891.8 GB/s reasons=['canary_after 779.07 < 783.94 GB/s']
+2026-10-23 11:29:03,725 INFO [5/360] 3225b07a8a9c4c47 write torch_fill_ eager N=4294967296 cold -> contaminated median 4816.26 us 891.8 GB/s reasons=['canary_after 778.72 < 783.94 GB/s']
+2026-10-23 11:29:09,722 INFO [5/360] 3225b07a8a9c4c47 write torch_fill_ eager N=4294967296 cold -> contaminated median 4816.05 us 891.8 GB/s reasons=['canary_after 779.05 < 783.94 GB/s']
+2026-10-23 11:29:15,717 INFO [5/360] 3225b07a8a9c4c47 write torch_fill_ eager N=4294967296 cold -> unclean_exhausted median 4815.94 us 891.8 GB/s reasons=['canary_after 779.39 < 783.94 GB/s']
+2026-10-23 11:29:20,803 INFO [6/360] 76eb716b2cdea884 read triton_read graph N=8388608 cold -> clean median 10.65 us 787.9 GB/s
+2026-10-23 11:29:27,659 INFO [7/360] cb6f61fa3b1e4860 copy torch_copy_ graph N=4294967296 hot -> contaminated median 10568.35 us 812.8 GB/s reasons=['canary_after 779.32 < 783.94 GB/s']
+2026-10-23 11:29:34,447 INFO [7/360] cb6f61fa3b1e4860 copy torch_copy_ graph N=4294967296 hot -> contaminated median 10562.37 us 813.3 GB/s reasons=['canary_after 779.05 < 783.94 GB/s']
+2026-10-23 11:29:41,442 INFO [7/360] cb6f61fa3b1e4860 copy torch_copy_ graph N=4294967296 hot -> contaminated median 10570.18 us 812.7 GB/s reasons=['canary_after 778.76 < 783.94 GB/s']
+2026-10-23 11:29:48,467 INFO [7/360] cb6f61fa3b1e4860 copy torch_copy_ graph N=4294967296 hot -> contaminated median 10575.31 us 812.3 GB/s reasons=['canary_after 778.65 < 783.94 GB/s']
+2026-10-23 11:29:55,478 INFO [7/360] cb6f61fa3b1e4860 copy torch_copy_ graph N=4294967296 hot -> contaminated median 10569.54 us 812.7 GB/s reasons=['canary_after 779.10 < 783.94 GB/s']
+2026-10-23 11:30:02,471 INFO [7/360] cb6f61fa3b1e4860 copy torch_copy_ graph N=4294967296 hot -> unclean_exhausted median 10565.52 us 813.0 GB/s reasons=['canary_after 778.71 < 783.94 GB/s']
+2026-10-23 11:30:07,622 INFO [8/360] 45e8f80f150e2070 write torch_fill_ graph N=2097152 cold -> clean median 2.39 us 876.7 GB/s
+2026-10-23 11:30:12,684 INFO [9/360] 33bd3210f712c493 copy torch_copy_ eager N=33554432 hot -> clean median 14.94 us 4492.4 GB/s
+2026-10-23 11:30:17,550 INFO [10/360] 907d455ea9d2d4a0 read triton_read eager N=67108864 cold -> clean median 77.09 us 870.6 GB/s
+2026-10-23 11:30:22,667 INFO [11/360] cba499e2e1ac5548 read triton_read eager N=2097152 cold -> clean median 9.98 us 210.5 GB/s
+2026-10-23 11:30:27,525 INFO [12/360] 38e51f66769860bc copy torch_copy_ eager N=16777216 hot -> clean median 8.09 us 4145.8 GB/s
+2026-10-23 11:30:32,908 INFO [13/360] 26dd643a12d437eb read torch_sum graph N=1048576 cold -> clean median 6.72 us 156.0 GB/s
+2026-10-23 11:30:39,180 INFO [14/360] 4390e6593d823ea5 read triton_read eager N=2147483648 cold -> contaminated median 2408.81 us 891.5 GB/s reasons=['canary_after 778.27 < 783.94 GB/s']
+2026-10-23 11:30:45,237 INFO [14/360] 4390e6593d823ea5 read triton_read eager N=2147483648 cold -> contaminated median 2408.82 us 891.5 GB/s reasons=['canary_after 778.72 < 783.94 GB/s']
+2026-10-23 11:30:51,091 INFO [14/360] 4390e6593d823ea5 read triton_read eager N=2147483648 cold -> contaminated median 2408.78 us 891.5 GB/s reasons=['canary_after 778.29 < 783.94 GB/s']
+2026-10-23 11:30:57,102 INFO [14/360] 4390e6593d823ea5 read triton_read eager N=2147483648 cold -> contaminated median 2408.76 us 891.5 GB/s reasons=['canary_after 778.74 < 783.94 GB/s']
+2026-10-23 11:31:03,143 INFO [14/360] 4390e6593d823ea5 read triton_read eager N=2147483648 cold -> contaminated median 2408.77 us 891.5 GB/s reasons=['canary_after 778.54 < 783.94 GB/s']
+2026-10-23 11:31:09,223 INFO [14/360] 4390e6593d823ea5 read triton_read eager N=2147483648 cold -> unclean_exhausted median 2408.74 us 891.5 GB/s reasons=['canary_after 778.63 < 783.94 GB/s']
+2026-10-23 11:31:15,141 INFO [15/360] 48a219cba531d106 read triton_read graph N=1073741824 cold -> clean median 1204.85 us 891.2 GB/s
+2026-10-23 11:31:20,656 INFO [16/360] 113196c654b6c91f write torch_fill_ eager N=4194304 cold -> clean median 4.79 us 875.7 GB/s
+2026-10-23 11:31:24,870 INFO [17/360] da18d1e81e047efa write torch_fill_ isolated N=262144 cold -> clean median 13.41 us 19.6 GB/s
+2026-10-23 11:31:29,859 INFO [18/360] caea8147e6085d80 write torch_fill_ graph N=1073741824 hot -> clean median 1204.19 us 891.7 GB/s
+2026-10-23 11:31:34,914 INFO [19/360] e2eb14e7040bb75e read triton_read eager N=524288 cold -> clean median 10.04 us 52.7 GB/s
+2026-10-23 11:31:39,767 INFO [20/360] 668ad1de7170f818 read triton_read isolated N=2147483648 hot -> clean median 2422.34 us 886.5 GB/s
+2026-10-23 11:31:43,541 INFO [21/360] af954d9f18f7368d read triton_read isolated N=33554432 hot -> clean median 19.22 us 1746.4 GB/s
+2026-10-23 11:31:48,872 INFO [22/360] db0249dfb36fee35 read triton_read graph N=16777216 hot -> clean median 4.43 us 3786.3 GB/s
+2026-10-23 11:31:53,710 INFO [23/360] 52bb5103b436c6b0 read triton_read eager N=268435456 cold -> clean median 303.22 us 885.3 GB/s
+2026-10-23 11:31:59,050 INFO [24/360] 0e2ccfc16931ae6c write torch_fill_ eager N=2147483648 cold -> contaminated median 2408.04 us 891.8 GB/s reasons=['canary_after 778.13 < 783.94 GB/s']
+2026-10-23 11:32:05,235 INFO [24/360] 0e2ccfc16931ae6c write torch_fill_ eager N=2147483648 cold -> contaminated median 2408.16 us 891.8 GB/s reasons=['canary_after 778.92 < 783.94 GB/s']
+2026-10-23 11:32:11,217 INFO [24/360] 0e2ccfc16931ae6c write torch_fill_ eager N=2147483648 cold -> contaminated median 2408.12 us 891.8 GB/s reasons=['canary_after 777.82 < 783.94 GB/s']
+2026-10-23 11:32:17,200 INFO [24/360] 0e2ccfc16931ae6c write torch_fill_ eager N=2147483648 cold -> contaminated median 2408.03 us 891.8 GB/s reasons=['canary_after 778.63 < 783.94 GB/s']
+2026-10-23 11:32:23,147 INFO [24/360] 0e2ccfc16931ae6c write torch_fill_ eager N=2147483648 cold -> contaminated median 2408.00 us 891.8 GB/s reasons=['canary_after 778.24 < 783.94 GB/s']
+2026-10-23 11:32:29,096 INFO [24/360] 0e2ccfc16931ae6c write torch_fill_ eager N=2147483648 cold -> unclean_exhausted median 2408.06 us 891.8 GB/s reasons=['canary_after 778.78 < 783.94 GB/s']
+2026-10-23 11:32:35,807 INFO [25/360] 992ddcb28c23be15 write torch_fill_ graph N=4294967296 cold -> contaminated median 4816.69 us 891.7 GB/s reasons=['canary_after 778.80 < 783.94 GB/s']
+2026-10-23 11:32:41,891 INFO [25/360] 992ddcb28c23be15 write torch_fill_ graph N=4294967296 cold -> contaminated median 4816.62 us 891.7 GB/s reasons=['canary_after 778.78 < 783.94 GB/s']
+2026-10-23 11:32:48,799 INFO [25/360] 992ddcb28c23be15 write torch_fill_ graph N=4294967296 cold -> contaminated median 4816.54 us 891.7 GB/s reasons=['canary_after 778.62 < 783.94 GB/s']
+2026-10-23 11:32:54,865 INFO [25/360] 992ddcb28c23be15 write torch_fill_ graph N=4294967296 cold -> contaminated median 4816.62 us 891.7 GB/s reasons=['canary_after 778.63 < 783.94 GB/s']
+2026-10-23 11:33:01,996 INFO [25/360] 992ddcb28c23be15 write torch_fill_ graph N=4294967296 cold -> contaminated median 4816.60 us 891.7 GB/s reasons=['canary_after 778.83 < 783.94 GB/s']
+2026-10-23 11:33:08,923 INFO [25/360] 992ddcb28c23be15 write torch_fill_ graph N=4294967296 cold -> unclean_exhausted median 4816.58 us 891.7 GB/s reasons=['canary_after 778.60 < 783.94 GB/s']
+2026-10-23 11:33:15,146 INFO [26/360] 3e31d11a3df5446d read torch_sum isolated N=4294967296 hot -> contaminated median 4844.05 us 886.6 GB/s reasons=['canary_after 778.53 < 783.94 GB/s']
+2026-10-23 11:33:21,146 INFO [26/360] 3e31d11a3df5446d read torch_sum isolated N=4294967296 hot -> contaminated median 4843.86 us 886.7 GB/s reasons=['canary_after 778.94 < 783.94 GB/s']
+2026-10-23 11:33:27,147 INFO [26/360] 3e31d11a3df5446d read torch_sum isolated N=4294967296 hot -> contaminated median 4843.82 us 886.7 GB/s reasons=['canary_after 777.86 < 783.94 GB/s']
+2026-10-23 11:33:33,148 INFO [26/360] 3e31d11a3df5446d read torch_sum isolated N=4294967296 hot -> contaminated median 4843.78 us 886.7 GB/s reasons=['canary_after 778.56 < 783.94 GB/s']
+2026-10-23 11:33:39,145 INFO [26/360] 3e31d11a3df5446d read torch_sum isolated N=4294967296 hot -> contaminated median 4843.90 us 886.7 GB/s reasons=['canary_after 777.73 < 783.94 GB/s']
+2026-10-23 11:33:45,147 INFO [26/360] 3e31d11a3df5446d read torch_sum isolated N=4294967296 hot -> unclean_exhausted median 4843.65 us 886.7 GB/s reasons=['canary_after 778.72 < 783.94 GB/s']
+2026-10-23 11:33:50,970 INFO [27/360] 00e9cc903ae69daa write torch_fill_ graph N=1048576 cold -> clean median 1.25 us 836.2 GB/s
+2026-10-23 11:33:56,674 INFO [28/360] 18c5ebddaf398035 read triton_read graph N=134217728 hot -> clean median 151.81 us 884.2 GB/s
+2026-10-23 11:34:00,676 INFO [29/360] 972e9aadca196ab9 copy torch_copy_ isolated N=33554432 hot -> clean median 19.04 us 3524.6 GB/s
+2026-10-23 11:34:06,153 INFO [30/360] 62d7c515b296f577 read triton_read eager N=1073741824 cold -> clean median 1205.65 us 890.6 GB/s
+2026-10-23 11:34:11,948 INFO [31/360] c3a0c39eecb1d4fe read triton_read eager N=262144 cold -> clean median 10.03 us 26.6 GB/s
+2026-10-23 11:34:17,621 INFO [32/360] 2be2d9c1da639585 copy torch_copy_ isolated N=268435456 hot -> clean median 674.53 us 795.9 GB/s
+2026-10-23 11:34:21,811 INFO [33/360] 7f80cc4ed67b4ef6 read triton_read isolated N=524288 cold -> clean median 19.02 us 27.8 GB/s
+2026-10-23 11:34:26,682 INFO [34/360] f430bfed9fb91360 write torch_fill_ isolated N=1073741824 hot -> clean median 1208.05 us 888.8 GB/s
+2026-10-23 11:34:30,663 INFO [35/360] bb50ed2af5f4adf6 copy torch_copy_ isolated N=8388608 hot -> clean median 14.43 us 1162.5 GB/s
+2026-10-23 11:34:36,078 INFO [36/360] ad58134c6f39b6b9 write torch_fill_ eager N=1073741824 cold -> clean median 1204.01 us 891.8 GB/s
+2026-10-23 11:34:41,915 INFO [37/360] b03d1cd803b00590 copy torch_copy_ graph N=268435456 cold -> clean median 667.54 us 804.2 GB/s
+2026-10-23 11:34:46,687 INFO [38/360] 99fa3249ae8cedbb copy torch_copy_ eager N=268435456 cold -> clean median 669.59 us 801.8 GB/s
+2026-10-23 11:34:52,328 INFO [39/360] 3b8db3c73e44caed write torch_fill_ graph N=262144 cold -> clean median 0.79 us 333.2 GB/s
+2026-10-23 11:34:58,732 INFO [40/360] a0e85ca76efb4076 write torch_fill_ eager N=4294967296 hot -> contaminated median 4816.10 us 891.8 GB/s reasons=['canary_after 778.25 < 783.94 GB/s']
+2026-10-23 11:35:04,665 INFO [40/360] a0e85ca76efb4076 write torch_fill_ eager N=4294967296 hot -> contaminated median 4816.28 us 891.8 GB/s reasons=['canary_after 778.94 < 783.94 GB/s']
+2026-10-23 11:35:10,820 INFO [40/360] a0e85ca76efb4076 write torch_fill_ eager N=4294967296 hot -> contaminated median 4816.18 us 891.8 GB/s reasons=['canary_after 778.42 < 783.94 GB/s']
+2026-10-23 11:35:16,752 INFO [40/360] a0e85ca76efb4076 write torch_fill_ eager N=4294967296 hot -> contaminated median 4816.12 us 891.8 GB/s reasons=['canary_after 778.58 < 783.94 GB/s']
+2026-10-23 11:35:22,649 INFO [40/360] a0e85ca76efb4076 write torch_fill_ eager N=4294967296 hot -> contaminated median 4815.90 us 891.8 GB/s reasons=['canary_after 778.29 < 783.94 GB/s']
+2026-10-23 11:35:28,806 INFO [40/360] a0e85ca76efb4076 write torch_fill_ eager N=4294967296 hot -> unclean_exhausted median 4816.34 us 891.7 GB/s reasons=['canary_after 778.80 < 783.94 GB/s']
+2026-10-23 11:35:32,795 INFO [41/360] 01b246b4f5ae8c69 copy torch_copy_ isolated N=67108864 hot -> clean median 159.76 us 840.1 GB/s
+2026-10-23 11:35:39,003 INFO [42/360] ec0801975b4fb19e read triton_read graph N=4294967296 cold -> contaminated median 4814.04 us 892.2 GB/s reasons=['canary_after 778.45 < 783.94 GB/s']
+2026-10-23 11:35:46,037 INFO [42/360] ec0801975b4fb19e read triton_read graph N=4294967296 cold -> contaminated median 4814.05 us 892.2 GB/s reasons=['canary_after 778.33 < 783.94 GB/s']
+2026-10-23 11:35:53,071 INFO [42/360] ec0801975b4fb19e read triton_read graph N=4294967296 cold -> contaminated median 4814.09 us 892.2 GB/s reasons=['canary_after 778.40 < 783.94 GB/s']
+2026-10-23 11:36:00,092 INFO [42/360] ec0801975b4fb19e read triton_read graph N=4294967296 cold -> contaminated median 4814.10 us 892.2 GB/s reasons=['canary_after 778.29 < 783.94 GB/s']
+2026-10-23 11:36:07,124 INFO [42/360] ec0801975b4fb19e read triton_read graph N=4294967296 cold -> contaminated median 4814.13 us 892.2 GB/s reasons=['canary_after 778.80 < 783.94 GB/s']
+2026-10-23 11:36:14,171 INFO [42/360] ec0801975b4fb19e read triton_read graph N=4294967296 cold -> unclean_exhausted median 4814.14 us 892.2 GB/s reasons=['canary_after 778.53 < 783.94 GB/s']
+2026-10-23 11:36:20,804 INFO [43/360] 4c26b45f681818b6 read triton_read eager N=4294967296 hot -> contaminated median 4814.66 us 892.1 GB/s reasons=['canary_after 778.87 < 783.94 GB/s']
+2026-10-23 11:36:26,848 INFO [43/360] 4c26b45f681818b6 read triton_read eager N=4294967296 hot -> contaminated median 4814.70 us 892.1 GB/s reasons=['canary_after 778.53 < 783.94 GB/s']
+2026-10-23 11:36:33,058 INFO [43/360] 4c26b45f681818b6 read triton_read eager N=4294967296 hot -> clean median 4814.65 us 892.1 GB/s
+2026-10-23 11:36:37,704 INFO [44/360] 3eb057a2d07b737d read triton_read eager N=8388608 cold -> clean median 11.24 us 746.5 GB/s
+2026-10-23 11:36:44,678 INFO [45/360] 246351bb3f476233 copy torch_copy_ eager N=4294967296 hot -> contaminated median 10678.64 us 804.4 GB/s reasons=['canary_after 778.04 < 783.94 GB/s']
+2026-10-23 11:36:51,637 INFO [45/360] 246351bb3f476233 copy torch_copy_ eager N=4294967296 hot -> contaminated median 10685.52 us 803.9 GB/s reasons=['canary_after 778.94 < 783.94 GB/s']
+2026-10-23 11:36:58,831 INFO [45/360] 246351bb3f476233 copy torch_copy_ eager N=4294967296 hot -> contaminated median 10720.35 us 801.3 GB/s reasons=['canary_after 778.16 < 783.94 GB/s']
+2026-10-23 11:37:05,808 INFO [45/360] 246351bb3f476233 copy torch_copy_ eager N=4294967296 hot -> contaminated median 10709.94 us 802.1 GB/s reasons=['canary_after 778.94 < 783.94 GB/s']
+2026-10-23 11:37:12,791 INFO [45/360] 246351bb3f476233 copy torch_copy_ eager N=4294967296 hot -> contaminated median 10698.02 us 802.9 GB/s reasons=['canary_after 778.00 < 783.94 GB/s']
+2026-10-23 11:37:19,769 INFO [45/360] 246351bb3f476233 copy torch_copy_ eager N=4294967296 hot -> unclean_exhausted median 10717.46 us 801.5 GB/s reasons=['canary_after 779.05 < 783.94 GB/s']
+2026-10-23 11:37:24,089 INFO [46/360] 5cd0dbe6eba51a4b read triton_read isolated N=134217728 hot -> clean median 162.66 us 825.2 GB/s
+2026-10-23 11:37:27,999 INFO [47/360] a6f41c1ebaa41449 copy torch_copy_ isolated N=1048576 cold -> clean median 14.62 us 143.4 GB/s
+2026-10-23 11:37:33,160 INFO [48/360] 1760e6aea034734a read torch_sum graph N=8388608 cold -> clean median 14.95 us 561.1 GB/s
+2026-10-23 11:37:38,214 INFO [49/360] 353eebd46777bebf write torch_fill_ eager N=134217728 cold -> clean median 150.56 us 891.5 GB/s
+2026-10-23 11:37:43,692 INFO [50/360] 50c6c4e5ddce4d3b copy torch_copy_ eager N=2147483648 cold -> contaminated median 5365.68 us 800.5 GB/s reasons=['canary_after 778.06 < 783.94 GB/s']
+2026-10-23 11:37:49,573 INFO [50/360] 50c6c4e5ddce4d3b copy torch_copy_ eager N=2147483648 cold -> contaminated median 5367.76 us 800.1 GB/s reasons=['canary_after 778.92 < 783.94 GB/s']
+2026-10-23 11:37:55,678 INFO [50/360] 50c6c4e5ddce4d3b copy torch_copy_ eager N=2147483648 cold -> contaminated median 5367.04 us 800.2 GB/s reasons=['canary_after 778.36 < 783.94 GB/s']
+2026-10-23 11:38:01,576 INFO [50/360] 50c6c4e5ddce4d3b copy torch_copy_ eager N=2147483648 cold -> contaminated median 5364.88 us 800.6 GB/s reasons=['canary_after 778.80 < 783.94 GB/s']
+2026-10-23 11:38:07,675 INFO [50/360] 50c6c4e5ddce4d3b copy torch_copy_ eager N=2147483648 cold -> contaminated median 5362.90 us 800.9 GB/s reasons=['canary_after 778.40 < 783.94 GB/s']
+2026-10-23 11:38:13,554 INFO [50/360] 50c6c4e5ddce4d3b copy torch_copy_ eager N=2147483648 cold -> unclean_exhausted median 5365.28 us 800.5 GB/s reasons=['canary_after 778.78 < 783.94 GB/s']
+2026-10-23 11:38:20,317 INFO [51/360] 3c09f4e2cd4c8443 read triton_read eager N=4294967296 cold -> contaminated median 4814.87 us 892.0 GB/s reasons=['canary_after 778.04 < 783.94 GB/s']
+2026-10-23 11:38:27,280 INFO [51/360] 3c09f4e2cd4c8443 read triton_read eager N=4294967296 cold -> contaminated median 4814.89 us 892.0 GB/s reasons=['canary_after 778.53 < 783.94 GB/s']
+2026-10-23 11:38:34,243 INFO [51/360] 3c09f4e2cd4c8443 read triton_read eager N=4294967296 cold -> contaminated median 4814.73 us 892.0 GB/s reasons=['canary_after 778.24 < 783.94 GB/s']
+2026-10-23 11:38:41,207 INFO [51/360] 3c09f4e2cd4c8443 read triton_read eager N=4294967296 cold -> contaminated median 4814.78 us 892.0 GB/s reasons=['canary_after 778.74 < 783.94 GB/s']
+2026-10-23 11:38:47,331 INFO [51/360] 3c09f4e2cd4c8443 read triton_read eager N=4294967296 cold -> contaminated median 4814.82 us 892.0 GB/s reasons=['canary_after 778.29 < 783.94 GB/s']
+2026-10-23 11:38:54,293 INFO [51/360] 3c09f4e2cd4c8443 read triton_read eager N=4294967296 cold -> unclean_exhausted median 4814.78 us 892.0 GB/s reasons=['canary_after 779.07 < 783.94 GB/s']
+2026-10-23 11:39:00,174 INFO [52/360] 65a8010d5d3c7ac6 read torch_sum eager N=536870912 cold -> clean median 607.51 us 883.7 GB/s
+2026-10-23 11:39:05,067 INFO [53/360] 60c7d7d2f4e804fc copy torch_copy_ eager N=8388608 cold -> clean median 20.50 us 818.3 GB/s
+2026-10-23 11:39:10,043 INFO [54/360] ae21abb213fc6c68 write torch_fill_ isolated N=536870912 cold -> clean median 605.18 us 887.1 GB/s
+2026-10-23 11:39:15,073 INFO [55/360] 370173209f1892db write torch_fill_ eager N=524288 hot -> clean median 4.73 us 110.8 GB/s
+2026-10-23 11:39:19,089 INFO [56/360] 601925aef4b7a104 read triton_read isolated N=67108864 hot -> clean median 25.70 us 2611.8 GB/s
+2026-10-23 11:39:24,144 INFO [57/360] fd32d1fd7419133a copy torch_copy_ graph N=67108864 cold -> clean median 167.10 us 803.2 GB/s
+2026-10-23 11:39:29,022 INFO [58/360] 7068617557f8a437 read triton_read eager N=67108864 hot -> clean median 16.20 us 4141.9 GB/s
+2026-10-23 11:39:34,259 INFO [59/360] 68b0847b2a35a016 write torch_fill_ graph N=67108864 hot -> clean median 23.40 us 2867.9 GB/s
+2026-10-23 11:39:39,299 INFO [60/360] f82f4f55179ebec5 read triton_read graph N=536870912 hot -> clean median 603.18 us 890.1 GB/s
+2026-10-23 11:39:42,848 INFO [61/360] bfb1d84d0cdaff7b copy torch_copy_ isolated N=1048576 hot -> clean median 14.53 us 144.4 GB/s
+2026-10-23 11:39:48,117 INFO [62/360] 806970c773cc354b read triton_read eager N=4194304 cold -> clean median 9.98 us 420.7 GB/s
+2026-10-23 11:39:53,007 INFO [63/360] 522fb630a55f3828 read torch_sum isolated N=1073741824 hot -> clean median 1219.97 us 880.1 GB/s
+2026-10-23 11:39:57,091 INFO [64/360] 1dbd8b62dfd206a1 copy torch_copy_ isolated N=16777216 cold -> clean median 45.01 us 745.5 GB/s
+2026-10-23 11:40:02,357 INFO [65/360] cb569d9245302e2c write torch_fill_ isolated N=4294967296 hot -> contaminated median 4824.96 us 890.2 GB/s reasons=['canary_after 778.18 < 783.94 GB/s']
+2026-10-23 11:40:07,407 INFO [65/360] cb569d9245302e2c write torch_fill_ isolated N=4294967296 hot -> contaminated median 4825.17 us 890.1 GB/s reasons=['canary_after 778.67 < 783.94 GB/s']
+2026-10-23 11:40:13,500 INFO [65/360] cb569d9245302e2c write torch_fill_ isolated N=4294967296 hot -> contaminated median 4825.49 us 890.1 GB/s reasons=['canary_after 778.31 < 783.94 GB/s']
+2026-10-23 11:40:19,392 INFO [65/360] cb569d9245302e2c write torch_fill_ isolated N=4294967296 hot -> contaminated median 4824.94 us 890.2 GB/s reasons=['canary_after 778.65 < 783.94 GB/s']
+2026-10-23 11:40:25,485 INFO [65/360] cb569d9245302e2c write torch_fill_ isolated N=4294967296 hot -> contaminated median 4824.74 us 890.2 GB/s reasons=['canary_after 778.45 < 783.94 GB/s']
+2026-10-23 11:40:31,575 INFO [65/360] cb569d9245302e2c write torch_fill_ isolated N=4294967296 hot -> unclean_exhausted median 4825.01 us 890.1 GB/s reasons=['canary_after 779.00 < 783.94 GB/s']
+2026-10-23 11:40:37,609 INFO [66/360] d3d844659e561bc2 read torch_sum isolated N=4294967296 cold -> contaminated median 4843.94 us 886.7 GB/s reasons=['canary_after 778.63 < 783.94 GB/s']
+2026-10-23 11:40:43,642 INFO [66/360] d3d844659e561bc2 read torch_sum isolated N=4294967296 cold -> contaminated median 4844.11 us 886.6 GB/s reasons=['canary_after 779.36 < 783.94 GB/s']
+2026-10-23 11:40:49,678 INFO [66/360] d3d844659e561bc2 read torch_sum isolated N=4294967296 cold -> contaminated median 4843.97 us 886.7 GB/s reasons=['canary_after 778.24 < 783.94 GB/s']
+2026-10-23 11:40:55,715 INFO [66/360] d3d844659e561bc2 read torch_sum isolated N=4294967296 cold -> contaminated median 4844.32 us 886.6 GB/s reasons=['canary_after 778.94 < 783.94 GB/s']
+2026-10-23 11:41:01,550 INFO [66/360] d3d844659e561bc2 read torch_sum isolated N=4294967296 cold -> contaminated median 4844.45 us 886.6 GB/s reasons=['canary_after 778.60 < 783.94 GB/s']
+2026-10-23 11:41:07,636 INFO [66/360] d3d844659e561bc2 read torch_sum isolated N=4294967296 cold -> unclean_exhausted median 4844.06 us 886.6 GB/s reasons=['canary_after 778.29 < 783.94 GB/s']
+2026-10-23 11:41:14,512 INFO [67/360] 2e3f1a33b2c8bebd read torch_sum graph N=4294967296 cold -> contaminated median 4826.52 us 889.9 GB/s reasons=['canary_after 778.80 < 783.94 GB/s']
+2026-10-23 11:41:21,570 INFO [67/360] 2e3f1a33b2c8bebd read torch_sum graph N=4294967296 cold -> contaminated median 4826.53 us 889.9 GB/s reasons=['canary_after 778.56 < 783.94 GB/s']
+2026-10-23 11:41:28,428 INFO [67/360] 2e3f1a33b2c8bebd read torch_sum graph N=4294967296 cold -> contaminated median 4826.53 us 889.9 GB/s reasons=['canary_after 778.62 < 783.94 GB/s']
+2026-10-23 11:41:35,503 INFO [67/360] 2e3f1a33b2c8bebd read torch_sum graph N=4294967296 cold -> contaminated median 4826.62 us 889.9 GB/s reasons=['canary_after 778.76 < 783.94 GB/s']
+2026-10-23 11:41:42,563 INFO [67/360] 2e3f1a33b2c8bebd read torch_sum graph N=4294967296 cold -> contaminated median 4826.77 us 889.8 GB/s reasons=['canary_after 779.77 < 783.94 GB/s']
+2026-10-23 11:41:49,422 INFO [67/360] 2e3f1a33b2c8bebd read torch_sum graph N=4294967296 cold -> unclean_exhausted median 4826.74 us 889.8 GB/s reasons=['canary_after 778.90 < 783.94 GB/s']
+2026-10-23 11:41:54,034 INFO [68/360] 09e2046b316433f2 copy torch_copy_ isolated N=4194304 hot -> clean median 14.50 us 578.7 GB/s
+2026-10-23 11:41:59,319 INFO [69/360] fc4ca3871a53e3bb read torch_sum eager N=1048576 cold -> clean median 10.08 us 104.0 GB/s
+2026-10-23 11:42:01,932 INFO waiting 30s: foreign_cpu 8.35 cores >= 2 top=[('pratishtha.saxena', 8.003), ('prometheus', 0.292)]
+2026-10-23 11:42:34,172 INFO waiting 60s: foreign_cpu 7.61 cores >= 2 top=[('pratishtha.saxena', 7.574)]
+2026-10-23 11:43:36,432 INFO waiting 120s: foreign_cpu 7.68 cores >= 2 top=[('pratishtha.saxena', 7.617999999999999)]
+2026-10-23 11:45:38,733 INFO waiting 240s: foreign_cpu 7.28 cores >= 2 top=[('pratishtha.saxena', 7.242000000000001)]
+2026-10-23 11:49:41,031 INFO waiting 480s: foreign_cpu 7.58 cores >= 2 top=[('pratishtha.saxena', 7.547999999999999)]
+2026-10-23 11:57:43,329 INFO waiting 600s: foreign_cpu 7.57 cores >= 2 top=[('pratishtha.saxena', 7.519)]
+2026-10-23 12:07:45,628 INFO waiting 600s: foreign_cpu 7.19 cores >= 2 top=[('pratishtha.saxena', 7.141)]
+2026-10-23 12:17:47,911 INFO waiting 600s: foreign_cpu 7.30 cores >= 2 top=[('pratishtha.saxena', 7.263)]
+2026-10-23 12:27:50,190 INFO waiting 600s: foreign_cpu 7.77 cores >= 2 top=[('pratishtha.saxena', 7.58), ('henilsinh.raj', 0.132)]
+2026-10-23 12:37:54,697 INFO waiting 600s: foreign_cpu 9.02 cores >= 2 top=[('pratishtha.saxena', 7.976), ('henilsinh.raj', 1.002)]
+2026-10-23 12:47:59,192 INFO waiting 600s: foreign_cpu 7.72 cores >= 2 top=[('pratishtha.saxena', 7.671)]
+2026-10-23 12:58:03,692 INFO waiting 600s: foreign_cpu 7.19 cores >= 2 top=[('pratishtha.saxena', 7.149)]
+2026-10-23 13:08:08,192 INFO waiting 600s: foreign_cpu 8.02 cores >= 2 top=[('pratishtha.saxena', 7.97)]
+2026-10-23 13:18:12,688 INFO waiting 600s: foreign_cpu 7.36 cores >= 2 top=[('pratishtha.saxena', 7.308)]
+2026-10-23 13:28:17,177 INFO waiting 600s: foreign_cpu 7.17 cores >= 2 top=[('pratishtha.saxena', 7.121)]
+2026-10-23 13:38:21,652 INFO waiting 600s: foreign_cpu 7.82 cores >= 2 top=[('pratishtha.saxena', 7.781000000000001)]
+2026-10-23 13:48:26,153 INFO waiting 600s: foreign_cpu 7.47 cores >= 2 top=[('pratishtha.saxena', 7.416)]
+2026-10-23 13:58:30,649 INFO waiting 600s: foreign_cpu 8.44 cores >= 2 top=[('pratishtha.saxena', 7.981), ('prometheus', 0.385)]
+2026-10-23 14:08:35,315 INFO canary ref drift vs previous: -0.02%
+2026-10-23 14:08:35,319 INFO canary reference 825.00 GB/s (cv 0.0002)
+2026-10-23 14:08:40,104 INFO [70/360] 0b35f59c8b31a95b copy torch_copy_ eager N=1073741824 cold -> contaminated median 2683.52 us 800.2 GB/s reasons=['canary_after 778.87 < 783.75 GB/s']
+2026-10-23 14:08:45,928 INFO [70/360] 0b35f59c8b31a95b copy torch_copy_ eager N=1073741824 cold -> contaminated median 2685.48 us 799.7 GB/s reasons=['canary_after 779.27 < 783.75 GB/s']
+2026-10-23 14:08:50,907 INFO [70/360] 0b35f59c8b31a95b copy torch_copy_ eager N=1073741824 cold -> contaminated median 2684.22 us 800.0 GB/s reasons=['canary_after 778.74 < 783.75 GB/s']
+2026-10-23 14:08:55,890 INFO [70/360] 0b35f59c8b31a95b copy torch_copy_ eager N=1073741824 cold -> contaminated median 2684.78 us 799.9 GB/s reasons=['canary_after 779.56 < 783.75 GB/s']
+2026-10-23 14:09:01,071 INFO [70/360] 0b35f59c8b31a95b copy torch_copy_ eager N=1073741824 cold -> contaminated median 2684.14 us 800.1 GB/s reasons=['canary_after 778.49 < 783.75 GB/s']
+2026-10-23 14:09:07,094 INFO [70/360] 0b35f59c8b31a95b copy torch_copy_ eager N=1073741824 cold -> unclean_exhausted median 2683.63 us 800.2 GB/s reasons=['canary_after 778.83 < 783.75 GB/s']
+2026-10-23 14:09:11,488 INFO [71/360] 91b2b7af0886acba write torch_fill_ isolated N=16777216 hot -> clean median 13.76 us 1219.3 GB/s
+2026-10-23 14:09:16,770 INFO [72/360] c6922d9a51ac4a7e copy torch_copy_ graph N=33554432 hot -> clean median 14.23 us 4716.5 GB/s
+2026-10-23 14:09:21,620 INFO [73/360] e4a84aa44efb187e read torch_sum eager N=2097152 cold -> clean median 10.03 us 209.0 GB/s
+2026-10-23 14:09:26,895 INFO [74/360] 301ddbb465eb4fee read triton_read graph N=8388608 hot -> clean median 2.71 us 3096.7 GB/s
+2026-10-23 14:09:31,932 INFO [75/360] 902841df07529c3f read torch_sum graph N=134217728 hot -> clean median 156.55 us 857.4 GB/s
+2026-10-23 14:09:36,693 INFO [76/360] 0454e2c9dea9d89e write torch_fill_ graph N=536870912 hot -> clean median 602.12 us 891.6 GB/s
+2026-10-23 14:09:40,883 INFO [77/360] 389f78a4d403c7f3 write torch_fill_ isolated N=134217728 cold -> clean median 152.54 us 879.9 GB/s
+2026-10-23 14:09:45,870 INFO [78/360] 235722905d6f6d75 read triton_read eager N=536870912 hot -> clean median 604.05 us 888.8 GB/s
+2026-10-23 14:09:50,869 INFO [79/360] d4cec0dc7409128f read triton_read graph N=134217728 cold -> clean median 151.81 us 884.2 GB/s
+2026-10-23 14:09:55,976 INFO [80/360] 7d56d4e0324b903c read torch_sum graph N=268435456 cold -> clean median 307.12 us 874.0 GB/s
+2026-10-23 14:10:00,604 INFO [81/360] 3538fc89e8823710 read triton_read eager N=1048576 hot -> contaminated median 9.90 us 106.4 GB/s reasons=["foreign_cpu 2.12 cores > 2 top=[('prometheus', 1.8869999999999998), ('messagebus', 0.102), ('root', 0.051)]"]
+2026-10-23 14:10:05,653 INFO [81/360] 3538fc89e8823710 read triton_read eager N=1048576 hot -> clean median 9.89 us 106.4 GB/s
+2026-10-23 14:10:11,076 INFO [82/360] 36d7b09824993b26 copy torch_copy_ graph N=524288 cold -> clean median 2.22 us 473.3 GB/s
+2026-10-23 14:10:15,942 INFO [83/360] 2f0d4eedd8620a4c copy torch_copy_ isolated N=67108864 cold -> clean median 171.12 us 784.3 GB/s
+2026-10-23 14:10:22,506 INFO [84/360] 8174c751aeaa7d8c copy torch_copy_ graph N=4294967296 cold -> contaminated median 10562.93 us 813.2 GB/s reasons=['canary_after 779.43 < 783.75 GB/s']
+2026-10-23 14:10:29,679 INFO [84/360] 8174c751aeaa7d8c copy torch_copy_ graph N=4294967296 cold -> contaminated median 10558.77 us 813.5 GB/s reasons=['canary_after 778.87 < 783.75 GB/s']
+2026-10-23 14:10:36,695 INFO [84/360] 8174c751aeaa7d8c copy torch_copy_ graph N=4294967296 cold -> contaminated median 10553.55 us 813.9 GB/s reasons=['canary_after 779.45 < 783.75 GB/s']
+2026-10-23 14:10:43,661 INFO [84/360] 8174c751aeaa7d8c copy torch_copy_ graph N=4294967296 cold -> contaminated median 10555.06 us 813.8 GB/s reasons=['canary_after 778.65 < 783.75 GB/s']
+2026-10-23 14:10:50,675 INFO [84/360] 8174c751aeaa7d8c copy torch_copy_ graph N=4294967296 cold -> contaminated median 10559.20 us 813.5 GB/s reasons=['canary_after 778.92 < 783.75 GB/s']
+2026-10-23 14:10:57,700 INFO [84/360] 8174c751aeaa7d8c copy torch_copy_ graph N=4294967296 cold -> unclean_exhausted median 10562.70 us 813.2 GB/s reasons=['canary_after 778.98 < 783.75 GB/s']
+2026-10-23 14:11:02,926 INFO [85/360] 9d0eefaf19471827 write torch_fill_ eager N=524288 cold -> clean median 4.77 us 109.9 GB/s
+2026-10-23 14:11:07,726 INFO [86/360] 936399369fcd0cd0 read torch_sum eager N=134217728 hot -> clean median 156.24 us 859.0 GB/s
+2026-10-23 14:11:13,220 INFO [87/360] aa0cbd51feb22a26 copy torch_copy_ graph N=2147483648 cold -> contaminated median 5301.01 us 810.2 GB/s reasons=['canary_after 778.65 < 783.75 GB/s']
+2026-10-23 14:11:19,338 INFO [87/360] aa0cbd51feb22a26 copy torch_copy_ graph N=2147483648 cold -> contaminated median 5307.70 us 809.2 GB/s reasons=['canary_after 778.71 < 783.75 GB/s']
+2026-10-23 14:11:25,251 INFO [87/360] aa0cbd51feb22a26 copy torch_copy_ graph N=2147483648 cold -> contaminated median 5302.72 us 810.0 GB/s reasons=['canary_after 778.94 < 783.75 GB/s']
+2026-10-23 14:11:31,382 INFO [87/360] aa0cbd51feb22a26 copy torch_copy_ graph N=2147483648 cold -> contaminated median 5298.08 us 810.7 GB/s reasons=['canary_after 778.98 < 783.75 GB/s']
+2026-10-23 14:11:37,289 INFO [87/360] aa0cbd51feb22a26 copy torch_copy_ graph N=2147483648 cold -> contaminated median 5294.56 us 811.2 GB/s reasons=['canary_after 779.01 < 783.75 GB/s']
+2026-10-23 14:11:43,403 INFO [87/360] aa0cbd51feb22a26 copy torch_copy_ graph N=2147483648 cold -> unclean_exhausted median 5306.10 us 809.4 GB/s reasons=['canary_after 779.41 < 783.75 GB/s']
+2026-10-23 14:11:47,842 INFO [88/360] fb70e38d20b84de7 read torch_sum isolated N=134217728 hot -> clean median 164.90 us 814.0 GB/s
+2026-10-23 14:11:51,692 INFO [89/360] 3d13c475324d5f5b read torch_sum isolated N=33554432 cold -> clean median 51.42 us 652.5 GB/s
+2026-10-23 14:11:56,960 INFO [90/360] 916be3fe2dcf7948 read torch_sum isolated N=2147483648 hot -> clean median 2425.89 us 885.2 GB/s
+2026-10-23 14:12:03,940 INFO [91/360] 393b3bc88972d8d7 read torch_sum graph N=4294967296 hot -> contaminated median 4826.67 us 889.8 GB/s reasons=['canary_after 778.89 < 783.75 GB/s']
+2026-10-23 14:12:09,873 INFO [91/360] 393b3bc88972d8d7 read torch_sum graph N=4294967296 hot -> contaminated median 4826.74 us 889.8 GB/s reasons=['canary_after 778.96 < 783.75 GB/s']
+2026-10-23 14:12:16,007 INFO [91/360] 393b3bc88972d8d7 read torch_sum graph N=4294967296 hot -> contaminated median 4826.71 us 889.8 GB/s reasons=['canary_after 778.89 < 783.75 GB/s']
+2026-10-23 14:12:21,938 INFO [91/360] 393b3bc88972d8d7 read torch_sum graph N=4294967296 hot -> contaminated median 4826.76 us 889.8 GB/s reasons=['canary_after 778.72 < 783.75 GB/s']
+2026-10-23 14:12:28,071 INFO [91/360] 393b3bc88972d8d7 read torch_sum graph N=4294967296 hot -> contaminated median 4826.74 us 889.8 GB/s reasons=['canary_after 779.00 < 783.75 GB/s']
+2026-10-23 14:12:35,047 INFO [91/360] 393b3bc88972d8d7 read torch_sum graph N=4294967296 hot -> unclean_exhausted median 4826.77 us 889.8 GB/s reasons=['canary_after 779.00 < 783.75 GB/s']
+2026-10-23 14:12:40,814 INFO [92/360] 8ca0d5c9e090839f read triton_read graph N=16777216 cold -> clean median 20.05 us 837.0 GB/s
+2026-10-23 14:12:45,617 INFO [93/360] 52b4d34c34db4b5e copy torch_copy_ eager N=1048576 hot -> clean median 5.52 us 379.9 GB/s
+2026-10-23 14:12:49,673 INFO [94/360] 2fa7ffce41fadff0 read triton_read isolated N=4194304 cold -> clean median 19.49 us 215.5 GB/s
+2026-10-23 14:12:55,317 INFO [95/360] ffd93ce5efea1527 read triton_read isolated N=4294967296 cold -> contaminated median 4832.19 us 888.8 GB/s reasons=['canary_after 778.60 < 783.75 GB/s']
+2026-10-23 14:13:01,361 INFO [95/360] ffd93ce5efea1527 read triton_read isolated N=4294967296 cold -> contaminated median 4832.13 us 888.8 GB/s reasons=['canary_after 778.94 < 783.75 GB/s']
+2026-10-23 14:13:07,203 INFO [95/360] ffd93ce5efea1527 read triton_read isolated N=4294967296 cold -> contaminated median 4831.90 us 888.9 GB/s reasons=['canary_after 778.58 < 783.75 GB/s']
+2026-10-23 14:13:13,244 INFO [95/360] ffd93ce5efea1527 read triton_read isolated N=4294967296 cold -> contaminated median 4832.37 us 888.8 GB/s reasons=['canary_after 778.56 < 783.75 GB/s']
+2026-10-23 14:13:19,292 INFO [95/360] ffd93ce5efea1527 read triton_read isolated N=4294967296 cold -> contaminated median 4832.21 us 888.8 GB/s reasons=['canary_after 777.80 < 783.75 GB/s']
+2026-10-23 14:13:25,338 INFO [95/360] ffd93ce5efea1527 read triton_read isolated N=4294967296 cold -> unclean_exhausted median 4831.73 us 888.9 GB/s reasons=['canary_after 778.74 < 783.75 GB/s']
+2026-10-23 14:13:29,822 INFO [96/360] 058661c85c2355c1 read triton_read isolated N=8388608 cold -> clean median 21.47 us 390.9 GB/s
+2026-10-23 14:13:33,697 INFO [97/360] 8383e3c5f1c718fe write torch_fill_ isolated N=33554432 cold -> clean median 39.14 us 857.4 GB/s
+2026-10-23 14:13:39,075 INFO [98/360] 15fa4c7564be2dff write torch_fill_ graph N=1048576 hot -> clean median 1.02 us 1025.6 GB/s
+2026-10-23 14:13:42,642 INFO [99/360] 5a27eec6188a6bf8 read triton_read isolated N=1048576 hot -> clean median 19.23 us 54.8 GB/s
+2026-10-23 14:13:47,922 INFO [100/360] 8c38e3b673e9509a read triton_read graph N=67108864 hot -> clean median 15.69 us 4277.0 GB/s
+2026-10-23 14:13:52,821 INFO [101/360] e0d19453b4722f1f write torch_fill_ graph N=4194304 cold -> clean median 4.75 us 883.2 GB/s
+2026-10-23 14:13:57,705 INFO [102/360] 4799cedce0887fed copy torch_copy_ graph N=16777216 cold -> clean median 41.37 us 811.1 GB/s
+2026-10-23 14:14:02,818 INFO [103/360] af4a5cd7b411db05 read torch_sum eager N=16777216 cold -> clean median 24.15 us 694.7 GB/s
+2026-10-23 14:14:07,727 INFO [104/360] 17ea67b57e57d3e3 read triton_read graph N=67108864 cold -> clean median 76.48 us 877.5 GB/s
+2026-10-23 14:14:12,771 INFO [105/360] 8e2baf805511cc9a write torch_fill_ eager N=8388608 hot -> clean median 4.80 us 1749.4 GB/s
+2026-10-23 14:14:16,750 INFO [106/360] 8134ccff659707f6 read triton_read isolated N=262144 hot -> clean median 19.17 us 13.9 GB/s
+2026-10-23 14:14:22,391 INFO [107/360] d56b04c972a3de1b read torch_sum eager N=2147483648 cold -> contaminated median 2413.19 us 889.9 GB/s reasons=['canary_after 778.63 < 783.75 GB/s']
+2026-10-23 14:14:28,442 INFO [107/360] d56b04c972a3de1b read torch_sum eager N=2147483648 cold -> contaminated median 2413.19 us 889.9 GB/s reasons=['canary_after 779.12 < 783.75 GB/s']
+2026-10-23 14:14:34,295 INFO [107/360] d56b04c972a3de1b read torch_sum eager N=2147483648 cold -> contaminated median 2413.13 us 889.9 GB/s reasons=['canary_after 778.65 < 783.75 GB/s']
+2026-10-23 14:14:40,317 INFO [107/360] d56b04c972a3de1b read torch_sum eager N=2147483648 cold -> contaminated median 2413.14 us 889.9 GB/s reasons=['canary_after 779.12 < 783.75 GB/s']
+2026-10-23 14:14:46,339 INFO [107/360] d56b04c972a3de1b read torch_sum eager N=2147483648 cold -> contaminated median 2413.13 us 889.9 GB/s reasons=['canary_after 778.07 < 783.75 GB/s']
+2026-10-23 14:14:52,394 INFO [107/360] d56b04c972a3de1b read torch_sum eager N=2147483648 cold -> unclean_exhausted median 2413.19 us 889.9 GB/s reasons=['canary_after 779.16 < 783.75 GB/s']
+2026-10-23 14:14:59,139 INFO [108/360] 9a786e1e02e1a0ae read triton_read graph N=4294967296 hot -> contaminated median 4814.06 us 892.2 GB/s reasons=['canary_after 778.67 < 783.75 GB/s']
+2026-10-23 14:15:06,086 INFO [108/360] 9a786e1e02e1a0ae read triton_read graph N=4294967296 hot -> contaminated median 4814.11 us 892.2 GB/s reasons=['canary_after 778.09 < 783.75 GB/s']
+2026-10-23 14:15:13,035 INFO [108/360] 9a786e1e02e1a0ae read triton_read graph N=4294967296 hot -> contaminated median 4814.10 us 892.2 GB/s reasons=['canary_after 778.58 < 783.75 GB/s']
+2026-10-23 14:15:19,144 INFO [108/360] 9a786e1e02e1a0ae read triton_read graph N=4294967296 hot -> contaminated median 4814.18 us 892.1 GB/s reasons=['canary_after 777.82 < 783.75 GB/s']
+2026-10-23 14:15:26,093 INFO [108/360] 9a786e1e02e1a0ae read triton_read graph N=4294967296 hot -> contaminated median 4814.10 us 892.2 GB/s reasons=['canary_after 778.42 < 783.75 GB/s']
+2026-10-23 14:15:33,020 INFO [108/360] 9a786e1e02e1a0ae read triton_read graph N=4294967296 hot -> unclean_exhausted median 4814.15 us 892.2 GB/s reasons=['canary_after 778.34 < 783.75 GB/s']
+2026-10-23 14:15:38,318 INFO [109/360] 9968fa6170b9afc7 read torch_sum graph N=1073741824 cold -> clean median 1209.78 us 887.5 GB/s
+2026-10-23 14:15:42,747 INFO [110/360] cb10c5429971a126 write torch_fill_ isolated N=4194304 cold -> clean median 13.66 us 307.0 GB/s
+2026-10-23 14:15:46,810 INFO [111/360] d86689a28bce1c43 write torch_fill_ isolated N=8388608 cold -> clean median 14.30 us 586.5 GB/s
+2026-10-23 14:15:52,047 INFO [112/360] 117fb70a5c4d20ab read torch_sum eager N=536870912 hot -> clean median 607.46 us 883.8 GB/s
+2026-10-23 14:15:57,005 INFO [113/360] cdf691fe4cbe1cc4 copy torch_copy_ isolated N=536870912 cold -> clean median 1348.46 us 796.3 GB/s
+2026-10-23 14:16:00,763 INFO [114/360] beceef1d28df4881 read torch_sum isolated N=2097152 hot -> clean median 20.05 us 104.6 GB/s
+2026-10-23 14:16:04,735 INFO [115/360] 3abaa22321b678ce read torch_sum isolated N=33554432 hot -> clean median 20.00 us 1677.7 GB/s
+2026-10-23 14:16:09,825 INFO [116/360] 83b8fa464b9e9180 read triton_read isolated N=1073741824 hot -> clean median 1217.41 us 882.0 GB/s
+2026-10-23 14:16:13,872 INFO [117/360] d8c77f9227a8ebd9 write torch_fill_ isolated N=16777216 cold -> clean median 20.22 us 829.6 GB/s
+2026-10-23 14:16:19,261 INFO [118/360] 5d6b9ea3e839454d write torch_fill_ graph N=2147483648 cold -> contaminated median 2408.31 us 891.7 GB/s reasons=['canary_after 779.23 < 783.75 GB/s']
+2026-10-23 14:16:25,305 INFO [118/360] 5d6b9ea3e839454d write torch_fill_ graph N=2147483648 cold -> clean median 2408.29 us 891.7 GB/s
+2026-10-23 14:16:30,793 INFO [119/360] 68ad2301dd404c2e copy torch_copy_ graph N=134217728 hot -> clean median 335.49 us 800.1 GB/s
+2026-10-23 14:16:37,502 INFO [120/360] 7219766b9c64d7c8 copy torch_copy_ isolated N=4294967296 hot -> contaminated median 10733.44 us 800.3 GB/s reasons=['canary_after 778.71 < 783.75 GB/s']
+2026-10-23 14:16:44,424 INFO [120/360] 7219766b9c64d7c8 copy torch_copy_ isolated N=4294967296 hot -> contaminated median 10712.19 us 801.9 GB/s reasons=['canary_after 779.09 < 783.75 GB/s']
+2026-10-23 14:16:51,543 INFO [120/360] 7219766b9c64d7c8 copy torch_copy_ isolated N=4294967296 hot -> contaminated median 10722.59 us 801.1 GB/s reasons=['canary_after 778.33 < 783.75 GB/s']
+2026-10-23 14:16:58,469 INFO [120/360] 7219766b9c64d7c8 copy torch_copy_ isolated N=4294967296 hot -> contaminated median 10716.32 us 801.6 GB/s reasons=['canary_after 778.81 < 783.75 GB/s']
+2026-10-23 14:17:05,394 INFO [120/360] 7219766b9c64d7c8 copy torch_copy_ isolated N=4294967296 hot -> contaminated median 10732.11 us 800.4 GB/s reasons=['canary_after 777.91 < 783.75 GB/s']
+2026-10-23 14:17:12,524 INFO [120/360] 7219766b9c64d7c8 copy torch_copy_ isolated N=4294967296 hot -> unclean_exhausted median 10713.90 us 801.8 GB/s reasons=['canary_after 779.28 < 783.75 GB/s']
+2026-10-23 14:17:17,212 INFO [121/360] 166964626b31be51 read triton_read isolated N=268435456 hot -> clean median 313.34 us 856.7 GB/s
+2026-10-23 14:17:23,052 INFO [122/360] 39031ad7405f1a86 write torch_fill_ eager N=1048576 cold -> clean median 4.78 us 219.3 GB/s
+2026-10-23 14:17:27,866 INFO [123/360] 0de86db47147dc76 read torch_sum eager N=8388608 hot -> clean median 10.07 us 833.0 GB/s
+2026-10-23 14:17:31,826 INFO [124/360] 36a42f449a82a41c copy torch_copy_ isolated N=262144 hot -> clean median 14.56 us 36.0 GB/s
+2026-10-23 14:17:37,290 INFO [125/360] 345ceac77ffbb2d7 read triton_read graph N=1073741824 hot -> clean median 1204.82 us 891.2 GB/s
+2026-10-23 14:17:42,898 INFO [126/360] ad9660ff07e9bb47 write torch_fill_ eager N=33554432 cold -> clean median 37.64 us 891.6 GB/s
+2026-10-23 14:17:47,830 INFO [127/360] 85fb4d4b4d4cfa05 copy torch_copy_ eager N=33554432 cold -> clean median 83.09 us 807.6 GB/s
+2026-10-23 14:17:51,814 INFO [128/360] 0a32f94df24f5f66 write torch_fill_ isolated N=524288 hot -> clean median 13.60 us 38.6 GB/s
+2026-10-23 14:17:56,829 INFO [129/360] 534323fe1cb8b356 copy torch_copy_ eager N=262144 hot -> clean median 5.46 us 96.1 GB/s
+2026-10-23 14:18:00,856 INFO [130/360] 7135b2d12a4d3e4e read torch_sum isolated N=4194304 cold -> clean median 20.32 us 206.4 GB/s
+2026-10-23 14:18:06,128 INFO [131/360] 8221e25d00443782 read torch_sum graph N=536870912 hot -> clean median 607.72 us 883.4 GB/s
+2026-10-23 14:18:12,676 INFO [132/360] 5ebf06eb9add177b copy torch_copy_ eager N=4294967296 cold -> contaminated median 10709.46 us 802.1 GB/s reasons=['canary_after 778.22 < 783.75 GB/s']
+2026-10-23 14:18:19,882 INFO [132/360] 5ebf06eb9add177b copy torch_copy_ eager N=4294967296 cold -> contaminated median 10716.27 us 801.6 GB/s reasons=['canary_after 779.01 < 783.75 GB/s']
+2026-10-23 14:18:26,858 INFO [132/360] 5ebf06eb9add177b copy torch_copy_ eager N=4294967296 cold -> contaminated median 10713.73 us 801.8 GB/s reasons=['canary_after 778.16 < 783.75 GB/s']
+2026-10-23 14:18:33,809 INFO [132/360] 5ebf06eb9add177b copy torch_copy_ eager N=4294967296 cold -> contaminated median 10680.53 us 804.3 GB/s reasons=['canary_after 778.51 < 783.75 GB/s']
+2026-10-23 14:18:40,786 INFO [132/360] 5ebf06eb9add177b copy torch_copy_ eager N=4294967296 cold -> contaminated median 10720.03 us 801.3 GB/s reasons=['canary_after 778.15 < 783.75 GB/s']
+2026-10-23 14:18:47,762 INFO [132/360] 5ebf06eb9add177b copy torch_copy_ eager N=4294967296 cold -> unclean_exhausted median 10698.94 us 802.9 GB/s reasons=['canary_after 778.53 < 783.75 GB/s']
+2026-10-23 14:18:51,999 INFO [133/360] f0ddd66e5eaf49e1 read torch_sum isolated N=262144 cold -> clean median 18.05 us 14.5 GB/s
+2026-10-23 14:18:55,774 INFO [134/360] 047605197b022fd0 read triton_read isolated N=4194304 hot -> clean median 19.23 us 218.3 GB/s
+2026-10-23 14:18:59,973 INFO [135/360] 0f06bdfaf1b098b2 write torch_fill_ isolated N=134217728 hot -> clean median 152.45 us 880.4 GB/s
+2026-10-23 14:19:04,835 INFO [136/360] 4cfca7635800dfb0 read triton_read eager N=8388608 hot -> clean median 9.94 us 844.0 GB/s
+2026-10-23 14:19:10,046 INFO [137/360] cfe08fc3016f44f0 read torch_sum eager N=67108864 cold -> clean median 80.82 us 830.4 GB/s
+2026-10-23 14:19:14,952 INFO [138/360] dd067874fb140f1c read torch_sum graph N=8388608 hot -> clean median 6.32 us 1328.3 GB/s
+2026-10-23 14:19:19,878 INFO [139/360] ea4e38c95b58f249 write torch_fill_ eager N=16777216 cold -> clean median 18.81 us 891.9 GB/s
+2026-10-23 14:19:23,865 INFO [140/360] bac28650a224806f copy torch_copy_ isolated N=16777216 hot -> clean median 14.72 us 2279.5 GB/s
+2026-10-23 14:19:29,275 INFO [141/360] ecd7f7968d83ede7 write torch_fill_ eager N=1073741824 hot -> clean median 1204.02 us 891.8 GB/s
+2026-10-23 14:19:35,594 INFO [142/360] c25bae0aead71650 read torch_sum graph N=262144 cold -> clean median 10.17 us 25.8 GB/s
+2026-10-23 14:19:40,813 INFO [143/360] 0fde3a1d83582ce1 copy torch_copy_ eager N=4194304 hot -> clean median 5.50 us 1525.4 GB/s
+2026-10-23 14:19:45,916 INFO [144/360] 469b531daaab9802 write torch_fill_ eager N=33554432 hot -> clean median 11.60 us 2891.6 GB/s
+2026-10-23 14:19:51,061 INFO [145/360] 2a0539d4eeb838f3 copy torch_copy_ eager N=1073741824 hot -> clean median 2683.94 us 800.1 GB/s
+2026-10-23 14:19:56,001 INFO [146/360] 4dd45e4821d562fa write torch_fill_ graph N=8388608 cold -> clean median 9.45 us 887.4 GB/s
+2026-10-23 14:19:59,814 INFO [147/360] 360886382b4e68a0 write torch_fill_ isolated N=2097152 cold -> clean median 13.66 us 153.5 GB/s
+2026-10-23 14:20:04,945 INFO [148/360] 570467c155c4a2a0 read torch_sum graph N=33554432 hot -> clean median 11.01 us 3047.4 GB/s
+2026-10-23 14:20:08,916 INFO [149/360] 620666ffd74199b0 copy torch_copy_ isolated N=262144 cold -> clean median 14.72 us 35.6 GB/s
+2026-10-23 14:20:12,734 INFO [150/360] b1e3afca8f79a17e copy torch_copy_ isolated N=4194304 cold -> clean median 15.14 us 554.2 GB/s
+2026-10-23 14:20:18,019 INFO [151/360] 5dc27cfd65220f73 read torch_sum eager N=268435456 cold -> clean median 306.80 us 874.9 GB/s
+2026-10-23 14:20:23,177 INFO [152/360] 17111fb3e23391f9 read triton_read graph N=4194304 cold -> clean median 5.99 us 700.4 GB/s
+2026-10-23 14:20:28,053 INFO [153/360] b27cc61e1f4a8082 copy torch_copy_ isolated N=1073741824 cold -> clean median 2691.46 us 797.9 GB/s
+2026-10-23 14:20:33,108 INFO [154/360] d84bd93d43e7da63 read torch_sum eager N=268435456 hot -> clean median 306.83 us 874.9 GB/s
+2026-10-23 14:20:38,141 INFO [155/360] 391cf97069a53310 read triton_read eager N=536870912 cold -> clean median 604.02 us 888.8 GB/s
+2026-10-23 14:20:41,869 INFO [156/360] f5cfabdf49e66338 copy torch_copy_ isolated N=33554432 cold -> clean median 87.23 us 769.3 GB/s
+2026-10-23 14:20:45,822 INFO [157/360] a4e6989bd7bd16c1 copy torch_copy_ isolated N=524288 hot -> clean median 14.66 us 71.5 GB/s
+2026-10-23 14:20:50,415 INFO [158/360] 4863f59bbbca3bed copy torch_copy_ isolated N=134217728 cold -> clean median 338.77 us 792.4 GB/s
+2026-10-23 14:20:56,058 INFO [159/360] 32a49cd58df1e835 write torch_fill_ eager N=134217728 hot -> clean median 150.56 us 891.5 GB/s
+2026-10-23 14:21:00,346 INFO [160/360] 28c5dfbdb359f446 read torch_sum isolated N=268435456 cold -> clean median 315.58 us 850.6 GB/s
+2026-10-23 14:21:06,168 INFO [161/360] 7c01679bee91dbaf copy torch_copy_ graph N=1073741824 hot -> clean median 2656.37 us 808.4 GB/s
+2026-10-23 14:21:10,931 INFO [162/360] 34772af6808b5eb4 read torch_sum graph N=4194304 cold -> clean median 10.07 us 416.3 GB/s
+2026-10-23 14:21:16,273 INFO [163/360] ccaa3762e7978fbf read triton_read graph N=524288 cold -> clean median 1.85 us 285.6 GB/s
+2026-10-23 14:21:22,605 INFO [164/360] 8072821068c9f251 read torch_sum graph N=2147483648 cold -> contaminated median 2413.48 us 889.8 GB/s reasons=['canary_after 779.23 < 783.75 GB/s']
+2026-10-23 14:21:28,499 INFO [164/360] 8072821068c9f251 read torch_sum graph N=2147483648 cold -> contaminated median 2413.45 us 889.8 GB/s reasons=['canary_after 779.07 < 783.75 GB/s']
+2026-10-23 14:21:34,635 INFO [164/360] 8072821068c9f251 read torch_sum graph N=2147483648 cold -> contaminated median 2413.29 us 889.9 GB/s reasons=['canary_after 778.90 < 783.75 GB/s']
+2026-10-23 14:21:40,567 INFO [164/360] 8072821068c9f251 read torch_sum graph N=2147483648 cold -> contaminated median 2413.36 us 889.8 GB/s reasons=['canary_after 779.12 < 783.75 GB/s']
+2026-10-23 14:21:46,654 INFO [164/360] 8072821068c9f251 read torch_sum graph N=2147483648 cold -> clean median 2413.41 us 889.8 GB/s
+2026-10-23 14:21:52,016 INFO [165/360] 7d508d962f133c21 write torch_fill_ eager N=67108864 hot -> clean median 23.99 us 2797.7 GB/s
+2026-10-23 14:21:57,057 INFO [166/360] 5c32443b6f2855a5 copy torch_copy_ graph N=8388608 cold -> clean median 20.77 us 807.6 GB/s
+2026-10-23 14:22:02,051 INFO [167/360] 37392232ea84a4f0 copy torch_copy_ eager N=67108864 hot -> clean median 155.22 us 864.7 GB/s
+2026-10-23 14:22:05,847 INFO [168/360] a808c65c0bb25ccf read torch_sum isolated N=16777216 hot -> clean median 20.06 us 836.2 GB/s
+2026-10-23 14:22:10,999 INFO [169/360] 2a63480dfbc1dad4 write torch_fill_ graph N=33554432 hot -> clean median 11.04 us 3040.6 GB/s
+2026-10-23 14:22:16,166 INFO [170/360] 1a4d37484a5d965f read triton_read graph N=2097152 hot -> clean median 1.82 us 1152.0 GB/s
+2026-10-23 14:22:21,772 INFO [171/360] 1ad313d4e5eb06d2 read triton_read isolated N=536870912 cold -> clean median 614.85 us 873.2 GB/s
+2026-10-23 14:22:26,766 INFO [172/360] 7ea3cd283c40a814 read torch_sum isolated N=536870912 cold -> clean median 616.90 us 870.3 GB/s
+2026-10-23 14:22:31,801 INFO [173/360] 69dfd0e58d98d165 write torch_fill_ eager N=2097152 hot -> clean median 4.86 us 431.8 GB/s
+2026-10-23 14:22:37,233 INFO [174/360] 9919c6490c8185a0 read torch_sum eager N=1073741824 hot -> clean median 1209.52 us 887.7 GB/s
+2026-10-23 14:22:43,012 INFO [175/360] 6d2387db8fcf15c7 copy torch_copy_ graph N=33554432 cold -> clean median 81.86 us 819.8 GB/s
+2026-10-23 14:22:48,158 INFO [176/360] 06df72f383cc74cb write torch_fill_ graph N=524288 hot -> clean median 0.89 us 587.6 GB/s
+2026-10-23 14:22:53,150 INFO [177/360] d242405a4d2f2f47 read triton_read graph N=1048576 cold -> clean median 2.43 us 433.0 GB/s
+2026-10-23 14:22:58,110 INFO [178/360] 182ed9a92962b378 read torch_sum graph N=524288 cold -> clean median 6.32 us 82.9 GB/s
+2026-10-23 14:23:02,128 INFO [179/360] 6fa26aefb6b34f41 read triton_read isolated N=134217728 cold -> clean median 162.74 us 824.8 GB/s
+2026-10-23 14:23:06,753 INFO [180/360] c810e1b2ce99d7d3 write torch_fill_ eager N=1048576 hot -> clean median 4.74 us 221.3 GB/s
+2026-10-23 14:23:12,346 INFO [181/360] 3a082bf317dd58e1 read triton_read eager N=2147483648 hot -> contaminated median 2408.76 us 891.5 GB/s reasons=['canary_after 778.04 < 783.75 GB/s']
+2026-10-23 14:23:18,356 INFO [181/360] 3a082bf317dd58e1 read triton_read eager N=2147483648 hot -> contaminated median 2408.73 us 891.5 GB/s reasons=['canary_after 779.90 < 783.75 GB/s']
+2026-10-23 14:23:24,363 INFO [181/360] 3a082bf317dd58e1 read triton_read eager N=2147483648 hot -> contaminated median 2408.81 us 891.5 GB/s reasons=['canary_after 777.71 < 783.75 GB/s']
+2026-10-23 14:23:30,372 INFO [181/360] 3a082bf317dd58e1 read triton_read eager N=2147483648 hot -> contaminated median 2408.73 us 891.5 GB/s reasons=["foreign_cpu 2.55 cores > 2 top=[('prometheus', 2.5469999999999997)]", 'canary_after 779.19 < 783.75 GB/s']
+2026-10-23 14:23:36,386 INFO [181/360] 3a082bf317dd58e1 read triton_read eager N=2147483648 hot -> contaminated median 2408.76 us 891.5 GB/s reasons=['canary_after 779.03 < 783.75 GB/s']
+2026-10-23 14:23:42,394 INFO [181/360] 3a082bf317dd58e1 read triton_read eager N=2147483648 hot -> unclean_exhausted median 2408.68 us 891.6 GB/s reasons=['canary_after 779.01 < 783.75 GB/s']
+2026-10-23 14:23:48,287 INFO [182/360] 1dc32b369f7becef read torch_sum eager N=1073741824 cold -> clean median 1209.54 us 887.7 GB/s
+2026-10-23 14:23:53,850 INFO [183/360] 8ff723545101df2e write torch_fill_ isolated N=536870912 hot -> clean median 605.34 us 886.9 GB/s
+2026-10-23 14:23:57,811 INFO [184/360] 3c5f204f99ad2ec3 write torch_fill_ isolated N=262144 hot -> clean median 13.66 us 19.2 GB/s
+2026-10-23 14:24:02,045 INFO [185/360] 8659c1f382e3f9b1 read torch_sum isolated N=524288 cold -> clean median 20.64 us 25.4 GB/s
+2026-10-23 14:24:06,919 INFO [186/360] 57a6164d0c2b512d write torch_fill_ isolated N=1073741824 cold -> clean median 1208.18 us 888.7 GB/s
+2026-10-23 14:24:11,133 INFO [187/360] 1eb7ed16936cec2d write torch_fill_ isolated N=524288 cold -> clean median 13.76 us 38.1 GB/s
+2026-10-23 14:24:15,952 INFO [188/360] 3867c96f233c2ed2 read torch_sum eager N=67108864 hot -> clean median 17.15 us 3912.3 GB/s
+2026-10-23 14:24:20,671 INFO [189/360] 82b0cdfd5dde6081 read triton_read eager N=33554432 hot -> clean median 9.95 us 3372.7 GB/s
+2026-10-23 14:24:26,110 INFO [190/360] f29329e5a1d800bd write torch_fill_ graph N=4194304 hot -> clean median 1.98 us 2120.7 GB/s
+2026-10-23 14:24:31,037 INFO [191/360] 1608236e01f87f2f read torch_sum graph N=2097152 cold -> clean median 7.65 us 274.1 GB/s
+2026-10-23 14:24:36,456 INFO [192/360] b48f1d22c24dfa2a read triton_read graph N=2147483648 hot -> clean median 2408.11 us 891.8 GB/s
+2026-10-23 14:24:42,081 INFO [193/360] 627c0b27e52eed40 write torch_fill_ graph N=536870912 cold -> clean median 602.12 us 891.6 GB/s
+2026-10-23 14:24:46,849 INFO [194/360] 08eb37fcaa69663c copy torch_copy_ eager N=2097152 hot -> clean median 5.56 us 754.9 GB/s
+2026-10-23 14:24:52,235 INFO [195/360] 40ad28e394712819 read torch_sum graph N=536870912 cold -> clean median 607.73 us 883.4 GB/s
+2026-10-23 14:24:57,864 INFO [196/360] b4577e419319663a read torch_sum eager N=4194304 hot -> clean median 9.94 us 422.0 GB/s
+2026-10-23 14:25:02,894 INFO [197/360] 5bfa6c046d787c3e read torch_sum eager N=1048576 hot -> clean median 9.91 us 105.8 GB/s
+2026-10-23 14:25:07,136 INFO [198/360] a51b71b7c5032c47 read torch_sum isolated N=134217728 cold -> clean median 164.80 us 814.4 GB/s
+2026-10-23 14:25:12,168 INFO [199/360] 76e5f63086a5717f read triton_read eager N=268435456 hot -> clean median 303.20 us 885.4 GB/s
+2026-10-23 14:25:17,053 INFO [200/360] 77ebb0eae7ee06c5 copy torch_copy_ eager N=262144 cold -> clean median 5.68 us 92.3 GB/s
+2026-10-23 14:25:21,961 INFO [201/360] fd890e257bbd079d copy torch_copy_ graph N=4194304 cold -> clean median 9.58 us 875.2 GB/s
+2026-10-23 14:25:25,802 INFO [202/360] 88446af4164b9bf5 read torch_sum isolated N=16777216 cold -> clean median 32.61 us 514.5 GB/s
+2026-10-23 14:25:31,063 INFO [203/360] fad85faa8d45be1b copy torch_copy_ graph N=2097152 hot -> clean median 1.70 us 2463.7 GB/s
+2026-10-23 14:25:36,234 INFO [204/360] 79a17e73f270bb65 read triton_read graph N=1048576 hot -> clean median 1.76 us 597.5 GB/s
+2026-10-23 14:25:40,869 INFO [205/360] 0193a3590f4089c9 read torch_sum isolated N=8388608 hot -> clean median 20.10 us 417.4 GB/s
+2026-10-23 14:25:46,242 INFO [206/360] 10869e69b23713c2 copy torch_copy_ graph N=1048576 hot -> clean median 1.32 us 1594.1 GB/s
+2026-10-23 14:25:52,288 INFO [207/360] a1d28c6c14467a78 write torch_fill_ graph N=1073741824 cold -> clean median 1204.19 us 891.7 GB/s
+2026-10-23 14:25:57,238 INFO [208/360] 927b78eb08333d8b write torch_fill_ eager N=262144 cold -> clean median 4.79 us 54.7 GB/s
+2026-10-23 14:26:02,364 INFO [209/360] 699324aeb48639e2 write torch_fill_ graph N=524288 cold -> clean median 0.90 us 584.5 GB/s
+2026-10-23 14:26:06,930 INFO [210/360] afa3d4a18fe3b24c read triton_read isolated N=33554432 cold -> clean median 49.70 us 675.3 GB/s
+2026-10-23 14:26:10,960 INFO [211/360] 4bcd57980b429f03 read torch_sum isolated N=2097152 cold -> clean median 20.26 us 103.5 GB/s
+2026-10-23 14:26:15,027 INFO [212/360] 1e1fffc4177a98ab read torch_sum isolated N=8388608 cold -> clean median 22.98 us 365.1 GB/s
+2026-10-23 14:26:20,163 INFO [213/360] 3177f6b0f9a9c14f write torch_fill_ graph N=2097152 hot -> clean median 1.30 us 1613.4 GB/s
+2026-10-23 14:26:25,266 INFO [214/360] 6bc665c4f5cc0308 read triton_read graph N=536870912 cold -> clean median 603.22 us 890.0 GB/s
+2026-10-23 14:26:30,057 INFO [215/360] 3e73e2a279a4d1a1 write torch_fill_ eager N=536870912 cold -> clean median 602.08 us 891.7 GB/s
+2026-10-23 14:26:35,206 INFO [216/360] cfdd70acacd85a91 read triton_read graph N=4194304 hot -> clean median 1.98 us 2121.2 GB/s
+2026-10-23 14:26:40,282 INFO [217/360] 5a6e8c8cfd8eadce read torch_sum graph N=1073741824 hot -> clean median 1209.74 us 887.6 GB/s
+2026-10-23 14:26:46,484 INFO [218/360] 258ff0e912c66c44 read triton_read graph N=262144 cold -> clean median 1.69 us 158.2 GB/s
+2026-10-23 14:26:52,184 INFO [219/360] 7c40c4f14e4bf73a read triton_read graph N=268435456 cold -> clean median 302.30 us 888.0 GB/s
+2026-10-23 14:26:56,775 INFO [220/360] 5daecf1ff3dc7d3e read torch_sum eager N=16777216 hot -> clean median 10.04 us 1670.9 GB/s
+2026-10-23 14:27:02,278 INFO [221/360] dcbfd0053b42c10e read torch_sum graph N=268435456 hot -> clean median 307.24 us 873.7 GB/s
+2026-10-23 14:27:06,870 INFO [222/360] 047e30add3d1e757 write torch_fill_ isolated N=1048576 hot -> clean median 13.66 us 76.7 GB/s
+2026-10-23 14:27:12,062 INFO [223/360] 5e60feef2206d908 read triton_read eager N=134217728 hot -> clean median 152.72 us 878.9 GB/s
+2026-10-23 14:27:15,857 INFO [224/360] fc502329f1c5d731 read torch_sum isolated N=67108864 hot -> clean median 25.34 us 2647.9 GB/s
+2026-10-23 14:27:19,815 INFO [225/360] c9a36bde96b3e0a4 write torch_fill_ isolated N=33554432 hot -> clean median 16.35 us 2052.0 GB/s
+2026-10-23 14:27:25,503 INFO [226/360] 538d065130301739 read triton_read graph N=2147483648 cold -> contaminated median 2408.13 us 891.8 GB/s reasons=['canary_after 778.67 < 783.75 GB/s']
+2026-10-23 14:27:31,612 INFO [226/360] 538d065130301739 read triton_read graph N=2147483648 cold -> contaminated median 2408.08 us 891.8 GB/s reasons=['canary_after 778.02 < 783.75 GB/s']
+2026-10-23 14:27:37,517 INFO [226/360] 538d065130301739 read triton_read graph N=2147483648 cold -> contaminated median 2408.03 us 891.8 GB/s reasons=['canary_after 778.67 < 783.75 GB/s']
+2026-10-23 14:27:43,572 INFO [226/360] 538d065130301739 read triton_read graph N=2147483648 cold -> contaminated median 2408.03 us 891.8 GB/s reasons=['canary_after 778.15 < 783.75 GB/s']
+2026-10-23 14:27:49,677 INFO [226/360] 538d065130301739 read triton_read graph N=2147483648 cold -> contaminated median 2408.12 us 891.8 GB/s reasons=['canary_after 779.32 < 783.75 GB/s']
+2026-10-23 14:27:55,667 INFO [226/360] 538d065130301739 read triton_read graph N=2147483648 cold -> unclean_exhausted median 2408.05 us 891.8 GB/s reasons=['canary_after 778.60 < 783.75 GB/s']
+2026-10-23 14:28:01,110 INFO [227/360] 1f6463e46400e456 copy torch_copy_ graph N=268435456 hot -> clean median 670.53 us 800.7 GB/s
+2026-10-23 14:28:06,311 INFO [228/360] b27357602bb2a552 copy torch_copy_ graph N=1073741824 cold -> contaminated median 2659.57 us 807.5 GB/s reasons=['canary_after 779.23 < 783.75 GB/s']
+2026-10-23 14:28:12,351 INFO [228/360] b27357602bb2a552 copy torch_copy_ graph N=1073741824 cold -> contaminated median 2661.31 us 806.9 GB/s reasons=['canary_after 778.15 < 783.75 GB/s']
+2026-10-23 14:28:18,396 INFO [228/360] b27357602bb2a552 copy torch_copy_ graph N=1073741824 cold -> contaminated median 2654.11 us 809.1 GB/s reasons=['canary_after 778.31 < 783.75 GB/s']
+2026-10-23 14:28:24,231 INFO [228/360] b27357602bb2a552 copy torch_copy_ graph N=1073741824 cold -> contaminated median 2651.42 us 809.9 GB/s reasons=['canary_after 778.40 < 783.75 GB/s']
+2026-10-23 14:28:29,233 INFO [228/360] b27357602bb2a552 copy torch_copy_ graph N=1073741824 cold -> contaminated median 2658.70 us 807.7 GB/s reasons=['canary_after 778.71 < 783.75 GB/s']
+2026-10-23 14:28:34,231 INFO [228/360] b27357602bb2a552 copy torch_copy_ graph N=1073741824 cold -> unclean_exhausted median 2657.51 us 808.1 GB/s reasons=['canary_after 779.25 < 783.75 GB/s']
+2026-10-23 14:28:39,892 INFO [229/360] 08a8df28855ca4e6 read torch_sum eager N=33554432 hot -> clean median 11.04 us 3039.1 GB/s
+2026-10-23 14:28:45,155 INFO [230/360] 3b05cf540f406d96 copy torch_copy_ eager N=536870912 cold -> clean median 1342.68 us 799.7 GB/s
+2026-10-23 14:28:50,057 INFO [231/360] 020326bcc99f4f4c write torch_fill_ eager N=268435456 hot -> clean median 301.08 us 891.6 GB/s
+2026-10-23 14:28:54,971 INFO [232/360] 008e387828f98494 read torch_sum graph N=16777216 cold -> clean median 24.70 us 679.3 GB/s
+2026-10-23 14:29:00,539 INFO [233/360] f78c10c031690812 write torch_fill_ graph N=2147483648 hot -> contaminated median 2408.33 us 891.7 GB/s reasons=["foreign_cpu 2.83 cores > 2 top=[('prometheus', 2.718), ('messagebus', 0.078)]"]
+2026-10-23 14:29:06,519 INFO [233/360] f78c10c031690812 write torch_fill_ graph N=2147483648 hot -> clean median 2408.30 us 891.7 GB/s
+2026-10-23 14:29:11,972 INFO [234/360] 851f503db9a8e4f2 write torch_fill_ eager N=4194304 hot -> clean median 4.82 us 870.6 GB/s
+2026-10-23 14:29:17,091 INFO [235/360] d0bad6d888882d73 write torch_fill_ eager N=268435456 cold -> clean median 301.08 us 891.6 GB/s
+2026-10-23 14:29:22,026 INFO [236/360] dd52df09a9b4b182 read torch_sum graph N=33554432 cold -> clean median 43.43 us 772.6 GB/s
+2026-10-23 14:29:26,814 INFO [237/360] 1e97633ed4115063 copy torch_copy_ eager N=524288 hot -> clean median 5.57 us 188.3 GB/s
+2026-10-23 14:29:32,173 INFO [238/360] cb8959c1e34f9cdd copy torch_copy_ graph N=524288 hot -> clean median 1.30 us 805.9 GB/s
+2026-10-23 14:29:37,071 INFO [239/360] 02d7309a1f06906b write torch_fill_ graph N=16777216 hot -> clean median 5.93 us 2830.6 GB/s
+2026-10-23 14:29:41,916 INFO [240/360] 902557ee108fd3a7 write torch_fill_ eager N=2097152 cold -> clean median 4.86 us 431.8 GB/s
+2026-10-23 14:29:47,242 INFO [241/360] f73cb25f0ac80663 write torch_fill_ graph N=262144 hot -> clean median 0.78 us 335.2 GB/s
+2026-10-23 14:29:51,927 INFO [242/360] 7ef10f2ff70ffb1f copy torch_copy_ isolated N=536870912 hot -> clean median 1347.84 us 796.6 GB/s
+2026-10-23 14:29:56,098 INFO [243/360] ddb592e18bb08704 read torch_sum isolated N=67108864 cold -> clean median 89.52 us 749.7 GB/s
+2026-10-23 14:30:01,142 INFO [244/360] 333b0284ac85e519 copy torch_copy_ graph N=16777216 hot -> clean median 7.62 us 4401.3 GB/s
+2026-10-23 14:30:05,947 INFO [245/360] 546f17e5cc524c79 read triton_read eager N=524288 hot -> clean median 9.90 us 53.4 GB/s
+2026-10-23 14:30:11,121 INFO [246/360] baa7a6e772f3c2be read torch_sum eager N=134217728 cold -> clean median 156.21 us 859.2 GB/s
+2026-10-23 14:30:15,947 INFO [247/360] 5576b023db94e91d copy torch_copy_ eager N=134217728 hot -> clean median 334.56 us 802.3 GB/s
+2026-10-23 14:30:19,911 INFO [248/360] a88817225912fa85 copy torch_copy_ isolated N=2097152 hot -> clean median 14.59 us 287.4 GB/s
+2026-10-23 14:30:25,001 INFO [249/360] 3ae408ab1356a48b write torch_fill_ eager N=8388608 cold -> clean median 9.41 us 891.7 GB/s
+2026-10-23 14:30:30,571 INFO [250/360] eae2dde5c87cb649 read triton_read isolated N=4294967296 hot -> contaminated median 4832.22 us 888.8 GB/s reasons=['canary_after 778.83 < 783.75 GB/s']
+2026-10-23 14:30:36,560 INFO [250/360] eae2dde5c87cb649 read triton_read isolated N=4294967296 hot -> contaminated median 4832.54 us 888.8 GB/s reasons=['canary_after 778.72 < 783.75 GB/s']
+2026-10-23 14:30:42,549 INFO [250/360] eae2dde5c87cb649 read triton_read isolated N=4294967296 hot -> contaminated median 4832.03 us 888.9 GB/s reasons=['canary_after 778.24 < 783.75 GB/s']
+2026-10-23 14:30:48,608 INFO [250/360] eae2dde5c87cb649 read triton_read isolated N=4294967296 hot -> contaminated median 4832.42 us 888.8 GB/s reasons=['canary_after 779.03 < 783.75 GB/s']
+2026-10-23 14:30:54,600 INFO [250/360] eae2dde5c87cb649 read triton_read isolated N=4294967296 hot -> contaminated median 4832.21 us 888.8 GB/s reasons=['canary_after 778.09 < 783.75 GB/s']
+2026-10-23 14:31:00,588 INFO [250/360] eae2dde5c87cb649 read triton_read isolated N=4294967296 hot -> unclean_exhausted median 4832.18 us 888.8 GB/s reasons=['canary_after 779.14 < 783.75 GB/s']
+2026-10-23 14:31:06,281 INFO [251/360] ca0e50b4ecfb36c0 read triton_read isolated N=2147483648 cold -> contaminated median 2422.34 us 886.5 GB/s reasons=['canary_after 778.42 < 783.75 GB/s']
+2026-10-23 14:31:12,178 INFO [251/360] ca0e50b4ecfb36c0 read triton_read isolated N=2147483648 cold -> contaminated median 2422.78 us 886.4 GB/s reasons=['canary_after 779.12 < 783.75 GB/s']
+2026-10-23 14:31:17,286 INFO [251/360] ca0e50b4ecfb36c0 read triton_read isolated N=2147483648 cold -> contaminated median 2422.62 us 886.4 GB/s reasons=['canary_after 778.94 < 783.75 GB/s']
+2026-10-23 14:31:23,218 INFO [251/360] ca0e50b4ecfb36c0 read triton_read isolated N=2147483648 cold -> contaminated median 2422.59 us 886.4 GB/s reasons=['canary_after 778.90 < 783.75 GB/s']
+2026-10-23 14:31:28,325 INFO [251/360] ca0e50b4ecfb36c0 read triton_read isolated N=2147483648 cold -> contaminated median 2422.50 us 886.5 GB/s reasons=['canary_after 777.91 < 783.75 GB/s']
+2026-10-23 14:31:33,190 INFO [251/360] ca0e50b4ecfb36c0 read triton_read isolated N=2147483648 cold -> unclean_exhausted median 2422.43 us 886.5 GB/s reasons=['canary_after 778.72 < 783.75 GB/s']
+2026-10-23 14:31:38,070 INFO [252/360] 7d7f305280fe8b4e read torch_sum eager N=33554432 cold -> clean median 42.95 us 781.3 GB/s
+2026-10-23 14:31:44,770 INFO [253/360] 4a258393911fc368 copy torch_copy_ isolated N=4294967296 cold -> contaminated median 10724.27 us 801.0 GB/s reasons=['canary_after 778.20 < 783.75 GB/s']
+2026-10-23 14:31:51,700 INFO [253/360] 4a258393911fc368 copy torch_copy_ isolated N=4294967296 cold -> contaminated median 10697.71 us 803.0 GB/s reasons=['canary_after 778.92 < 783.75 GB/s']
+2026-10-23 14:31:58,628 INFO [253/360] 4a258393911fc368 copy torch_copy_ isolated N=4294967296 cold -> contaminated median 10715.63 us 801.6 GB/s reasons=['canary_after 778.07 < 783.75 GB/s']
+2026-10-23 14:32:05,726 INFO [253/360] 4a258393911fc368 copy torch_copy_ isolated N=4294967296 cold -> contaminated median 10720.67 us 801.2 GB/s reasons=['canary_after 778.53 < 783.75 GB/s']
+2026-10-23 14:32:12,657 INFO [253/360] 4a258393911fc368 copy torch_copy_ isolated N=4294967296 cold -> contaminated median 10729.68 us 800.6 GB/s reasons=['canary_after 778.15 < 783.75 GB/s']
+2026-10-23 14:32:19,751 INFO [253/360] 4a258393911fc368 copy torch_copy_ isolated N=4294967296 cold -> unclean_exhausted median 10727.47 us 800.7 GB/s reasons=['canary_after 778.92 < 783.75 GB/s']
+2026-10-23 14:32:24,993 INFO [254/360] 0d346ab778d96740 read torch_sum eager N=2097152 hot -> clean median 9.92 us 211.3 GB/s
+2026-10-23 14:32:28,992 INFO [255/360] 99798d99c37bdf26 read torch_sum isolated N=524288 hot -> clean median 20.35 us 25.8 GB/s
+2026-10-23 14:32:32,954 INFO [256/360] 8f96d472f7dd1e3d write torch_fill_ isolated N=2097152 hot -> clean median 13.79 us 152.1 GB/s
+2026-10-23 14:32:38,486 INFO [257/360] bd2553f16f15840d copy torch_copy_ isolated N=2147483648 hot -> contaminated median 5371.01 us 799.7 GB/s reasons=['canary_after 778.53 < 783.75 GB/s']
+2026-10-23 14:32:44,422 INFO [257/360] bd2553f16f15840d copy torch_copy_ isolated N=2147483648 hot -> contaminated median 5363.17 us 800.8 GB/s reasons=['canary_after 778.69 < 783.75 GB/s']
+2026-10-23 14:32:50,564 INFO [257/360] bd2553f16f15840d copy torch_copy_ isolated N=2147483648 hot -> contaminated median 5366.48 us 800.3 GB/s reasons=['canary_after 777.80 < 783.75 GB/s']
+2026-10-23 14:32:56,505 INFO [257/360] bd2553f16f15840d copy torch_copy_ isolated N=2147483648 hot -> contaminated median 5367.54 us 800.2 GB/s reasons=['canary_after 779.01 < 783.75 GB/s']
+2026-10-23 14:33:02,434 INFO [257/360] bd2553f16f15840d copy torch_copy_ isolated N=2147483648 hot -> contaminated median 5364.75 us 800.6 GB/s reasons=['canary_after 778.33 < 783.75 GB/s']
+2026-10-23 14:33:08,587 INFO [257/360] bd2553f16f15840d copy torch_copy_ isolated N=2147483648 hot -> unclean_exhausted median 5365.90 us 800.4 GB/s reasons=['canary_after 778.63 < 783.75 GB/s']
+2026-10-23 14:33:13,459 INFO [258/360] 0bf1d339f34a36b8 write torch_fill_ isolated N=268435456 cold -> clean median 303.52 us 884.4 GB/s
+2026-10-23 14:33:19,344 INFO [259/360] 9158c2d1efca4a5e copy torch_copy_ graph N=536870912 hot -> clean median 1331.33 us 806.5 GB/s
+2026-10-23 14:33:23,082 INFO [260/360] e0b5dfc6c59282e9 read triton_read isolated N=1048576 cold -> clean median 19.46 us 54.1 GB/s
+2026-10-23 14:33:28,336 INFO [261/360] b7d06325b8955524 read triton_read eager N=1048576 cold -> clean median 10.09 us 104.4 GB/s
+2026-10-23 14:33:33,295 INFO [262/360] ac7417e60705e58f write torch_fill_ graph N=33554432 cold -> clean median 37.38 us 897.6 GB/s
+2026-10-23 14:33:37,880 INFO [263/360] 989a92c77e461b13 read triton_read eager N=4194304 hot -> clean median 9.94 us 422.4 GB/s
+2026-10-23 14:33:43,116 INFO [264/360] 07c327c6d30fe0c5 read triton_read eager N=16777216 hot -> clean median 9.85 us 1703.6 GB/s
+2026-10-23 14:33:48,255 INFO [265/360] cd8fdd28585904f6 copy torch_copy_ graph N=262144 hot -> clean median 1.10 us 477.4 GB/s
+2026-10-23 14:33:53,200 INFO [266/360] 3bd5822efca7e600 write torch_fill_ eager N=536870912 hot -> clean median 602.08 us 891.7 GB/s
+2026-10-23 14:33:58,646 INFO [267/360] 6b923b5ca37818c4 read torch_sum graph N=2147483648 hot -> clean median 2413.40 us 889.8 GB/s
+2026-10-23 14:34:04,156 INFO [268/360] f46d3f6f46368f4d write torch_fill_ graph N=268435456 hot -> clean median 301.07 us 891.6 GB/s
+2026-10-23 14:34:08,243 INFO [269/360] b14538faec2bf8b1 read torch_sum isolated N=1048576 cold -> clean median 20.32 us 51.6 GB/s
+2026-10-23 14:34:12,076 INFO [270/360] 29060e75d23dc1d9 read triton_read isolated N=2097152 cold -> clean median 19.33 us 108.7 GB/s
+2026-10-23 14:34:17,312 INFO [271/360] c4927479de72e082 copy torch_copy_ graph N=1048576 cold -> clean median 3.33 us 630.0 GB/s
+2026-10-23 14:34:22,159 INFO [272/360] 9342b19f58b31977 copy torch_copy_ eager N=536870912 hot -> clean median 1341.47 us 800.4 GB/s
+2026-10-23 14:34:25,945 INFO [273/360] e69bd0bd487d4275 read triton_read isolated N=2097152 hot -> clean median 19.26 us 109.1 GB/s
+2026-10-23 14:34:31,249 INFO [274/360] 683271478c5dc858 read torch_sum isolated N=2147483648 cold -> contaminated median 2425.82 us 885.3 GB/s reasons=['canary_after 778.31 < 783.75 GB/s']
+2026-10-23 14:34:36,334 INFO [274/360] 683271478c5dc858 read torch_sum isolated N=2147483648 cold -> contaminated median 2425.89 us 885.2 GB/s reasons=['canary_after 778.90 < 783.75 GB/s']
+2026-10-23 14:34:42,228 INFO [274/360] 683271478c5dc858 read torch_sum isolated N=2147483648 cold -> contaminated median 2425.82 us 885.3 GB/s reasons=['canary_after 778.33 < 783.75 GB/s']
+2026-10-23 14:34:47,278 INFO [274/360] 683271478c5dc858 read torch_sum isolated N=2147483648 cold -> contaminated median 2425.73 us 885.3 GB/s reasons=['canary_after 778.96 < 783.75 GB/s']
+2026-10-23 14:34:52,377 INFO [274/360] 683271478c5dc858 read torch_sum isolated N=2147483648 cold -> contaminated median 2425.89 us 885.2 GB/s reasons=['canary_after 778.29 < 783.75 GB/s']
+2026-10-23 14:34:57,206 INFO [274/360] 683271478c5dc858 read torch_sum isolated N=2147483648 cold -> unclean_exhausted median 2425.82 us 885.3 GB/s reasons=['canary_after 778.71 < 783.75 GB/s']
+2026-10-23 14:35:02,288 INFO [275/360] 4fca70dad3cdc4e9 read torch_sum eager N=262144 cold -> clean median 10.91 us 24.0 GB/s
+2026-10-23 14:35:07,553 INFO [276/360] 6480920a7a60882f copy torch_copy_ graph N=262144 cold -> clean median 1.63 us 321.8 GB/s
+2026-10-23 14:35:13,073 INFO [277/360] 37b92f8bacff2b52 read torch_sum eager N=8388608 cold -> clean median 14.46 us 580.3 GB/s
+2026-10-23 14:35:18,157 INFO [278/360] 2659e7971e83a224 copy torch_copy_ graph N=134217728 cold -> clean median 335.53 us 800.0 GB/s
+2026-10-23 14:35:23,158 INFO [279/360] b04c08bf6f5dedc9 copy torch_copy_ graph N=67108864 hot -> clean median 154.84 us 866.8 GB/s
+2026-10-23 14:35:28,553 INFO [280/360] 8b46dde249f199c0 copy torch_copy_ isolated N=2147483648 cold -> contaminated median 5373.14 us 799.3 GB/s reasons=['canary_after 777.95 < 783.75 GB/s']
+2026-10-23 14:35:34,554 INFO [280/360] 8b46dde249f199c0 copy torch_copy_ isolated N=2147483648 cold -> contaminated median 5374.59 us 799.1 GB/s reasons=['canary_after 779.01 < 783.75 GB/s']
+2026-10-23 14:35:40,549 INFO [280/360] 8b46dde249f199c0 copy torch_copy_ isolated N=2147483648 cold -> contaminated median 5373.52 us 799.3 GB/s reasons=['canary_after 778.43 < 783.75 GB/s']
+2026-10-23 14:35:46,547 INFO [280/360] 8b46dde249f199c0 copy torch_copy_ isolated N=2147483648 cold -> contaminated median 5372.85 us 799.4 GB/s reasons=['canary_after 779.27 < 783.75 GB/s']
+2026-10-23 14:35:52,547 INFO [280/360] 8b46dde249f199c0 copy torch_copy_ isolated N=2147483648 cold -> contaminated median 5374.03 us 799.2 GB/s reasons=['canary_after 778.34 < 783.75 GB/s']
+2026-10-23 14:35:58,547 INFO [280/360] 8b46dde249f199c0 copy torch_copy_ isolated N=2147483648 cold -> unclean_exhausted median 5365.49 us 800.5 GB/s reasons=['canary_after 778.80 < 783.75 GB/s']
+2026-10-23 14:36:02,875 INFO [281/360] 292ce444a31fcbd7 write torch_fill_ isolated N=8388608 hot -> clean median 13.79 us 608.2 GB/s
+2026-10-23 14:36:08,423 INFO [282/360] c432a93fc6ff4bcc copy torch_copy_ eager N=524288 cold -> clean median 5.69 us 184.4 GB/s
+2026-10-23 14:36:14,321 INFO [283/360] 81d03e8aea89989d read torch_sum graph N=134217728 cold -> clean median 156.54 us 857.4 GB/s
+2026-10-23 14:36:19,427 INFO [284/360] c7c16dbe9e9048ba read triton_read eager N=1073741824 hot -> clean median 1205.61 us 890.6 GB/s
+2026-10-23 14:36:24,615 INFO [285/360] c2935ab0abbb8359 copy torch_copy_ eager N=2147483648 hot -> contaminated median 5360.50 us 801.2 GB/s reasons=['canary_after 778.62 < 783.75 GB/s']
+2026-10-23 14:36:30,627 INFO [285/360] c2935ab0abbb8359 copy torch_copy_ eager N=2147483648 hot -> contaminated median 5365.65 us 800.5 GB/s reasons=["foreign_cpu 2.33 cores > 2 top=[('pavan.harshit', 1.1909999999999998), ('prometheus', 0.966), ('root', 0.145)]", "foreign_cpu 2.41 cores > 2 top=[('pavan.harshit', 1.135), ('prometheus', 0.629), ('root', 0.44)]", 'canary_after 779.00 < 783.75 GB/s']
+2026-10-23 14:36:36,662 INFO [285/360] c2935ab0abbb8359 copy torch_copy_ eager N=2147483648 hot -> contaminated median 5361.23 us 801.1 GB/s reasons=['canary_after 778.74 < 783.75 GB/s']
+2026-10-23 14:36:42,612 INFO [285/360] c2935ab0abbb8359 copy torch_copy_ eager N=2147483648 hot -> contaminated median 5355.87 us 801.9 GB/s reasons=['canary_after 778.74 < 783.75 GB/s']
+2026-10-23 14:36:48,704 INFO [285/360] c2935ab0abbb8359 copy torch_copy_ eager N=2147483648 hot -> contaminated median 5355.01 us 802.0 GB/s reasons=['canary_after 777.82 < 783.75 GB/s']
+2026-10-23 14:36:54,713 INFO [285/360] c2935ab0abbb8359 copy torch_copy_ eager N=2147483648 hot -> unclean_exhausted median 5357.65 us 801.7 GB/s reasons=['canary_after 778.60 < 783.75 GB/s']
+2026-10-23 14:36:59,150 INFO [286/360] 136e8e85b01c6ad7 read torch_sum isolated N=262144 hot -> clean median 16.90 us 15.5 GB/s
+2026-10-23 14:37:04,281 INFO [287/360] 7678316373da92c4 read triton_read isolated N=1073741824 cold -> contaminated median 1217.34 us 882.0 GB/s reasons=['canary_after 778.43 < 783.75 GB/s']
+2026-10-23 14:37:09,194 INFO [287/360] 7678316373da92c4 read triton_read isolated N=1073741824 cold -> contaminated median 1217.50 us 881.9 GB/s reasons=['canary_after 779.16 < 783.75 GB/s']
+2026-10-23 14:37:14,107 INFO [287/360] 7678316373da92c4 read triton_read isolated N=1073741824 cold -> contaminated median 1217.34 us 882.0 GB/s reasons=['canary_after 778.53 < 783.75 GB/s']
+2026-10-23 14:37:19,245 INFO [287/360] 7678316373da92c4 read triton_read isolated N=1073741824 cold -> contaminated median 1217.50 us 881.9 GB/s reasons=['canary_after 779.10 < 783.75 GB/s']
+2026-10-23 14:37:24,157 INFO [287/360] 7678316373da92c4 read triton_read isolated N=1073741824 cold -> contaminated median 1217.50 us 881.9 GB/s reasons=['canary_after 778.22 < 783.75 GB/s']
+2026-10-23 14:37:29,310 INFO [287/360] 7678316373da92c4 read triton_read isolated N=1073741824 cold -> unclean_exhausted median 1217.44 us 882.0 GB/s reasons=["foreign_cpu 2.44 cores > 2 top=[('root', 1.282), ('pavan.harshit', 1.016)]"]
+2026-10-23 14:37:34,366 INFO [288/360] 1d2eeb4441546da0 write torch_fill_ graph N=67108864 cold -> clean median 75.30 us 891.2 GB/s
+2026-10-23 14:37:38,162 INFO [289/360] 692f4dd0740580bf write torch_fill_ isolated N=67108864 hot -> clean median 28.26 us 2375.0 GB/s
+2026-10-23 14:37:42,214 INFO [290/360] 14a20c2885979846 copy torch_copy_ isolated N=2097152 cold -> clean median 14.75 us 284.3 GB/s
+2026-10-23 14:37:46,507 INFO [291/360] f33210d6a4e54d5a copy torch_copy_ isolated N=134217728 hot -> clean median 338.50 us 793.0 GB/s
+2026-10-23 14:37:52,196 INFO [292/360] 741e7d12d499fe31 read triton_read eager N=2097152 hot -> clean median 9.94 us 211.5 GB/s
+2026-10-23 14:37:57,060 INFO [293/360] df418a10270e8341 read triton_read eager N=33554432 cold -> clean median 39.45 us 850.6 GB/s
+2026-10-23 14:38:02,343 INFO [294/360] 23d10fbef443b711 read torch_sum eager N=524288 cold -> contaminated median 10.08 us 52.0 GB/s reasons=["foreign_cpu 2.60 cores > 2 top=[('prometheus', 1.21), ('pavan.harshit', 1.037), ('root', 0.194)]"]
+2026-10-23 14:38:07,415 INFO [294/360] 23d10fbef443b711 read torch_sum eager N=524288 cold -> clean median 10.08 us 52.0 GB/s
+2026-10-23 14:38:12,102 INFO [295/360] 729c29ccd15013cf read triton_read graph N=33554432 cold -> clean median 38.86 us 863.6 GB/s
+2026-10-23 14:38:17,223 INFO [296/360] 629574592f73744f read torch_sum graph N=4194304 hot -> clean median 5.35 us 783.9 GB/s
+2026-10-23 14:38:22,152 INFO [297/360] 336d889d7a10e082 read torch_sum graph N=524288 hot -> clean median 5.09 us 103.0 GB/s
+2026-10-23 14:38:27,236 INFO [298/360] 276e090a33617b60 read triton_read eager N=134217728 cold -> contaminated median 152.75 us 878.7 GB/s reasons=["foreign_cpu 3.05 cores > 2 top=[('root', 1.9810000000000003), ('pavan.harshit', 1.015)]"]
+2026-10-23 14:38:32,219 INFO [298/360] 276e090a33617b60 read triton_read eager N=134217728 cold -> contaminated median 152.75 us 878.7 GB/s reasons=["foreign_cpu 2.39 cores > 2 top=[('prometheus', 1.217), ('pavan.harshit', 1.0390000000000001)]"]
+2026-10-23 14:38:37,213 INFO [298/360] 276e090a33617b60 read triton_read eager N=134217728 cold -> clean median 152.75 us 878.7 GB/s
+2026-10-23 14:38:42,205 INFO [299/360] dbee496d7f07d422 write torch_fill_ isolated N=2147483648 hot -> clean median 2413.70 us 889.7 GB/s
+2026-10-23 14:38:46,973 INFO [300/360] 5cd95e506866b7ec read torch_sum isolated N=536870912 hot -> clean median 616.94 us 870.2 GB/s
+2026-10-23 14:38:52,268 INFO [301/360] 17bdc02e5c6a3015 read torch_sum graph N=1048576 hot -> clean median 5.08 us 206.5 GB/s
+2026-10-23 14:38:56,306 INFO [302/360] a45a30ac2d71c5cd read triton_read isolated N=262144 cold -> clean median 19.30 us 13.8 GB/s
+2026-10-23 14:39:01,151 INFO [303/360] 96e20498deb9dd8b copy torch_copy_ eager N=67108864 cold -> contaminated median 166.60 us 805.6 GB/s reasons=["foreign_cpu 2.56 cores > 2 top=[('prometheus', 1.216), ('pavan.harshit', 1.103), ('root', 0.09699999999999999)]"]
+2026-10-23 14:39:06,397 INFO [303/360] 96e20498deb9dd8b copy torch_copy_ eager N=67108864 cold -> clean median 166.71 us 805.1 GB/s
+2026-10-23 14:39:10,970 INFO [304/360] 871dc4dc2018fb1e read triton_read eager N=262144 hot -> clean median 10.00 us 26.7 GB/s
+2026-10-23 14:39:16,286 INFO [305/360] 1da9fd5fd5072703 read torch_sum eager N=4194304 cold -> clean median 10.06 us 417.0 GB/s
+2026-10-23 14:39:18,900 INFO waiting 30s: foreign_cpu 9.51 cores >= 2 top=[('pavan.harshit', 9.477)]
+2026-10-23 14:39:51,140 INFO waiting 60s: foreign_cpu 8.36 cores >= 2 top=[('pavan.harshit', 8.308)]
+2026-10-23 14:40:53,401 INFO waiting 120s: foreign_cpu 9.32 cores >= 2 top=[('pavan.harshit', 9.273)]
+2026-10-23 14:42:55,649 INFO waiting 240s: foreign_cpu 9.37 cores >= 2 top=[('pavan.harshit', 9.267999999999999)]
+2026-10-23 14:46:57,959 INFO waiting 480s: foreign_cpu 2.05 cores >= 2 top=[('pavan.harshit', 1.951)]
+2026-10-23 14:55:02,525 INFO [306/360] 30d1efa1654a6e0e write torch_fill_ eager N=67108864 cold -> clean median 75.29 us 891.4 GB/s
+2026-10-23 14:55:07,633 INFO [307/360] be8778694ae75781 write torch_fill_ isolated N=4294967296 cold -> contaminated median 4824.96 us 890.2 GB/s reasons=['canary_after 779.36 < 783.75 GB/s']
+2026-10-23 14:55:13,583 INFO [307/360] be8778694ae75781 write torch_fill_ isolated N=4294967296 cold -> contaminated median 4824.94 us 890.2 GB/s reasons=['canary_after 779.32 < 783.75 GB/s']
+2026-10-23 14:55:19,736 INFO [307/360] be8778694ae75781 write torch_fill_ isolated N=4294967296 cold -> contaminated median 4824.94 us 890.2 GB/s reasons=['canary_after 778.83 < 783.75 GB/s']
+2026-10-23 14:55:25,685 INFO [307/360] be8778694ae75781 write torch_fill_ isolated N=4294967296 cold -> contaminated median 4825.09 us 890.1 GB/s reasons=['canary_after 779.39 < 783.75 GB/s']
+2026-10-23 14:55:31,637 INFO [307/360] be8778694ae75781 write torch_fill_ isolated N=4294967296 cold -> contaminated median 4825.18 us 890.1 GB/s reasons=["foreign_cpu 2.67 cores > 2 top=[('pavan.harshit', 1.212), ('prometheus', 1.1640000000000001), ('root', 0.148)]", 'canary_after 779.12 < 783.75 GB/s']
+2026-10-23 14:55:37,585 INFO [307/360] be8778694ae75781 write torch_fill_ isolated N=4294967296 cold -> unclean_exhausted median 4825.01 us 890.1 GB/s reasons=['canary_after 779.01 < 783.75 GB/s']
+2026-10-23 14:55:43,365 INFO [308/360] b356920605da8d5b read torch_sum graph N=67108864 cold -> clean median 81.18 us 826.6 GB/s
+2026-10-23 14:55:48,416 INFO [309/360] 52249ba6bfcc7b7f copy torch_copy_ isolated N=1073741824 hot -> clean median 2690.18 us 798.3 GB/s
+2026-10-23 14:55:53,483 INFO [310/360] 2cf4a09a9471c3c0 copy torch_copy_ eager N=1048576 cold -> contaminated median 5.57 us 376.2 GB/s reasons=["foreign_cpu 11.77 cores > 2 top=[('pavan.harshit', 11.719000000000001)]", "foreign_cpu 10.97 cores > 2 top=[('pavan.harshit', 10.909)]", "foreign_cpu 12.28 cores > 2 top=[('pavan.harshit', 11.567), ('root', 0.556)]"]
+2026-10-23 14:55:55,882 INFO waiting 30s: foreign_cpu 11.92 cores >= 2 top=[('pavan.harshit', 11.828)]
+2026-10-23 14:56:30,627 INFO [310/360] 2cf4a09a9471c3c0 copy torch_copy_ eager N=1048576 cold -> clean median 5.56 us 377.3 GB/s
+2026-10-23 14:56:36,390 INFO [311/360] 3049790d79b25754 copy torch_copy_ graph N=536870912 cold -> contaminated median 1330.45 us 807.1 GB/s reasons=["foreign_cpu 2.24 cores > 2 top=[('pavan.harshit', 2.207)]", "foreign_cpu 2.31 cores > 2 top=[('pavan.harshit', 2.276)]", "foreign_cpu 4.34 cores > 2 top=[('pavan.harshit', 4.309)]"]
+2026-10-23 14:56:39,006 INFO waiting 30s: foreign_cpu 2.03 cores >= 2 top=[('pavan.harshit', 1.991)]
+2026-10-23 14:57:11,251 INFO waiting 60s: foreign_cpu 5.75 cores >= 2 top=[('pavan.harshit', 5.703)]
+2026-10-23 14:58:13,520 INFO waiting 120s: foreign_cpu 2.13 cores >= 2 top=[('pavan.harshit', 1.947)]
+2026-10-23 15:00:15,828 INFO waiting 240s: foreign_cpu 3.32 cores >= 2 top=[('pavan.harshit', 3.1599999999999997)]
+2026-10-23 15:04:18,098 INFO waiting 480s: foreign_cpu 2.15 cores >= 2 top=[('pavan.harshit', 2.035)]
+2026-10-23 15:12:22,548 INFO waiting 600s: foreign_cpu 2.17 cores >= 2 top=[('pavan.harshit', 2.034)]
+2026-10-23 15:22:26,992 INFO waiting 600s: foreign_cpu 2.16 cores >= 2 top=[('pavan.harshit', 2.0380000000000003)]
+2026-10-23 15:32:31,460 INFO waiting 600s: foreign_cpu 2.51 cores >= 2 top=[('pavan.harshit', 2.1050000000000004), ('prometheus', 0.319)]
+2026-10-23 15:42:35,980 INFO waiting 600s: foreign_cpu 13.97 cores >= 2 top=[('pavan.harshit', 13.862)]
+2026-10-23 15:52:40,490 INFO waiting 600s: foreign_cpu 2.15 cores >= 2 top=[('pavan.harshit', 2.037)]
+2026-10-23 16:02:44,932 INFO waiting 600s: foreign_cpu 2.15 cores >= 2 top=[('pavan.harshit', 2.037)]
+2026-10-23 16:12:49,443 INFO waiting 600s: foreign_cpu 2.17 cores >= 2 top=[('pavan.harshit', 2.033)]
+2026-10-23 16:22:53,943 INFO waiting 600s: foreign_cpu 2.12 cores >= 2 top=[('pavan.harshit', 2.044)]
+2026-10-23 16:32:58,451 INFO waiting 600s: foreign_cpu 2.12 cores >= 2 top=[('pavan.harshit', 2.0490000000000004)]
+2026-10-23 16:43:02,958 INFO not idle for canary reference: ["foreign_cpu 2.08 cores >= 2 top=[('pavan.harshit', 1.023), ('root', 0.995)]"]
+2026-10-23 16:43:35,342 INFO canary ref drift vs previous: +0.03%
+2026-10-23 16:43:35,345 INFO canary reference 825.21 GB/s (cv 0.0002)
+2026-10-23 16:43:40,038 INFO [311/360] 3049790d79b25754 copy torch_copy_ graph N=536870912 cold -> clean median 1329.14 us 807.8 GB/s
+2026-10-23 16:43:44,783 INFO [312/360] 665d2c80f8a30d7d write torch_fill_ isolated N=67108864 cold -> clean median 76.96 us 872.0 GB/s
+2026-10-23 16:43:49,731 INFO [313/360] b051687f429698cf copy torch_copy_ graph N=2097152 cold -> clean median 5.41 us 775.5 GB/s
+2026-10-23 16:43:54,970 INFO [314/360] c45a60e0073a71ed write torch_fill_ graph N=134217728 cold -> clean median 150.57 us 891.4 GB/s
+2026-10-23 16:43:59,813 INFO [315/360] 429a90d4bd0a60fa copy torch_copy_ graph N=4194304 hot -> clean median 2.49 us 3374.6 GB/s
+2026-10-23 16:44:04,749 INFO [316/360] a47f41727a9b150e read torch_sum isolated N=1073741824 cold -> contaminated median 1220.02 us 880.1 GB/s reasons=['canary_after 778.00 < 783.95 GB/s']
+2026-10-23 16:44:09,890 INFO [316/360] a47f41727a9b150e read torch_sum isolated N=1073741824 cold -> contaminated median 1220.06 us 880.1 GB/s reasons=['canary_after 779.10 < 783.95 GB/s']
+2026-10-23 16:44:14,809 INFO [316/360] a47f41727a9b150e read torch_sum isolated N=1073741824 cold -> contaminated median 1220.16 us 880.0 GB/s reasons=['canary_after 778.24 < 783.95 GB/s']
+2026-10-23 16:44:19,900 INFO [316/360] a47f41727a9b150e read torch_sum isolated N=1073741824 cold -> clean median 1219.94 us 880.2 GB/s
+2026-10-23 16:44:24,755 INFO [317/360] 07e5029e83a519db copy torch_copy_ eager N=16777216 cold -> clean median 41.02 us 818.0 GB/s
+2026-10-23 16:44:29,237 INFO [318/360] f4c795be56bf592a read torch_sum isolated N=268435456 hot -> clean median 315.65 us 850.4 GB/s
+2026-10-23 16:44:34,959 INFO [319/360] d39dacfd9b5980f9 read triton_read eager N=16777216 cold -> clean median 20.64 us 813.1 GB/s
+2026-10-23 16:44:39,820 INFO [320/360] af98711babeb1a32 copy torch_copy_ eager N=2097152 cold -> clean median 5.94 us 706.7 GB/s
+2026-10-23 16:44:43,800 INFO [321/360] 1220aebfcc93aa7f write torch_fill_ isolated N=4194304 hot -> clean median 13.73 us 305.5 GB/s
+2026-10-23 16:44:48,915 INFO [322/360] 741ff70f94af8a85 read triton_read isolated N=536870912 hot -> clean median 614.66 us 873.5 GB/s
+2026-10-23 16:44:52,756 INFO [323/360] 8fc17e697381989d copy torch_copy_ isolated N=8388608 cold -> clean median 24.53 us 684.0 GB/s
+2026-10-23 16:44:57,912 INFO [324/360] 910aec02c442bb4a read torch_sum graph N=67108864 hot -> clean median 17.11 us 3922.0 GB/s
+2026-10-23 16:45:02,747 INFO [325/360] 272fa3ec4300fd66 write torch_fill_ eager N=16777216 hot -> clean median 6.50 us 2580.5 GB/s
+2026-10-23 16:45:08,086 INFO [326/360] 9ee08dcd8686a8db read triton_read graph N=2097152 cold -> clean median 3.64 us 577.0 GB/s
+2026-10-23 16:45:12,955 INFO [327/360] 8386255932e0ab60 copy torch_copy_ eager N=4194304 cold -> clean median 9.65 us 869.2 GB/s
+2026-10-23 16:45:18,955 INFO [328/360] cf4faa90567c9369 write torch_fill_ graph N=4294967296 hot -> contaminated median 4816.41 us 891.7 GB/s reasons=['canary_after 779.18 < 783.95 GB/s']
+2026-10-23 16:45:24,956 INFO [328/360] cf4faa90567c9369 write torch_fill_ graph N=4294967296 hot -> contaminated median 4816.49 us 891.7 GB/s reasons=['canary_after 778.85 < 783.95 GB/s']
+2026-10-23 16:45:30,956 INFO [328/360] cf4faa90567c9369 write torch_fill_ graph N=4294967296 hot -> contaminated median 4816.56 us 891.7 GB/s reasons=["foreign_cpu 2.23 cores > 2 top=[('prometheus', 1.065), ('pavan.harshit', 1.016)]", 'canary_after 778.60 < 783.95 GB/s']
+2026-10-23 16:45:36,957 INFO [328/360] cf4faa90567c9369 write torch_fill_ graph N=4294967296 hot -> contaminated median 4816.54 us 891.7 GB/s reasons=['canary_after 778.74 < 783.95 GB/s']
+2026-10-23 16:45:42,960 INFO [328/360] cf4faa90567c9369 write torch_fill_ graph N=4294967296 hot -> contaminated median 4816.47 us 891.7 GB/s reasons=['canary_after 779.05 < 783.95 GB/s']
+2026-10-23 16:45:48,961 INFO [328/360] cf4faa90567c9369 write torch_fill_ graph N=4294967296 hot -> unclean_exhausted median 4816.43 us 891.7 GB/s reasons=['canary_after 778.85 < 783.95 GB/s']
+2026-10-23 16:45:53,990 INFO [329/360] 7aa258c3211b55d1 copy torch_copy_ graph N=8388608 hot -> clean median 4.25 us 3947.5 GB/s
+2026-10-23 16:45:58,966 INFO [330/360] eebaa9e4e6c3b6a0 read torch_sum graph N=262144 hot -> clean median 5.61 us 46.7 GB/s
+2026-10-23 16:46:03,901 INFO [331/360] e195e63f66cba7c9 read torch_sum graph N=16777216 hot -> clean median 8.22 us 2041.6 GB/s
+2026-10-23 16:46:09,048 INFO [332/360] 8bce0c205435de88 read triton_read graph N=524288 hot -> clean median 1.71 us 308.9 GB/s
+2026-10-23 16:46:13,922 INFO [333/360] c79c1e27e8a2a8c1 copy torch_copy_ eager N=134217728 cold -> clean median 334.79 us 801.8 GB/s
+2026-10-23 16:46:19,981 INFO [334/360] 79a227aef34614e4 read torch_sum eager N=4294967296 hot -> contaminated median 4826.20 us 889.9 GB/s reasons=['canary_after 778.29 < 783.95 GB/s']
+2026-10-23 16:46:26,043 INFO [334/360] 79a227aef34614e4 read torch_sum eager N=4294967296 hot -> contaminated median 4826.30 us 889.9 GB/s reasons=['canary_after 778.47 < 783.95 GB/s']
+2026-10-23 16:46:32,105 INFO [334/360] 79a227aef34614e4 read torch_sum eager N=4294967296 hot -> contaminated median 4826.28 us 889.9 GB/s reasons=["foreign_cpu 2.25 cores > 2 top=[('prometheus', 1.079), ('pavan.harshit', 1.032)]", 'canary_after 777.82 < 783.95 GB/s']
+2026-10-23 16:46:39,006 INFO [334/360] 79a227aef34614e4 read torch_sum eager N=4294967296 hot -> contaminated median 4826.27 us 889.9 GB/s reasons=['canary_after 778.62 < 783.95 GB/s']
+2026-10-23 16:46:45,069 INFO [334/360] 79a227aef34614e4 read torch_sum eager N=4294967296 hot -> contaminated median 4826.20 us 889.9 GB/s reasons=['canary_after 778.16 < 783.95 GB/s']
+2026-10-23 16:46:51,132 INFO [334/360] 79a227aef34614e4 read torch_sum eager N=4294967296 hot -> unclean_exhausted median 4826.26 us 889.9 GB/s reasons=['canary_after 778.81 < 783.95 GB/s']
+2026-10-23 16:46:55,008 INFO [335/360] a31f18324b6a2fc5 write torch_fill_ isolated N=1048576 cold -> clean median 13.73 us 76.4 GB/s
+2026-10-23 16:46:58,790 INFO [336/360] d390883d142adfea read torch_sum isolated N=4194304 hot -> clean median 20.13 us 208.4 GB/s
+2026-10-23 16:47:04,130 INFO [337/360] 0094a06eb2b2d902 read triton_read graph N=262144 hot -> clean median 1.71 us 156.2 GB/s
+2026-10-23 16:47:09,186 INFO [338/360] 1359185d2223e3d7 write torch_fill_ graph N=134217728 hot -> clean median 150.58 us 891.3 GB/s
+2026-10-23 16:47:13,779 INFO [339/360] ebf79f46c4459f72 read torch_sum eager N=524288 hot -> clean median 9.93 us 52.8 GB/s
+2026-10-23 16:47:17,779 INFO [340/360] e2a8340389c2c512 read triton_read isolated N=524288 hot -> clean median 19.42 us 27.2 GB/s
+2026-10-23 16:47:22,808 INFO [341/360] de33c54170edf066 copy torch_copy_ eager N=8388608 hot -> clean median 5.50 us 3051.7 GB/s
+2026-10-23 16:47:26,887 INFO [342/360] dd1918ca82fa1759 read triton_read isolated N=16777216 cold -> clean median 30.62 us 548.0 GB/s
+2026-10-23 16:47:31,954 INFO [343/360] 350c9c2bee7182c5 copy torch_copy_ isolated N=268435456 cold -> contaminated median 674.29 us 796.2 GB/s reasons=["foreign_cpu 2.30 cores > 2 top=[('prometheus', 1.159), ('pavan.harshit', 1.042)]"]
+2026-10-23 16:47:36,817 INFO [343/360] 350c9c2bee7182c5 copy torch_copy_ isolated N=268435456 cold -> clean median 675.04 us 795.3 GB/s
+2026-10-23 16:47:42,092 INFO [344/360] 10a8bdcbd13dbac4 read triton_read graph N=33554432 hot -> clean median 8.23 us 4075.7 GB/s
+2026-10-23 16:47:45,896 INFO [345/360] 55835120ccd53ece read triton_read isolated N=16777216 hot -> clean median 19.07 us 879.9 GB/s
+2026-10-23 16:47:50,880 INFO [346/360] ba64337c14c4b61f read torch_sum eager N=262144 hot -> clean median 7.16 us 36.6 GB/s
+2026-10-23 16:47:55,323 INFO [347/360] 472fc80ed159fc5c write torch_fill_ isolated N=268435456 hot -> clean median 303.42 us 884.7 GB/s
+2026-10-23 16:48:02,304 INFO [348/360] b5c24abb5d54be33 read torch_sum eager N=4294967296 cold -> contaminated median 4826.18 us 889.9 GB/s reasons=["foreign_cpu 2.29 cores > 2 top=[('pavan.harshit', 1.015), ('prometheus', 1.0), ('root', 0.063)]", "foreign_cpu 2.50 cores > 2 top=[('pavan.harshit', 2.2199999999999998), ('root', 0.094)]", "foreign_cpu 2.27 cores > 2 top=[('pavan.harshit', 2.018)]"]
+2026-10-23 16:48:05,747 INFO waiting 30s: foreign_cpu 2.11 cores >= 2 top=[('pavan.harshit', 2.045)]
+2026-10-23 16:48:41,558 INFO [348/360] b5c24abb5d54be33 read torch_sum eager N=4294967296 cold -> contaminated median 4826.19 us 889.9 GB/s reasons=['canary_after 778.67 < 783.95 GB/s']
+2026-10-23 16:48:48,138 INFO [348/360] b5c24abb5d54be33 read torch_sum eager N=4294967296 cold -> contaminated median 4826.19 us 889.9 GB/s reasons=['canary_after 779.12 < 783.95 GB/s']
+2026-10-23 16:48:55,120 INFO [348/360] b5c24abb5d54be33 read torch_sum eager N=4294967296 cold -> contaminated median 4826.17 us 889.9 GB/s reasons=['canary_after 778.47 < 783.95 GB/s']
+2026-10-23 16:49:02,307 INFO [348/360] b5c24abb5d54be33 read torch_sum eager N=4294967296 cold -> contaminated median 4826.27 us 889.9 GB/s reasons=["foreign_cpu 2.28 cores > 2 top=[('prometheus', 1.011), ('pavan.harshit', 1.011), ('root', 0.077)]", 'canary_after 778.94 < 783.95 GB/s']
+2026-10-23 16:49:09,261 INFO [348/360] b5c24abb5d54be33 read torch_sum eager N=4294967296 cold -> unclean_exhausted median 4826.28 us 889.9 GB/s reasons=['canary_after 778.47 < 783.95 GB/s']
+2026-10-23 16:49:15,491 INFO [349/360] cd0b17e2d183cb59 read torch_sum eager N=2147483648 hot -> contaminated median 2413.23 us 889.9 GB/s reasons=['canary_after 778.72 < 783.95 GB/s']
+2026-10-23 16:49:21,518 INFO [349/360] cd0b17e2d183cb59 read torch_sum eager N=2147483648 hot -> contaminated median 2413.14 us 889.9 GB/s reasons=['canary_after 778.18 < 783.95 GB/s']
+2026-10-23 16:49:27,541 INFO [349/360] cd0b17e2d183cb59 read torch_sum eager N=2147483648 hot -> contaminated median 2413.23 us 889.9 GB/s reasons=['canary_after 779.05 < 783.95 GB/s']
+2026-10-23 16:49:33,569 INFO [349/360] cd0b17e2d183cb59 read torch_sum eager N=2147483648 hot -> contaminated median 2413.15 us 889.9 GB/s reasons=['canary_after 777.91 < 783.95 GB/s']
+2026-10-23 16:49:39,354 INFO [349/360] cd0b17e2d183cb59 read torch_sum eager N=2147483648 hot -> contaminated median 2413.19 us 889.9 GB/s reasons=['canary_after 778.98 < 783.95 GB/s']
+2026-10-23 16:49:45,581 INFO [349/360] cd0b17e2d183cb59 read torch_sum eager N=2147483648 hot -> unclean_exhausted median 2413.15 us 889.9 GB/s reasons=['canary_after 778.53 < 783.95 GB/s']
+2026-10-23 16:49:51,187 INFO [350/360] 1dfc9e14c1ccf568 write torch_fill_ graph N=16777216 cold -> clean median 18.85 us 890.1 GB/s
+2026-10-23 16:49:54,942 INFO [351/360] 36a1a283ee37000a read triton_read isolated N=8388608 hot -> clean median 19.33 us 434.2 GB/s
+2026-10-23 16:50:00,149 INFO [352/360] 93b0870932a0d104 read torch_sum graph N=2097152 hot -> clean median 5.18 us 404.8 GB/s
+2026-10-23 16:50:03,946 INFO [353/360] 5f6ad40c4fa6ce67 read torch_sum isolated N=1048576 hot -> clean median 19.97 us 52.5 GB/s
+2026-10-23 16:50:08,448 INFO [354/360] c284697d2eac4ac6 read triton_read isolated N=268435456 cold -> clean median 313.34 us 856.7 GB/s
+2026-10-23 16:50:13,058 INFO [355/360] 8c2da40a2a428fae copy torch_copy_ isolated N=524288 cold -> clean median 14.82 us 70.8 GB/s
+2026-10-23 16:50:18,096 INFO [356/360] f6bd879765571234 write torch_fill_ graph N=8388608 hot -> clean median 3.35 us 2505.4 GB/s
+2026-10-23 16:50:22,909 INFO [357/360] edca2f7c90c9023f write torch_fill_ eager N=262144 hot -> clean median 4.75 us 55.2 GB/s
+2026-10-23 16:50:28,342 INFO [358/360] b1e59d43d16bc9fd read triton_read graph N=268435456 hot -> clean median 302.29 us 888.0 GB/s
+2026-10-23 16:50:33,120 INFO [359/360] c765f198b4c571a0 copy torch_copy_ eager N=268435456 hot -> clean median 669.29 us 802.1 GB/s
+2026-10-23 16:50:38,081 INFO [360/360] 2ab7a4416f55212e write torch_fill_ graph N=268435456 cold -> clean median 301.08 us 891.6 GB/s

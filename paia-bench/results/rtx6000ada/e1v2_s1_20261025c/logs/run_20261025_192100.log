@@ -1,0 +1,9 @@
+2026-10-25 19:21:00,642 INFO session e1v2_s1_20261025c phase e1: 360 cells, 360 to run (resume skips clean cells)
+2026-10-25 19:21:06,833 INFO not idle for canary reference: ["foreign_cpu 6.12 cores >= 2 top=[('hanvithasaraswathi.m', 6.037)]"]
+2026-10-25 19:21:39,074 INFO not idle for canary reference: ["foreign_cpu 6.08 cores >= 2 top=[('hanvithasaraswathi.m', 6.029999999999999)]"]
+2026-10-25 19:22:41,338 INFO not idle for canary reference: ["foreign_cpu 6.07 cores >= 2 top=[('hanvithasaraswathi.m', 6.021000000000001)]"]
+2026-10-25 19:24:43,580 INFO not idle for canary reference: ["foreign_cpu 6.06 cores >= 2 top=[('hanvithasaraswathi.m', 6.024000000000002)]"]
+2026-10-25 19:28:45,888 INFO not idle for canary reference: ["foreign_cpu 6.11 cores >= 2 top=[('hanvithasaraswathi.m', 6.038000000000002)]"]
+2026-10-25 19:36:48,194 INFO not idle for canary reference: ["foreign_cpu 6.09 cores >= 2 top=[('hanvithasaraswathi.m', 6.036999999999999)]"]
+2026-10-25 19:46:50,497 INFO not idle for canary reference: ["foreign_cpu 6.08 cores >= 2 top=[('hanvithasaraswathi.m', 6.026)]"]
+2026-10-25 19:56:52,803 INFO not idle for canary reference: ["foreign_cpu 6.12 cores >= 2 top=[('hanvithasaraswathi.m', 6.042)]"]

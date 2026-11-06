@@ -1,0 +1,119 @@
+{
+ "BLOCK": 2048,
+ "num_warps": 8,
+ "waves": 8,
+ "sm_count": 142,
+ "tuning": [
+  {
+   "BLOCK": 1024,
+   "num_warps": 4,
+   "waves": 2,
+   "median_ms": 1.2214399576187134
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 4,
+   "waves": 4,
+   "median_ms": 1.2177599668502808
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 4,
+   "waves": 8,
+   "median_ms": 1.2201600074768066
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 8,
+   "waves": 2,
+   "median_ms": 1.2205439805984497
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 8,
+   "waves": 4,
+   "median_ms": 1.2176320552825928
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 8,
+   "waves": 8,
+   "median_ms": 1.2187199592590332
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 4,
+   "waves": 2,
+   "median_ms": 1.2184319496154785
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 4,
+   "waves": 4,
+   "median_ms": 1.2190719842910767
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 4,
+   "waves": 8,
+   "median_ms": 1.2210240364074707
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 8,
+   "waves": 2,
+   "median_ms": 1.2189760208129883
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 8,
+   "waves": 4,
+   "median_ms": 1.2195520401000977
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 8,
+   "waves": 8,
+   "median_ms": 1.2167999744415283
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 4,
+   "waves": 2,
+   "median_ms": 1.230847954750061
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 4,
+   "waves": 4,
+   "median_ms": 1.2208319902420044
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 4,
+   "waves": 8,
+   "median_ms": 1.219167947769165
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 8,
+   "waves": 2,
+   "median_ms": 1.2191359996795654
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 8,
+   "waves": 4,
+   "median_ms": 1.2186239957809448
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 8,
+   "waves": 8,
+   "median_ms": 1.2180160284042358
+  }
+ ],
+ "note": "tuned once per session on a cold 1 GiB buffer; timings here are for selection only",
+ "tuned_clean": true,
+ "tune_reasons": []
+}

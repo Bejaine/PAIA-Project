@@ -1,0 +1,117 @@
+{
+ "BLOCK": 1024,
+ "num_warps": 4,
+ "waves": 2,
+ "sm_count": 142,
+ "tuning": [
+  {
+   "BLOCK": 1024,
+   "num_warps": 4,
+   "waves": 2,
+   "median_ms": 1.3607679605484009
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 4,
+   "waves": 4,
+   "median_ms": 1.3651200532913208
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 4,
+   "waves": 8,
+   "median_ms": 1.3851200342178345
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 8,
+   "waves": 2,
+   "median_ms": 1.363327980041504
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 8,
+   "waves": 4,
+   "median_ms": 1.366976022720337
+  },
+  {
+   "BLOCK": 1024,
+   "num_warps": 8,
+   "waves": 8,
+   "median_ms": 1.3815360069274902
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 4,
+   "waves": 2,
+   "median_ms": 1.3734079599380493
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 4,
+   "waves": 4,
+   "median_ms": 1.386080026626587
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 4,
+   "waves": 8,
+   "median_ms": 1.4014719724655151
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 8,
+   "waves": 2,
+   "median_ms": 1.3645119667053223
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 8,
+   "waves": 4,
+   "median_ms": 1.3858879804611206
+  },
+  {
+   "BLOCK": 2048,
+   "num_warps": 8,
+   "waves": 8,
+   "median_ms": 1.3852800130844116
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 4,
+   "waves": 2,
+   "median_ms": 1.3937280178070068
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 4,
+   "waves": 4,
+   "median_ms": 1.3746880292892456
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 4,
+   "waves": 8,
+   "median_ms": 1.3780479431152344
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 8,
+   "waves": 2,
+   "median_ms": 1.383296012878418
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 8,
+   "waves": 4,
+   "median_ms": 1.3791040182113647
+  },
+  {
+   "BLOCK": 4096,
+   "num_warps": 8,
+   "waves": 8,
+   "median_ms": 1.3856639862060547
+  }
+ ],
+ "note": "tuned once per session on a cold 1 GiB buffer; timings here are for selection only"
+}

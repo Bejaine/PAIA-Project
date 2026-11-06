@@ -1,0 +1,6 @@
+{
+ "R_inf_B0_gbps": 891.7336293284785,
+ "source": "read/triton_read/graph",
+ "definition": "median achieved GB/s of clean, l2-safe, cold, graph-mode reads with >= 960 MiB (10x L2); best read implementation",
+ "session": "e1v2_s1_20261024"
+}

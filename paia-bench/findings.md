@@ -467,6 +467,249 @@ The run was stopped by hand after 80 cells. Cells are a fixed shuffled sample, s
 - Predictions for this platform were not committed before these cells ran, so E1 predictions here are no longer
   pre-registered. Commit E2, E4 and E5 predictions for `rtxpro5000bw` before those phases run.
 
+## Platform `rtx6000ada`: environment (2026-10-22)
+
+Raw evidence: `results/rtx6000ada/env_20261022/{env.json,selfcheck.json}`, preflight report on the host at
+`paia-bench/results/preflight/node01_20261022_011446.txt` (not committed: it lists other users of the server).
+
+### Machine and stack
+
+| Item | Value | Source |
+|---|---|---|
+| GPU | NVIDIA RTX 6000 Ada Generation, cc 8.9, 142 SMs, L2 100,663,296 B (96 MiB), 50,866,356,224 B memory, 384-bit GDDR6, 1536 threads and 65,536 registers per SM | `env.json` gpu, nvml |
+| Spec bandwidth | 960 GB/s (384 bit x 20 Gbps at the 10001 MHz max memory clock) | NVML max mem clock, bus width |
+| Memory clock with a CUDA context | 9501 MHz in pstate P2 at E0 time, i.e. 912 GB/s raw. Ada caps the memory clock in the CUDA P2 state; E1 cell telemetry will show the clock under load | `env.json` nvml |
+| Driver | 575.51.03 (CUDA 12.9); ECC disabled (current and pending); **persistence off**; power limit 300 W; max SM clock 3105 MHz, application clock 2505 MHz | `env.json` nvml |
+| Host | `node01` of a SLURM cluster (partition `u22`), 4 GPUs in the node; our job sees 1 GPU (`GPU-885eda7c-...`, PCI 07:00.0) via the SLURM GPU cgroup, so `device_count_visible_to_nvml` = 1 | `env.json`, `scontrol` |
+| CPU | 2x AMD EPYC 9124 (2x 16 cores, SMT, 64 logical), 2 NUMA nodes, 377 GiB RAM. Our SLURM job is limited to 10 logical CPUs (`10-12,18,19,42-44,50,51`) and 20 GB RAM. GPU NUMA affinity: CPUs `10-12,42-44` (NUMA 0) | `lscpu`, `nvidia-smi topo -m` |
+| Stack | host venv (no Docker): **torch 2.11.0+cu128, cuBLAS 12.8.4.1, Triton 3.6.0**, Python 3.10.12, no vLLM | `env.json` packages, cublas |
+| Profilers | host ncu 2025.2.0, nsys 2025.1.3 (`/usr/local/cuda-12.9/bin`, not on the default PATH); `RmProfilingAdminOnly: 0` | `env.json` tools, perf_counters |
+
+- **The stack matches neither GB10 (cuBLAS 13.1.0) nor P3 (cuBLAS 13.1.1).** Driver 575 cannot run CUDA 13 wheels or the
+  `paia-bench:25.11` image, and there is no Docker. `setup_venv.sh` picks the cu128 index for drivers 570 to 579; the newest
+  torch there is 2.11.0. **Every cross-platform comparison from this machine is stack-confounded,** above all the cuBLAS
+  dispatch question (Q2).
+- **Venv location.** `$HOME` (NFS) had 9.3 GB free, shared with other running work, so the venv lives on node-local scratch:
+  `PAIA_VENV=/scratch/bejaine.birju/paia/.venv-host`. Sessions must run on `node01` to use the same venv.
+- **Wheels fetched with resumable curl.** Egress from `node01` dropped to a few hundred B/s for about 20 minutes during setup.
+  The exact wheels `pip` would install from the cu128 index (torch's pinned `nvidia-*-cu12` set, Triton 3.6.0) were downloaded
+  with `curl -C -`, checked against the index sha256, installed from local files, and then `setup_venv.sh` ran unchanged
+  (no-op install, freeze, arch check). The lock file records each wheel's sha256.
+
+### Script fixes (no methodology change)
+
+- `scripts/preflight.sh`: added the three RTX 6000 names to the tag `case`, before the `*Blackwell*` pattern, which would have
+  suggested `rtxpro5000bw` for an RTX PRO 6000 Blackwell.
+- `scripts/setup_venv.sh`: the arch check rejected torch 2.11.0+cu128 because its arch list (`sm_75, sm_80, sm_86, sm_90,
+  sm_100, sm_120`) has no `sm_89` and no PTX. SASS runs on any GPU with the same major version and an equal or higher minor, so
+  `sm_86` code runs natively on cc 8.9. The check now accepts that case. Consequence: torch's own kernels (`sum` reduce,
+  `fill_`) run `sm_86` SASS here, while cuBLAS ships its own sm_89 kernels and Triton compiles for sm_89 directly.
+
+### Performance counters: ncu blocked by DCGM (E3 blocker)
+
+- The ncu probe fails (rc 9): "Profiling failed because a driver resource was unavailable. Ensure that no other tool (like
+  DCGM) is concurrently collecting profiling data."
+- Cause: the cluster runs `nv-hostengine` and `dcgm-exporter` as root (up 65 days). Its counter set includes DCP metrics
+  (`DCGM_FI_PROF_GR_ENGINE_ACTIVE`, `PIPE_TENSOR_ACTIVE`, `DRAM_ACTIVE`, `PCIE_TX/RX_BYTES`), which hold the hardware
+  counters permanently.
+- **E3 needs the admin to pause DCGM profiling** (`dcgmi profile --pause`, then `--resume`) during an agreed window. Not
+  attempted by us: it affects cluster monitoring.
+- `ncu --query-metrics --chip ad102` lists `dram__bytes_read`, `dram__bytes_write`, `dram__throughput`, `lts__t_bytes`
+  and the stall ratios used on GB10, so the default discrete metric names in `platform_notes.yaml` apply.
+- **Timing side effect:** DCGM's DCP sampling runs in the background during every cell on this machine (not on GB10 or the
+  RTX PRO 5000 as far as we know). It is constant across sessions; its size is unknown.
+
+### Library paths (`selfcheck.json`, functional only)
+
+- **BF16 vs CPU; cuBLAS BF16 on 6 shapes at M = 1 and 16: correct and graph-capturable.** Triton read probe correct and
+  graph-capturable. E1 torch ops: `sum` = Memset + `reduce_kernel` (two kernels, as on GB10), `copy_` = Memcpy DtoD.
+- **cuBLAS at M=1 dispatches `internal::gemvx::kernel` on every shape,** but the v6/v7 split differs from GB10:
+
+| Shape (N x K) | rtx6000ada (cuBLAS 12.8.4) | GB10 (13.1.0) | RTX PRO 5000 (13.1.1) |
+|---|---|---|---|
+| 1024x4096 (Llama k/v) | v6 | v6 | v6 |
+| 4096x4096 (Llama q/o) | v6 | v6 | v7 |
+| 14336x4096 (Llama gate/up) | v7 | v7 | v7 |
+| 4096x14336 (Llama down) | v7 | v7 | v7 |
+| 512x3584 (Qwen k/v) | v7 | v7 | v7 |
+| 18944x3584 (Qwen gate/up) | **v7** | v6 | v7 |
+
+  Selfcheck covers 6 shapes; E2 gives the full table.
+- **M=16:** `cutlass_80_wmma_tensorop_bf16 ... 128x2`, plus `splitKreduce` for 1024x4096 and 512x3584 (same as the RTX PRO 5000).
+- **FP8 `_scaled_mm` per-tensor (M = 1 to 16) and row-wise (M = 1, 16): correct and graph-capturable on sm_89.**
+- **INT4 tinygemm:** correct and graph-capturable at M = 1 and 16.
+- **vLLM CUTLASS FP8 and Marlin:** not tested (vLLM not installed, as on the RTX PRO 5000).
+
+### Measurement-setup questions for P2 (before E1 s1)
+
+1. **CPU pinning.** All 64 cores report the same `cpuinfo_max_freq` (3713 MHz), so `cpu_sets()` returns the same 10 allowed
+   CPUs for the benchmark and the monitor: they are not separated. Options: leave as is, or pin the benchmark to the GPU-local
+   CPUs `10-12,42-44` and the monitor to `18,19,50,51`.
+2. **Foreign CPU load** at preflight: about 1 core (one other user), under the 2-core gate. No threshold change proposed.
+3. **Other jobs of our own uid** (another of P2's SLURM jobs on a different GPU of this node) are not counted by the gate,
+   which only checks other users. Sessions should run when no such job is active.
+4. **No clock locking** (needs root). Persistence mode is off; SM and memory clocks are recorded per cell.
+
+## Platform `rtx6000ada`: first E1 session is a pilot; post-cell canary false positive and its fix (2026-10-23)
+
+Evidence: `results/rtx6000ada/{env_20261023,e1v2_s1_20261023,e2v2_s1_20261023,diag_20261023_node03}/`.
+
+- **Card.** SLURM job 47824 on node01, `GPU-93fd8580-...` (PCI 47:00.0), ECC off. Same stack as `env_20261022`
+  (venv lock id `ca97c3a32dcc3d75`); selfcheck dispatch identical on both cards. The memory clock sits at 9501 MHz
+  (pstate P2) under CUDA load on both cards, so the raw bandwidth at the running clock is 912 GB/s (spec 960).
+- **Monitor does not bias medians here** (`env_20261023/diag_monitor_perturbation.json`): 64 MiB fill and read medians
+  agree within 0.4% across no monitor, NVML polling, psutil scanning and both. Benchmark and monitor share the job's 10
+  CPUs (all cores report the same max frequency), so this check matters on this platform.
+- **E1 `e1v2_s1_20261023`: 320 clean, 40 `unclean_exhausted`, 5.4 h wall time.** 268 min of it were gate waits: other
+  users started CPU-heavy jobs on node01 (up to 9.5 cores); the gate held every cell until they stopped. The cells' own
+  time was 13 min.
+- **All 40 exhausted cells failed only `canary_after`, deterministically.** After every cell with a footprint >= 2 GiB the
+  post-cell canary read 778.5 to 779.4 GB/s against a reference of 825 (threshold 784); after smaller cells it read
+  826 to 828. The next cell's `canary_before` was back to 825. Temperature (53 to 73 C), power and clocks do not explain
+  it, and the cells themselves are unaffected: in every cell >= 256 MiB, allocation 0 and the median of allocations 1 to 4
+  (each measured right after a multi-GiB free) agree to 0.00% median, 0.36% max.
+- **Cause, measured directly** (`scripts/diag/canary_after_free.py`, node03, a different RTX 6000 Ada, torch 2.6
+  diagnostic venv): after `torch.cuda.empty_cache()` returns a freed buffer to the driver, streaming bandwidth drops to
+  0.93x for **about 33 ms per GiB freed** (0.5 GiB: 11 ms; 2 GiB: 68 ms; 8 GiB: 267 ms). Freeing without `empty_cache`
+  (memory kept cached) causes no drop. The driver works on returned memory in the background (scrubbing or unmapping);
+  the post-cell canary ran inside that window. Cells are protected by their warmup (>= 200 ms) and about 1 s of samples.
+- **Fix (approved by P2):** `bench/run.py` waits `canary_settle_after_cell_s` before the post-cell canary, read from
+  `platform_notes.yaml` (1.0 s for `rtx6000ada`, covering the 12 GiB cap; 0 elsewhere, so other platforms are unchanged).
+  Thresholds, canary procedure and cell timing are unchanged. Because this changes which cells count as clean,
+  **`e1v2_s1_20261023` and the 22-cell `e2v2_s1_20261023` (stopped by the 6 h job limit) are pilots, not results.**
+  Fresh sessions on one card follow.
+- **Preliminary E1 numbers from the pilot (single session; plateaus rest on 1 to 2 clean 1 GiB cells):** B0 891.2 GB/s
+  (92.8% of spec), Triton graph tau 1.31 us (1.6% residual), B_half 1.12 MiB, fill 1.00x and copy 0.91x read, hot peak
+  4277 GB/s at 64 MiB, SM clock stable at 2475 to 2685 MHz.
+- **Gate blind spot noted:** the idle gate ignores processes of our own uid. The SLURM job script logs node state every
+  60 s (`node_state_<job>.log`, kept on the host since it lists other users' processes) to cover it.
+
+## Platform `rtx6000ada`: does foreign CPU load change our numbers? (2026-10-24, node03 diagnostics)
+
+Context: the fresh sessions `*_20261023b` (card `GPU-885eda7c`, node01, job 48244) measured **0 cells in 6 h**: one
+other user held a steady 2.0 to 3.5 cores (once 11) on node01, just above the frozen 2-core gate. Before asking P2 for
+a platform threshold, the effect of foreign CPU load was measured directly.
+
+- **Method** (`scripts/diag/host_idle_sensitivity.py`, harness ops and `timing.measure`, same stack as the sessions:
+  venv lock `ca97c3a32dcc3d75` rebuilt on node03; card `GPU-637da17a`, ECC on, so absolute values are not results).
+  The probe runs on one core with its SMT sibling idle (SLURM gives whole cores to a job, so foreign processes never
+  share our physical cores). Load: one spinning core on the other socket; 4 logical CPUs streaming memory (numpy copies
+  of 256 MiB) on other cores **sharing the probe's L3**; 4 streaming on the other socket. 5 shuffled rounds.
+- **Results** (`results/rtx6000ada/diag_20261024_node03/host_idle_sensitivity.json`), change of the median vs no load:
+
+| Cells | 1 spinning core, other socket | 4 streaming, same L3 | 4 streaming, other socket |
+|---|---|---|---|
+| graph mode (Triton read, torch ops, cuBLAS k/q) | within 0.6% | within 2.1% | within 1.1% |
+| eager, small (1 MiB torch ops, Triton 1 MiB) | within 0.5% | **+22 to +51%** | within 0.6%, except Triton 1 MiB **+572%** |
+| isolated (1 and 8 MiB ops, cuBLAS k_proj, q_proj) | within 0.7% | **+10 to +51%** | within 0.9% |
+| eager, larger (8 MiB ops, cuBLAS k/q eager) | within 0.4% | within 0.1% | within 0.1% |
+
+- **Conclusion: the 2-core gate is needed on this platform and stays unchanged.** Graph-mode numbers (B0, graph tau,
+  E2 graph %B0) are immune, but eager and isolated tau and the launch split change by tens of percent when a foreign
+  job streams memory on cores that share our L3, which SLURM can allocate to other users.
+- An idle-state hypothesis from an earlier quick test (`scripts/diag/foreign_cpu_sensitivity.py`, torch 2.6 venv, own
+  timing loop: small torch ops 30 to 50% *faster* when any other core was busy) **did not reproduce** with the harness
+  timing and stack (one spinning core: within 0.7% on every cell). It is kept as a record, not a finding.
+- A first run of the harness diagnostic placed one streamer on the probe core's SMT sibling (+100 to +1300% in eager
+  and isolated); that placement cannot happen with SLURM whole-core allocation. Kept as
+  `host_idle_sensitivity_smt_confounded.json`.
+- **Consequence for scheduling:** sessions need a node with no memory-heavy foreign jobs. The job script now requests
+  24 h (partition MaxTime is unlimited) so that gate waits cannot cut a session.
+
+## Platform `rtx6000ada`: E1 and E2 results of record (2026-10-24)
+
+Sessions `e1v2_s1_20261024`, `e2v2_s1_20261024`, `e1v2_s2_20261024`, `e2v2_s2_20261024`: SLURM job 48514, node01,
+one card for all four (`GPU-93fd8580-...`, PCI 47:00.0, ECC off, persistence off), 03:20 to 05:54 on 2026-10-24
+(same-phase sessions about 1 h apart, as on GB10; not different days). Stack: torch 2.11.0+cu128, cuBLAS 12.8.4.1,
+Triton 3.6.0, venv lock `ca97c3a32dcc3d75`, code `b3d2b90`/`7d7935c` (clean tree), canary settle 1.0 s. **All 1,156 cells
+clean** (40 attempts retried). The gate waited 80 times in total for foreign CPU. **Every cross-platform comparison
+is stack-confounded** (GB10: cuBLAS 13.1.0, RTX PRO 5000: 13.1.1).
+
+### E1 (B0)
+
+| Quantity | s1 | s2 | Prediction | GB10 v2 | RTX PRO 5000 (pilot) |
+|---|---|---|---|---|---|
+| **R_inf_B0** (cold graph Triton read, >= 10x L2) | **891.73 GB/s** | **891.77 GB/s** | 875 | 239.5 | 1238.8 |
+| as % of the 960 GB/s spec | 92.9% | 92.9% | 91% | 88% | 92% |
+| as % of 912 GB/s raw at the running 9501 MHz memory clock | 97.8% | 97.8% | | | 96.6% |
+| **probe tau, graph** | **1.31 us** [1.21, 1.36] | **1.21 us** [1.19, 1.23] | 1.6 | 1.7 | 1.36 |
+| fit residual / fitted R | 1.6% / 895.6 | 0.5% / 893.0 | | | |
+| **B_half (graph)** | **1.12 MiB** | **1.03 MiB** | 1.3 | 0.39 | 1.61 |
+| eager floor (Triton, 0.25 to 4 MiB, host-bound) | 10.0 to 10.2 us | 10.1 to 10.3 us | 6.5 | 4.7 (tau) | 5.8 |
+| isolated floor | 19.5 to 19.9 us | 19.2 to 19.7 us | 12 | 11.4 | |
+| write (fill) / copy vs read (graph plateaus) | 1.00x / 0.91x | 1.00x / 0.91x | 0.97 / 0.90 | 0.81 / 1.00 | 1.00 / 0.89 |
+| hot L2 peak, Triton read graph | 5026 GB/s at 64 MiB | 4999 GB/s at 64 MiB | ~4 TB/s at 32 to 64 | 1525 at 16 | 4572 at 16 |
+| hot falloff | below cold by 128 MiB | same | 64 to 128 MiB | 16 to 32 | by 128 |
+| SM clock per cell (median) | 2460 to 2685 MHz | 2460 to 2685 MHz | | 2177 to 2190 | 180 to 2595 |
+| canary | 824.5 GB/s, CV 0.13% | 824.7, CV 0.07% | | 0.2 to 0.8% | 0.04% |
+
+- **Cross-session agreement:** 360 matched cells, median |diff| **0.09%** (GB10 v2: 0.38%); 5 cells above 3%, all sub-2 us
+  graph Triton cells at 256 to 512 KiB (largest: 1.50 vs 1.66 us). B0 agrees to 0.005%. The graph tau fits differ by
+  0.1 us because of those small cells; tau is 1.2 to 1.3 us.
+- **SM clock is stable** under load (2460 to 2685 MHz in every cell), unlike the RTX PRO 5000. `sw_power_cap` appears in
+  the largest cells (about 290 W of 300 W) without a clock change. No clock locking was needed.
+- Only the Triton graph fit is valid (0.5 to 1.6% residual); eager and isolated fits misfit because those modes are
+  host-bound below about 8 MiB, as on the RTX PRO 5000. torch `sum` misfits in every mode, as on GB10.
+
+### E2 (cuBLAS BF16, M=1, graph mode, %B0 with B0 = 891.73 GB/s)
+
+| model | layer | MiB | rtx6000ada kernel | %B0 s1 / s2 | GB10 kernel | GB10 %B0 | same variant |
+|---|---|---|---|---|---|---|---|
+| llama31 | k_proj | 8.0 | gemvx/v6 | 79.7 / 79.7 | gemvx/v6 | 71.9 | yes |
+| llama31 | v_proj | 8.0 | gemvx/v6 | 79.8 / 79.5 | gemvx/v6 | 68.3 | yes |
+| llama31 | q_proj | 32.0 | gemvx/v6 | 93.3 / 93.4 | gemvx/v6 | 70.7 | yes |
+| llama31 | o_proj | 32.0 | gemvx/v6 | 93.4 / 93.4 | gemvx/v6 | 69.2 | yes |
+| llama31 | qkv_fused | 48.0 | gemvx/v7 | 96.3 / 96.3 | gemvx/v6 | 70.2 | **no** |
+| llama31 | gate_proj | 112.0 | gemvx/v7 | 98.3 / 98.3 | gemvx/v7 | 97.3 | yes |
+| llama31 | up_proj | 112.0 | gemvx/v7 | 98.3 / 98.3 | gemvx/v7 | 97.7 | yes |
+| llama31 | down_proj | 112.0 | gemvx/v7 | 97.6 / 97.7 | gemvx/v7 | 96.4 | yes |
+| llama31 | gate_up_fused | 224.0 | gemvx/v7 | 99.2 / 99.1 | gemvx/v7 | 98.0 | yes |
+| llama31 | lm_head | 1002.0 | gemvx/v6 | 99.9 / 99.9 | gemvx/v7 | 72.9 | **no** |
+| qwen25 | v_proj | 3.5 | gemvx/v7 | 69.6 / 69.4 | gemvx/v7 | 86.7 | yes |
+| qwen25 | k_proj | 3.5 | gemvx/v7 | 69.6 / 69.4 | gemvx/v7 | 87.1 | yes |
+| qwen25 | q_proj | 24.5 | gemvx/v6 | 89.6 / 89.5 | gemvx/v6 | 68.6 | yes |
+| qwen25 | o_proj | 24.5 | gemvx/v6 | 89.7 / 89.6 | gemvx/v6 | 68.6 | yes |
+| qwen25 | qkv_fused | 31.5 | gemvx/v6 | 92.2 / 92.2 | gemvx/v6 | 69.3 | yes |
+| qwen25 | gate_proj | 129.5 | gemvx/v7 | 98.6 / 98.6 | gemvx/v6 | 71.0 | **no** |
+| qwen25 | up_proj | 129.5 | gemvx/v7 | 98.6 / 98.6 | gemvx/v6 | 70.7 | **no** |
+| qwen25 | down_proj | 129.5 | gemvx/v7 | 97.5 / 97.6 | gemvx/v7 | 96.9 | yes |
+| qwen25 | gate_up_fused | 259.0 | gemvx/v7 | 99.4 / 99.4 | gemvx/v6 | 71.4 | **no** |
+| qwen25 | lm_head | 1039.5 | gemvx/v6 | 99.9 / 99.9 | gemvx/v7 | 72.1 | **no** |
+
+- **The v6 per-byte loss does not reproduce on Ada.** Per-kernel graph fits (both sessions): `gemvx/v6` tau 2.50 us,
+  **R_inf 887.6 to 887.8 GB/s (99.5% of B0)**, 1.2 to 1.3% residual; `gemvx/v7` tau 2.38 us, R_inf 900.4 to 900.8 GB/s,
+  4.1 to 4.3% residual. On GB10, v6 streams at 168 GB/s (70% of B0) with v7 at 87 to 98%. Here the two variants stream
+  equally well; v6 even serves both lm_heads at 99.9% of B0.
+- **The BF16 loss here is per op.** cuBLAS's tau (2.4 to 2.5 us) is about 2x the probe's (1.2 to 1.3 us), so B_half is
+  about 2.1 MiB: Llama k/v_proj (8 MiB) reach 79.7% of B0 and Qwen k/v_proj (3.5 MiB) 69.4%, against 90% of the same-size
+  E1 read. Shapes of 100 MiB and more reach 97.5 to 99.9%.
+- **Dispatch differs from GB10 on 6 of 20 shapes** (Llama qkv_fused, Qwen gate/up/gate_up: v6 on GB10, v7 here; both
+  lm_heads: v7 on GB10, v6 here). No variant appears that GB10 never used. Stack-confounded (cuBLAS 12.8 vs 13.1).
+- **M sweep (Q3):** t(M=2..16)/t(1) is 0.98 to 0.99 on Qwen q/o/qkv (v6 at M=1), 1.00 to 1.03 on every shape of 24 MiB
+  and more, 1.05 to 1.09 on Llama k/v and **1.23 to 1.27 on Qwen k/v** (split-K GEMM). M >= 2 is no longer faster than
+  M=1 in any useful way, because the M=1 GEMV is already near B0 here. From M=2 cuBLAS uses `cutlass_80_wmma_tensorop_bf16`
+  (with `splitKreduce` on small N), as on GB10 and the RTX PRO 5000.
+- **Launch split** (pooled, M=1): exposed host launch (eager - graph) 4.7 to 6.0 us; isolated - graph 16.3 to 18.4 us
+  (GB10: about 2 to 3 and 9 to 11 us).
+- **Allocation variance (Q4):** per-allocation median spread **0.08% median, 0.72 to 0.82% p90** in E2 and 0.10 to 0.12% /
+  1.08 to 1.28% in E1 (GB10: 0.44% / 1.3 to 1.7% and 0.38% / 2.9 to 3.2%). E2 cross-session median |diff| 0.08%
+  (GB10 v2: 0.27%), max 2.91%. GDDR6 shows about 5x less allocation-to-allocation variance than LPDDR5x.
+- **`model eff` columns are not efficiencies:** they use only the per-kernel tau (relative to each kernel's own R_inf).
+  Read %B0. (On this platform the two agree better than on GB10, because R_inf of both variants is near B0.)
+
+### Kernel names lost by the profiler on this stack (analysis-side fix)
+
+- 95% of E1/E2 cells recorded `kernel_names = []` (GB10 and RTX PRO 5000: 0 of 2,410). Reproduced outside the runner
+  (`scripts/diag/profiler_idle_repro.py`, node01): on torch 2.11.0+cu128 with driver 575, `torch.profiler` returns no CUDA events once the process
+  has spent a few seconds idle between profiler sessions (12 s gaps: lost after 2 cells; 4 s: after 5; 2 s: never).
+  Keeping the GPU busy for 200 ms before profiling does not help, so it is not a GPU power state. The idle gate's settle
+  and window steps create these gaps. Timings are unaffected; only the recorded names are missing.
+- **Fix without touching frozen code:** `scripts/diag/dispatch_table.py` records the kernels for all 96 E2 shapes
+  (M = 1 to 16) back to back in a fresh process (`results/rtx6000ada/dispatch_20261024/dispatch_table.json`, node01, same
+  stack). `bench.analyze --dispatch-table` fills empty `kernel_names` in memory only (cell files unchanged) and aborts if
+  any recorded name disagrees. **All 29 cells that did record names matched the table exactly**; 407 were filled.
+  The E2 summaries above were produced this way and say so.
+
 ## Open questions
 
 1. Is `lts__t_sectors_aperture_sysmem_op_write` the right write-bytes counter? To be confirmed in E3 with a `fill_` kernel of known size.

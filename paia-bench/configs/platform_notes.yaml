@@ -35,3 +35,19 @@ dgxspark_gb10:
   fp8_rowwise_impl: vllm_cutlass_scaled_mm
   nsys_flags: ["--trace=cuda,nvtx", "--cuda-graph-trace=node"]
   vllm_env: {VLLM_ENABLE_V1_MULTIPROCESSING: "0"}   # keep the engine in-process so one nsys trace sees it
+
+rtx6000ada:
+  verified_on: 2026-10-22
+  stack: host-venv   # torch 2.11.0+cu128, cuBLAS 12.8.4.1, Triton 3.6.0; venv at /scratch/bejaine.birju/paia/.venv-host on node01
+  driver: "575.51.03"
+  memory_kind: discrete_gddr6
+  # ncu_metrics: defaults (dram__*), present in `ncu --query-metrics --chip ad102`.
+  # Counter access is held by the cluster's DCGM exporter (DCP metrics): ncu fails until the admin runs `dcgmi profile --pause`.
+  ncu_blocker: dcgm_profiling
+  clock_lock: not_attempted   # needs root; persistence mode off
+  fp8_rowwise_impl: torch_scaled_mm   # selfcheck correct on sm_89
+  # The driver works on memory returned by empty_cache() for ~33 ms per GiB, slowing GPU streaming ~7% meanwhile
+  # (scratchpad diag 2026-10-23: 8 GiB -> 267 ms). Without a wait, the post-cell canary failed the 95% guard after every
+  # cell with a >= 2 GiB footprint (779 vs 825 GB/s) although the cell's own allocations agreed within 0.36%.
+  # 1.0 s covers the 12 GiB memory cap (~400 ms) with margin. Guard timing only; cell timing is unchanged.
+  canary_settle_after_cell_s: 1.0
